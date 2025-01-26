@@ -117,13 +117,16 @@ function Product(props)
                     <label className="font-semibold ml-1 uppercase">Width : </label>
                     <input
                         className="w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value={props.currentData.width || ''}
+                        onChange={(e) => props.handleInputChange('width', e.target.value)}
                     />
                 </div>
                 <div className="flex flex-col gap-4">
                     <label className="font-semibold ml-1 uppercase">Height : </label>
                     <input
                         className="w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        name="height"
+                        value={props.currentData.height || ''}
+                        onChange={(e) => props.handleInputChange('height', e.target.value)}
                     />
                 </div>
                 <div className="flex justify-center items-center gap-4 h-12 mt-10">
@@ -132,6 +135,9 @@ function Product(props)
                             type="radio"
                             name="mm"
                             className="w-8 h-8"
+                            value="mm"
+                            checked={props.selectedStatus === "mm"}
+                            onChange={props.handleChange}
                         />
                         <span className="text-xl">mm</span>
                     </label>
@@ -140,6 +146,9 @@ function Product(props)
                             type="radio"
                             name="ft"
                             className="w-8 h-8"
+                            value="ft"
+                            checked={props.selectedStatus === "ft"}
+                            onChange={props.handleChange}
                         />
                         <span className="text-xl">ft</span>
                     </label>
@@ -149,41 +158,52 @@ function Product(props)
                     <input
                         className="w-full p-3 border-2 border-black rounded-md bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         name="area"
+                        value={props.currentData.feet || ''}
+                        readOnly
+                        disabled
                     />
                 </div>
                 <div className="flex flex-col gap-4">
-                    <label className="font-semibold ml-1 uppercase">Price : </label>
+                    <label className="font-semibold ml-1 uppercase">Area : </label>
                     <input
                         className="w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         name="price"
+                        value={props.currentData.area || ''}
+                        readOnly
+                        disabled
                     />
                 </div>
                 <div className="flex flex-col gap-4">
-                    <label className="font-semibold ml-1 uppercase">Price : </label>
+                    <label className="font-semibold ml-1 uppercase">Price:</label>
                     <input
                         className="w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        name="price"
+                        value={props.currentData.price || ''}
+                        onChange={(e) => props.handleInputChange('price', e.target.value)}
                     />
                 </div>
                 <div className="flex flex-col gap-4">
-                    <label className="font-semibold ml-1 uppercase">Quantity : </label>
+                    <label className="font-semibold ml-1 uppercase">Quantity:</label>
                     <input
                         className="w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        name="quantity"
+                        value={props.currentData.quantity || ''}
+                        onChange={(e) => props.handleInputChange('quantity', e.target.value)}
                     />
                 </div>
                 <div className="flex flex-col gap-4">
-                    <label className="font-semibold ml-1 uppercase">Total Qty Price : </label>
+                    <label className="font-semibold ml-1 uppercase">Total Price:</label>
                     <input
-                        className="w-full p-3 border-2 border-black rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-200"
-                        name="total"
+                        className="w-full p-3 border-2 border-black rounded-md bg-slate-200"
+                        value={props.currentData.totalqtyprice || ''}
+                        readOnly
                     />
                 </div>
+
                 <div className="flex flex-col gap-4">
                     <label className="font-semibold ml-1 uppercase">Glass : </label>
                     <select
                         className="w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        name="glass"
+                        value={props.currentData.glass || ''}
+                        onChange={(e) => props.handleInputChange('glass', e.target.value)}
                     >
                         <option className='p-2 text-md'>Select</option>
                         <option className='p-2 text-md'>Normal Glass</option>
@@ -191,21 +211,19 @@ function Product(props)
                     </select>
                 </div>
                 <div className="flex flex-col gap-4">
-                    <label className="font-semibold ml-1 uppercase">Glass : </label>
-                    <select
+                    <label className="font-semibold ml-1 uppercase">Glass Thickness : </label>
+                    <input
                         className="w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        name="glass"
-                    >
-                        <option className='p-2 text-md'>Select</option>
-                        <option className='p-2 text-md'>Normal Glass</option>
-                        <option className='p-2 text-md'>Toughened Glass</option>
-                    </select>
+                        value={props.currentData.thickness || ''}
+                        onChange={(e) => props.handleInputChange('thickness', e.target.value)}
+                    />
                 </div>
                 <div className="flex flex-col gap-4">
                     <label className="font-semibold ml-1 uppercase">COLOUR : </label>
                     <select
                         className="w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        name="glass"
+                        value={props.currentData.color || ''}
+                        onChange={(e) => props.handleInputChange('color', e.target.value)}
                     >
                         <option className='p-2 text-md'>Select</option>
                         <option className='p-2 text-md'>Mahogany</option>
@@ -221,12 +239,16 @@ function Product(props)
                     <label className="font-semibold ml-1 uppercase">T.P. Cost : </label>
                     <input
                         className="w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value={props.currentData.tpcost || ''}
+                        onChange={(e) => props.handleInputChange('tpcost', e.target.value)}
                     />
                 </div>
                 <div className="flex flex-col gap-4">
                     <label className="font-semibold ml-1 uppercase ">Total Cost : </label>
                     <input
                         className="w-full p-3 border-2 bg-slate-200 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value={props.currentData.totalcost || ''}
+                        readOnly
                     />
                 </div>
             </div>

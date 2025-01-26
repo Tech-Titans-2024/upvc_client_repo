@@ -22,7 +22,7 @@ function Login()
                 username: userName,
                 password: password
             })
-            if (response.data.success) { navigate(`upvc/${userName}/`) }
+            if (response.data.success) { navigate(`upvc/${userName}/dashboard`) }
             else { setError(response.data.message) || 'Login Failed' }
         }
         catch (err) {

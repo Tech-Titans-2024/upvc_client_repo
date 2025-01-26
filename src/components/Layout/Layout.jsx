@@ -34,7 +34,7 @@ function Sidebar()
 		{
 			icon: faTag,
 			name: 'Price List',
-			path: `/upvc/${userName}/dashboard`
+			path: `/upvc/${userName}/pricelist`
 		},
 		{
 			icon:  faPeopleGroup ,
