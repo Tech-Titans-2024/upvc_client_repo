@@ -24,12 +24,12 @@ function Sidebar()
 		{
 			icon: faShoppingCart,
 			name: 'Order Processing',
-			path: `/upvc/${userName}/dashboard`
+			path: `/upvc/${userName}/orderprocessing`
 		},
 		{
 			icon: faListAlt,
 			name: 'Reports',
-			path: `/upvc/${userName}/dashboard`
+			path: `/upvc/${userName}/report`
 		},
 		{
 			icon: faTag,
@@ -39,22 +39,22 @@ function Sidebar()
 		{
 			icon:  faPeopleGroup ,
 			name: 'Sales Executive',
-			path: `/upvc/${userName}/dashboard`
+			path: `/upvc/${userName}/salesexecutive`
 		},
 		{
 			icon: faUserAlt,
 			name: 'Customer Profile',
-			path: `/upvc/${userName}/dashboard`
+			path: `/upvc/${userName}/customerprofile`
 		},
 		{
 			icon: faCogs,
 			name: 'Manage',
-			path: `/upvc/${userName}/dashboard`
+			path: `/upvc/${userName}/manage`
 		},
 		{
 			icon: faBookmark,
 			name: 'Profile',
-			path: `/upvc/${userName}/dashboard`
+			path: `/upvc/${userName}/profile`
 		},
 		{
 			icon: faSignOutAlt,
