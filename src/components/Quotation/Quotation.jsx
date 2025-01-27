@@ -4,6 +4,7 @@ import Logo from '../../assets/logo.jpeg';
 function Quotation(props) 
 {
     const apiUrl = import.meta.env.VITE_API_URL;
+    console.log(props.savedData)
 
     return (
         <>
@@ -43,7 +44,7 @@ function Quotation(props)
                                             <tr key={index} className={`bg-white ${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
                                                 <td className="border border-black">
                                                     <img
-                                                        src={`${apiUrl}${data.img}`}
+                                                        src={`${apiUrl}${data.image}`}
                                                         alt="Product"
                                                         className="w-44 h-32 object-cover mx-auto rounded"
                                                     />
@@ -89,21 +90,37 @@ function Quotation(props)
                                                 </td>
                                                 <td className="p-3 border border-black text-center">{data.quantity}</td>
                                                 <td className="p-3 border border-black text-center">{data.price}</td>
-                                                <td className="p-3 border border-black text-center">{data.totalPrice}</td>
+                                                <td className="p-3 border border-black text-center">{data.totalcost}</td>
                                             </tr>
                                         ))}
-                                        {/* <tr>
-                                            <td colSpan="4" className="p-2 border border-black text-right font-bold">Net Total (Rs.)</td>
-                                            <td className="p-2 border border-black text-center font-bold">₹ {data.netTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                                        </tr>
-                                        <tr>
-                                            <td colSpan="4" className="p-2 border border-black text-right font-bold">GST (18%)</td>
-                                            <td className="p-2 border border-black text-center font-bold">₹ {data.cgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                                        </tr>
-                                        <tr>
-                                            <td colSpan="4" className="p-2 border border-black text-right font-bold">Grand Total (Rs.)</td>
-                                            <td className="p-2 border border-black text-center font-bold">₹ {data.gTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                                        </tr> */}
+                                        {props.customer && (
+                                            <>
+                                                <tr>
+                                                    <td colSpan="4" className="p-2 border border-black text-right font-bold">Net Total (Rs.)</td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.netTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (18%)</td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan="4" className="p-2 border border-black text-right font-bold">SGST (Rs.)</td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.sgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan="4" className="p-2 border border-black text-right font-bold">IGST (18%)</td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.igst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan="4" className="p-2 border border-black text-right font-bold">T.P. Cost (Rs.)</td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.tpcost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan="4" className="p-2 border border-black text-right font-bold">Grand Total (Rs.)</td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.netTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                </tr>
+                                            </>
+                                        )}
                                     </tbody>
                                 </table>
                             </div>

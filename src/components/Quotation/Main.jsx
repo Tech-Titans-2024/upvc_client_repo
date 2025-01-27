@@ -20,10 +20,10 @@ function Main()
     const [currentData, setCurrentData] = useState({
         brand: 'Veka', product: 'Door', type: '', variant: '', mesh: 'No', frame: '',
         lock: '', width: '', height: '', feet: '', area: '', price: '', quantity: '1',
-        totalqtyprice: '', glass: '', thickness: '', color: '', tpcost: '', totalcost: '', image: ''
+        totalqtyprice: '', glass: '', thickness: '', color: '', adcost: '0', totalcost: '', image: ''
     })
     const [customer, setCustomer] = useState({
-        salesPerson: '', quotationNo: '001', cusName: '', cusAdddress: '', cusContact: '',
+        salesPerson: '', quotationNo: '001', tpcost: '0', cusName: '', cusAdddress: '',  cusContact: '', 
         cusState: '', date: '', netTotal: '', cgst: '', sgst: '', igst: '', gTotal: ''
     })
 
@@ -102,12 +102,12 @@ function Main()
         let updatedWidth = parseFloat(currentData.width) || 0;
         let updatedHeight = parseFloat(currentData.height) || 0;
         let updatedQuantity = parseFloat(currentData.quantity) || 0;
-        let updatedtpcost = parseFloat(currentData.tpcost) || 0;
+        let updatedadcost = parseFloat(currentData.adcost) || 0;
 
         if (name === 'width') updatedWidth = numericValue;
         if (name === 'height') updatedHeight = numericValue;
         if (name === 'quantity') updatedQuantity = numericValue;
-        if (name === 'tpcost') updatedtpcost = numericValue;
+        if (name === 'adcost') updatedadcost = numericValue;
 
         let updatedArea = 0;
         let areaInMM = 0;
@@ -143,10 +143,10 @@ function Main()
                     if (response.data?.data !== undefined) {
                         const fetchedPrice = parseFloat(response.data.data).toFixed(2);
                         const recalculatedTotal = (fetchedPrice * updatedQuantity * updatedArea).toFixed(2);
-                        const transportCost = (parseFloat(recalculatedTotal) + updatedtpcost).toFixed(2);
+                        const addCost = (parseFloat(recalculatedTotal) + updatedadcost).toFixed(2);
                         setCurrentData((prev) => ({
                             ...prev, price: fetchedPrice,
-                            totalqtyprice: recalculatedTotal, totalcost: transportCost,
+                            totalqtyprice: recalculatedTotal, totalcost: addCost,
                             image: response.data.image,
                         }))
                     }
@@ -160,28 +160,29 @@ function Main()
         if (name === 'price') {
             const updatedPrice = numericValue;
             const recalculatedTotal = (updatedPrice * updatedQuantity * updatedArea).toFixed(2);
-            const transportCost = (parseFloat(recalculatedTotal) + updatedtpcost).toFixed(2);
+            const addCost = (parseFloat(recalculatedTotal) + updatedadcost).toFixed(2);
             setCurrentData((prev) => ({
                 ...prev, price: updatedPrice,
                 totalqtyprice: recalculatedTotal,
-                totalcost: transportCost,
+                totalcost: addCost,
+                image: currentData.image
             }))
         }
 
         if (name === 'quantity') {
             const fetchedPrice = parseFloat(currentData.price) || 0;
             const recalculatedTotal = (fetchedPrice * updatedQuantity * updatedArea).toFixed(2);
-            const transportCost = (parseFloat(recalculatedTotal) + updatedtpcost).toFixed(2);
+            const addCost = (parseFloat(recalculatedTotal) + updatedadcost).toFixed(2);
             setCurrentData((prev) => ({
                 ...prev,
                 totalqtyprice: recalculatedTotal,
-                totalcost: transportCost,
+                totalcost: addCost,
             }))
         }
-        else if (name === 'tpcost') {
+        else if (name === 'adcost') {
             const totalqtyprice = parseFloat(currentData.totalqtyprice) || 0;
-            const transportCost = (totalqtyprice + updatedtpcost).toFixed(2);
-            setCurrentData((prev) => ({ ...prev, totalcost: transportCost }));
+            const addCost = (totalqtyprice + updatedadcost).toFixed(2);
+            setCurrentData((prev) => ({ ...prev, totalcost: addCost }));
         }
         else {
             setCurrentData((prev) => ({ ...prev, [name]: value }));
@@ -191,10 +192,10 @@ function Main()
     const handleSave = () => {
         setSavedData((prev) => [...prev, currentData]);
         alert("Data saved successfully");
-        setCurrentData((prev) => ({
-            ...prev, width: "", height: "", area: "", price: "", glass: "",
-            color: "", additionalcost: "", quantity: "", total: "", img: "",
-        }))
+        // setCurrentData((prev) => ({
+        //     ...prev, width: "", height: "", area: "", price: "", glass: "",
+        //     color: "", adcost: "0", quantity: "", total: "", image: "",
+        // }))
     }
 
     const handleDeleteRow = (index) => {setSavedData((prev) => prev.filter((_, i) => i !== index))}

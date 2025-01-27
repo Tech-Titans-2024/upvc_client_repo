@@ -236,11 +236,11 @@ function Product(props)
                     </select>
                 </div>
                 <div className="flex flex-col gap-4">
-                    <label className="font-semibold ml-1 uppercase">T.P. Cost : </label>
+                    <label className="font-semibold ml-1 uppercase">Addl Cost : </label>
                     <input
                         className="w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        value={props.currentData.tpcost || ''}
-                        onChange={(e) => props.handleInputChange('tpcost', e.target.value)}
+                        value={props.currentData.adcost || ''}
+                        onChange={(e) => props.handleInputChange('adcost', e.target.value)}
                     />
                 </div>
                 <div className="flex flex-col gap-4">
