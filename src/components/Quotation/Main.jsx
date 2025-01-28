@@ -192,10 +192,10 @@ function Main()
     const handleSave = () => {
         setSavedData((prev) => [...prev, currentData]);
         alert("Data saved successfully");
-        // setCurrentData((prev) => ({
-        //     ...prev, width: "", height: "", area: "", price: "", glass: "",
-        //     color: "", adcost: "0", quantity: "", total: "", image: "",
-        // }))
+        setCurrentData((prev) => ({
+            ...prev, width: "", height: "", area: "", price: "", glass: "",
+            color: "", adcost: "0", quantity: "", total: "", image: "",
+        }))
     }
 
     const handleDeleteRow = (index) => {setSavedData((prev) => prev.filter((_, i) => i !== index))}
@@ -223,6 +223,16 @@ function Main()
     }, [savedData]);
 
     const handleGetQuotation = () => { setQuotation(true) }
+
+    const handleFinish = async () => {
+        try {
+            const data = { customer, savedData }
+            const response = await axios.post(`${apiUrl}/api/quotationSave`, { data });
+            if (response.status === 200) { alert("The Quotation has been Saved Successfully...")} 
+            else { console.error('Failed to send Data to Backend:', response.status) }
+        } 
+        catch (error) { console.error('Error:', error) }
+    }
 
     return (
         <div className='flex flex-col gap-7 p-3'>
@@ -255,6 +265,16 @@ function Main()
                         </button>
                     </div>
                     <Quotation quotation={quotation} customer={customer} savedData={savedData} pdfDesign={pdfDesign} />
+                    {quotation && (
+                        <div className='flex justify-end'>
+                            <button
+                                className="bg-green-600 font-bold text-lg text-white py-3 px-6 rounded-lg shadow hover:bg-blue-700 transition duration-200"
+                                onClick={handleFinish}
+                            >
+                                Download Quotation
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

@@ -99,18 +99,24 @@ function Quotation(props)
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">Net Total (Rs.)</td>
                                                     <td className="p-2 border border-black text-center font-bold">₹ {props.customer.netTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                                 </tr>
-                                                <tr>
-                                                    <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (18%)</td>
-                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colSpan="4" className="p-2 border border-black text-right font-bold">SGST (Rs.)</td>
-                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.sgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colSpan="4" className="p-2 border border-black text-right font-bold">IGST (18%)</td>
-                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.igst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                                                </tr>
+                                                {props.customer.cusState === 'Tamil Nadu' && (
+                                                    <tr>
+                                                        <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (18%)</td>
+                                                        <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                    </tr>
+                                                )}
+                                                {props.customer.cusState !== 'Tamil Nadu' && (
+                                                    <>
+                                                        <tr>
+                                                            <td colSpan="4" className="p-2 border border-black text-right font-bold">SGST (Rs.)</td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.sgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colSpan="4" className="p-2 border border-black text-right font-bold">IGST (18%)</td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.igst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                        </tr>
+                                                    </>
+                                                )}
                                                 <tr>
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">T.P. Cost (Rs.)</td>
                                                     <td className="p-2 border border-black text-center font-bold">₹ {props.customer.tpcost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
