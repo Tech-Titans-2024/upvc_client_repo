@@ -12,6 +12,9 @@ import Manage from './components/Manage/Main';
 import Order from './components/Order/Main';
 import Profile from './components/Profile/Main';
 import Report from './components/Report/Main';
+import ProReport from './components/Report/Product';
+import SalesReport from './components/Report/Sales';
+import PeriodReport from './components/Report/Period';
 
 function App() 
 {
@@ -29,6 +32,9 @@ function App()
 					<Route path="orderprocessing" element={<Order />} />
 					<Route path="profile" element={<Profile />} />
 					<Route path="report" element={<Report />} />
+					<Route path="productreport" element={<ProReport />} />
+					<Route path="saleswisereport" element={<SalesReport />} />
+					<Route path="periodwisereport" element={<PeriodReport />} />
  				</Route>
 			</Routes>
 		</Router>
