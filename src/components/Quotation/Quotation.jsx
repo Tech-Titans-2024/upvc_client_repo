@@ -4,7 +4,7 @@ import Logo from '../../assets/logo.jpeg';
 function Quotation(props) 
 {
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log(props.savedData)
+    // console.log(props.savedData)
 
     return (
         <>

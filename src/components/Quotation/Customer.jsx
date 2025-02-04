@@ -69,7 +69,7 @@ function Customer(props)
                     type="text"
                     placeholder=''
                     className="w-full p-3 border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    name='quotation'
+                    name='quotationNo'
                     value={props.customer.quotationNo}
                     onChange={props.handleCustomer}
                 />

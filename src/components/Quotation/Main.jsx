@@ -23,7 +23,7 @@ function Main()
         totalqtyprice: '', glass: '', thickness: '', color: '', adcost: '0', totalcost: '', image: ''
     })
     const [customer, setCustomer] = useState({
-        salesPerson: '', quotationNo: '001', tpcost: '0', cusName: '', cusAdddress: '',  cusContact: '', 
+        salesPerson: '', quotationNo: '', tpcost: '0', cusName: '', cusAdddress: '',  cusContact: '', 
         cusState: '', date: '', netTotal: '', cgst: '', sgst: '', igst: '', gTotal: ''
     })
 
@@ -86,7 +86,7 @@ function Main()
         }
 
         if (name === 'type') {
-            if (value === 'Sliding Window' || value === 'Sliding Door') { lockValue = 'Toch Lock' }
+            if (value === 'Sliding Window' || value === 'Sliding Door') { lockValue = 'Touch Lock' }
             else if (value === 'Open Window' || value === 'Open Door') { lockValue = 'Multipoint Lock' }
             else { lockValue = 'Normal Lock' }
             try {
@@ -151,9 +151,7 @@ function Main()
                         }))
                     }
                 }
-                catch (error) {
-                    console.error('Error fetching Price List:', error);
-                }
+                catch (error) { console.error('Error fetching Price List:', error) }
             }
         }
 
@@ -190,6 +188,17 @@ function Main()
     }
 
     const handleSave = () => {
+        if (currentData.product === 'Door') {
+            if (
+                currentData.brand === '' || currentData.product === '' || currentData.type === '' || 
+                currentData.variant === '' || currentData.width === '' || currentData.height === '' || 
+                currentData.price === '' || currentData.glass === '' || currentData.thickness === ''
+            ) 
+            {
+                alert('Please fill in all required Fields .');
+                return; 
+            }
+        }
         setSavedData((prev) => [...prev, currentData]);
         alert("Data saved successfully");
         setCurrentData((prev) => ({
