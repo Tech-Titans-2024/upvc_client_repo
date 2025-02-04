@@ -94,6 +94,7 @@ function Summary(props)
                             ].map((field) => {
                                 const fieldKey = field.toLowerCase().replace(/\s+/g, "");
                                 const fieldValue = editingData[fieldKey];
+                                const disabledFields = ["brand", "product", "type", "variant", "mesh", "frame", "lock"];
                                 return fieldValue ? (
                                     <div key={field} className="space-y-2">
                                         <label className="block text-sm font-bold text-gray-700 tracking-wide">
@@ -104,6 +105,7 @@ function Summary(props)
                                             name={fieldKey}
                                             value={fieldValue || ""}
                                             onChange={handleChange}
+                                            disabled={disabledFields.includes(fieldKey)}
                                             className="w-full border border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm"
                                             placeholder={`Enter ${field}`}
                                         />
