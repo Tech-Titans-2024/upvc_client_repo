@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Edit from './Edit';
 import axios from 'axios';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function Main() {
     const apiUrl = import.meta.env.VITE_API_URL;
-
     const [edit, setEdit] = useState(false);
     const [priceData, setPriceData] = useState([]);
     const [editPriceData, setEditPriceData] = useState([]);
@@ -13,9 +13,8 @@ function Main() {
     const [price_id, setPrice_id] = useState()
     const [isDelete, setIsDelete] = useState(false);
     const [DeleteId, setDeleteId] = useState();
-    const [filteredData, setFilteredData] = useState([]); // For filtered results
-    const [searchTerm, setSearchTerm] = useState(""); // Search term
-
+    const [filteredData, setFilteredData] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         const fetchPriceList = async () => {
@@ -25,73 +24,49 @@ function Main() {
                     setPriceData(response.data);
                     setFilteredData(response.data);
                 }
-            } catch (err) {
-                console.log("SOMETHING ERROR", err);
             }
-        };
-
-
-
+            catch (err) { console.log("SOMETHING ERROR", err) }
+        }
         fetchPriceList();
-    }, [edit,isDelete]);
+    }, [edit, isDelete]);
 
     const handleSearch = (e) => {
         const searchValue = e.target.value.toLowerCase();
         setSearchTerm(searchValue);
-    
-        if (searchValue === "") {
-            setFilteredData(priceData); // Reset when search is empty
-        } else {
+        if (searchValue === "") { setFilteredData(priceData) }
+        else {
             const filtered = priceData.filter((item) =>
                 item.product.toLowerCase().includes(searchValue) ||
                 (item.type && item.type.toLowerCase().includes(searchValue)) ||
                 (item.variant && item.variant.toLowerCase().includes(searchValue)) ||
                 item.brand.toLowerCase().includes(searchValue) ||
-                String(item.price).includes(searchValue) // Convert price to string and check
-            );
+                String(item.price).includes(searchValue)
+            )
             setFilteredData(filtered);
-        }
-    };
-    
-    
-
-    const updatePrice = async (newChangedData) => {
-    
-        try {
-            const response = await axios.put(`${apiUrl}/api/updateprice`, {
-                changedData: newChangedData,  // Use latest data directly
-                price_id
-            });
-    
-            if (response.data) {
-                console.log("Updated Data:", response.data);
-            }
-        } catch (err) {
-            console.log("ERROR:", err);
-        }
-    };
-    
-
-
-
-    const handledelete = async () => {
-        console.log(DeleteId, "Delete Id");
-
-        try {
-            const response = await axios.put(`${apiUrl}/api/deleteprice`, { DeleteId })
-            if (response.data.message === "success") {
-                setIsDelete(false)
-                setDeleteId();
-            }
-            else {
-                alert(response.data.message)
-            }
-        } catch (err) {
-            console.log(err);
         }
     }
 
-    // console.log(changedData, "DATAS FROM ");
+    const updatePrice = async (newChangedData) => {
+        try {
+            const response = await axios.put(`${apiUrl}/api/updateprice`, {
+                changedData: newChangedData, price_id
+            })
+            if (response.data) { console.log("Updated Data:", response.data) }
+        }
+        catch (err) { console.log("ERROR:", err) }
+    }
+
+    const handledelete = async () => {
+        try {
+            const response = await axios.put(`${apiUrl}/api/deleteprice`, { DeleteId })
+            if (response.data.message === "success") {
+                setIsDelete(false);
+                setDeleteId();
+            }
+            else { alert(response.data.message) }
+        }
+        catch (err) { console.log(err) }
+    }
 
     return (
         <div className="w-full h-screen">
@@ -132,7 +107,8 @@ function Main() {
                                     <td className="px-4 py-2 border border-gray-300">{value.price}</td>
                                     <td className="px-4 py-2 border border-gray-300">{value.width}X{value.height}</td>
                                     <td className="px-4 py-2 border border-gray-300">
-                                        <button className="px-3 py-1 w-32 h-10 font-bold text-md bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none"
+                                        <button
+                                            className="px-3 py-1 w-32 h-10 font-bold text-md bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none"
                                             onClick={() => {
                                                 setEdit(true);
                                                 setEditPriceData({
@@ -144,10 +120,9 @@ function Main() {
                                                     price: value.price,
                                                 });
                                                 setPrice_id(value.price_id)
-                                                // updatePrice()
-
                                             }}
                                         >
+                                            <FontAwesomeIcon icon={faEdit} className="mr-2" />
                                             Edit
                                         </button>
                                     </td>
@@ -155,6 +130,7 @@ function Main() {
                                         <button className="px-3 py-1 w-32 h-10 font-bold text-md bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
                                             onClick={() => { setDeleteId(value.price_id), setIsDelete(true) }}
                                         >
+                                            <FontAwesomeIcon icon={faTrash} className="mr-2" />
                                             Delete
                                         </button>
                                     </td>
@@ -165,9 +141,6 @@ function Main() {
                                 No products found
                             </td>
                         </tr>}
-
-
-
                     </tbody>
                 </table>
                 {edit && (

@@ -232,8 +232,8 @@ function Main()
         const formattedDate = `${day}-${month}-${year}`;
         const netTotal = savedData.reduce((total, data) => total + parseFloat(data.totalcost || 0), 0);
         const cgst = parseFloat(netTotal * 18) / 100;
-        const sgst = parseFloat(netTotal * 15) / 100;
-        const igst = parseFloat(netTotal * 10) / 100;
+        const sgst = parseFloat(netTotal * 9) / 100;
+        const igst = parseFloat(netTotal * 9) / 100;
         const gTotal = netTotal + cgst + sgst + igst;
         setCustomer((prev) => ({
             ...prev, date: formattedDate, netTotal, cgst, sgst, igst, gTotal,

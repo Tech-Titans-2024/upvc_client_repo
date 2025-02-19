@@ -1,8 +1,10 @@
 import React, { useReducer } from 'react'
 
-function Edit(props) {
-    // console.log(props.data)
+function Edit(props) 
+{
     const initial = props.data;
+    const [changeData, DisChangeData] = useReducer(handleChangeData, initial);
+
     const handleChangeData = (changeData, action) => {
         switch (action.work) {
             case "changeData":
@@ -10,18 +12,12 @@ function Edit(props) {
             default:
                 return initial
         }
-
     }
+
     const handleSave = () => {
-        props.updateData(changeData); 
+        props.updateData(changeData);
         props.edit(false);
-    };
-    
-
-
-    const [changeData, DisChangeData] = useReducer(handleChangeData, initial);
-
-
+    }
 
     return (
         <div className="fixed inset-0  flex justify-center items-center z-50">
@@ -51,7 +47,6 @@ function Edit(props) {
                     <button
                         type="button"
                         onClick={handleSave}
-                        
                         className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 shadow-md"
                     >
                         Save
@@ -66,8 +61,7 @@ function Edit(props) {
                 </div>
             </div>
         </div>
-
     )
 }
 
-export default Edit
+export default Edit;
