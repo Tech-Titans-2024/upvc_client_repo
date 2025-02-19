@@ -188,13 +188,22 @@ function Main()
     }
 
     const handleSave = () => {
-        if (currentData.product === 'Door') {
+        if (currentData.product === 'Door' || currentData.product === 'Window') {
             if (
                 currentData.brand === '' || currentData.product === '' || currentData.type === '' || 
                 currentData.variant === '' || currentData.width === '' || currentData.height === '' || 
                 currentData.price === '' || currentData.glass === '' || currentData.thickness === ''
-            ) 
-            {
+            ) {
+                alert('Please fill in all required Fields .');
+                return; 
+            }
+        }
+        if (currentData.product === 'Louver') {
+            if (
+                currentData.brand === '' || currentData.product === '' ||
+                currentData.variant === '' || currentData.width === '' || currentData.height === '' || 
+                currentData.price === '' || currentData.glass === '' || currentData.thickness === ''
+            ) {
                 alert('Please fill in all required Fields .');
                 return; 
             }
