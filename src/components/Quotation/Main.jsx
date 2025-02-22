@@ -67,7 +67,7 @@ function Main()
 
     // useEffect(() => { console.log(currentData) }, [currentData]);
     
-    // useEffect(() => { console.log(customer) }, [customer]);
+    useEffect(() => { console.log(customer) }, [customer]);
 
     const handleChange = (event) => { setSelectedStatus(event.target.value) }
 
@@ -192,7 +192,8 @@ function Main()
             if (
                 currentData.brand === '' || currentData.product === '' || currentData.type === '' || 
                 currentData.variant === '' || currentData.width === '' || currentData.height === '' || 
-                currentData.price === '' || currentData.glass === '' || currentData.thickness === ''
+                currentData.price === '' || currentData.glass === '' || currentData.thickness === '' ||
+                currentData.color === ''
             ) {
                 alert('Please fill in all required Fields .');
                 return; 
@@ -202,7 +203,8 @@ function Main()
             if (
                 currentData.brand === '' || currentData.product === '' ||
                 currentData.variant === '' || currentData.width === '' || currentData.height === '' || 
-                currentData.price === '' || currentData.glass === '' || currentData.thickness === ''
+                currentData.price === '' || currentData.glass === '' || currentData.thickness === '' ||
+                currentData.color === ''
             ) {
                 alert('Please fill in all required Fields .');
                 return; 
@@ -220,7 +222,21 @@ function Main()
 
     const handleCustomer = (e) => {
         const { name, value } = e.target;
-        setCustomer((prevState) => ({ ...prevState, [name]: value, }))
+        setCustomer((prevState) => {
+            const updatedCustomer = { ...prevState, [name]: value };
+            if (updatedCustomer.cusState === 'Tamil Nadu') {
+                const cgst = parseFloat(updatedCustomer.netTotal * 18) / 100;
+                const gTotal = parseFloat(updatedCustomer.netTotal) + cgst + parseFloat(updatedCustomer.tpcost);
+                return { ...updatedCustomer, cgst, gTotal };
+            }
+            if (updatedCustomer.cusState === 'Others') {
+                const sgst = parseFloat(updatedCustomer.netTotal * 9) / 100;
+                const igst = parseFloat(updatedCustomer.netTotal * 9) / 100;
+                const gTotal = parseFloat(updatedCustomer.netTotal) + igst + sgst + parseFloat(updatedCustomer.tpcost);
+                return { ...updatedCustomer, sgst, igst, gTotal };
+            }
+            return updatedCustomer;
+        })
     }
 
     useEffect(() => 
@@ -231,12 +247,12 @@ function Main()
         const year = currentDate.getFullYear();
         const formattedDate = `${day}-${month}-${year}`;
         const netTotal = savedData.reduce((total, data) => total + parseFloat(data.totalcost || 0), 0);
-        const cgst = parseFloat(netTotal * 18) / 100;
-        const sgst = parseFloat(netTotal * 9) / 100;
-        const igst = parseFloat(netTotal * 9) / 100;
-        const gTotal = netTotal + cgst + sgst + igst;
+        // const cgst = parseFloat(netTotal * 18) / 100;
+        // const sgst = parseFloat(netTotal * 9) / 100;
+        // const igst = parseFloat(netTotal * 9) / 100;
+        // const gTotal = netTotal + cgst + sgst + igst;
         setCustomer((prev) => ({
-            ...prev, date: formattedDate, netTotal, cgst, sgst, igst, gTotal,
+            ...prev, date: formattedDate, netTotal
         }))
     }, [savedData]);
 

@@ -103,16 +103,16 @@ function Quotation(props)
                                                     <tr>
                                                         <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (18%)</td>
                                                         <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                                                    </tr>
+                                                    </tr> 
                                                 )}
                                                 {props.customer.cusState !== 'Tamil Nadu' && (
                                                     <>
                                                         <tr>
-                                                            <td colSpan="4" className="p-2 border border-black text-right font-bold">SGST (Rs.)</td>
+                                                            <td colSpan="4" className="p-2 border border-black text-right font-bold">SGST (9%)</td>
                                                             <td className="p-2 border border-black text-center font-bold">₹ {props.customer.sgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                                         </tr>
                                                         <tr>
-                                                            <td colSpan="4" className="p-2 border border-black text-right font-bold">IGST (18%)</td>
+                                                            <td colSpan="4" className="p-2 border border-black text-right font-bold">IGST (9%)</td>
                                                             <td className="p-2 border border-black text-center font-bold">₹ {props.customer.igst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                                         </tr>
                                                     </>
@@ -123,7 +123,7 @@ function Quotation(props)
                                                 </tr>
                                                 <tr>
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">Grand Total (Rs.)</td>
-                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.netTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.gTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                                 </tr>
                                             </>
                                         )}

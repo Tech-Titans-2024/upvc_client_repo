@@ -2,6 +2,7 @@ import React from 'react'
 
 function Customer(props) 
 {
+    // console.log(props.customer)
     return (
         <div className='p-5 grid grid-cols-4 gap-7 border-2 border-black rounded-lg py-12 '>
             <div className='flex flex-col gap-4'>
@@ -61,7 +62,7 @@ function Customer(props)
                     {props.salesPersons.map((value, index) => {
                         return <option key={index} value={value.username} >{value.username}</option>
                     })}
-                </select>
+                </select> 
             </div>
             <div className='flex flex-col gap-4'>
                 <label className='font-semibold ml-1 uppercase'>Quotation Id :</label>
