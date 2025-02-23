@@ -23,8 +23,8 @@ function Customer(props)
                     type="text"
                     placeholder=''
                     className="w-full p-3 border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    name='cusAdddress'
-                    value={props.customer.cusAdddress}
+                    name='cusAddress'
+                    value={props.customer.cusAddress}
                     onChange={props.handleCustomer}
                     autoComplete='off'
                 />

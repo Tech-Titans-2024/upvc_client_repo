@@ -4,7 +4,8 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-function Main() {
+function Main() 
+{
     const apiUrl = import.meta.env.VITE_API_URL;
     const [edit, setEdit] = useState(false);
     const [priceData, setPriceData] = useState([]);
@@ -72,12 +73,12 @@ function Main() {
         <div className="w-full h-screen">
             <h1 className="text-black text-3xl font-bold text-center">Price List</h1>
             <div className="w-full h-fit flex justify-between items-center gap-5 py-2">
-                <h1 className="font-bold text-lg">No of Products: {priceData.length}</h1>
+                <h1 className="font-bold text-lg">No of Products : {priceData.length}</h1>
                 <div className="flex gap-5">
                     <input
                         type="text"
-                        placeholder="Search..."
-                        className="w-80 p-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+                        placeholder="Search ..."
+                        className="w-80 p-3 border-2 text-md border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
                         onChange={handleSearch}
                     />
                 </div>
@@ -85,13 +86,13 @@ function Main() {
             <div className="overflow-x-auto">
                 <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg border-collapse">
                     <thead>
-                        <tr className="bg-blue-500 text-white h-16">
-                            <th className="px-4 py-2 border border-gray-300">S No</th>
+                        <tr className="bg-blue-500 text-white text-lg h-16">
+                            <th className="px-4 py-2 border border-gray-300">S. No.</th>
                             <th className="px-4 py-2 border border-gray-300">Category</th>
                             <th className="px-4 py-2 border border-gray-300">Type</th>
                             <th className="px-4 py-2 border border-gray-300">Brand</th>
                             <th className="px-4 py-2 border border-gray-300">Price</th>
-                            <th className="px-4 py-2 border border-gray-300">Sq Ft</th>
+                            <th className="px-4 py-2 border border-gray-300">Sq. Ft.</th>
                             <th className="px-4 py-2 border border-gray-300">Edit</th>
                             <th className="px-4 py-2 border border-gray-300">Delete</th>
                         </tr>
@@ -99,16 +100,16 @@ function Main() {
                     <tbody>
                         {filteredData.length > 0 ? (
                             filteredData.map((value, index) => {
-                                return <tr className="hover:bg-gray-100 h-16 text-center">
+                                return <tr className="hover:bg-gray-100 h-16 text-center text-lg">
                                     <td className="px-4 py-2 border border-gray-300">{index + 1}</td>
                                     <td className="px-4 py-2 border border-gray-300">{value.product}</td>
                                     <td className="px-4 py-2 border border-gray-300">{value.type || value.variant}</td>
                                     <td className="px-4 py-2 border border-gray-300">{value.brand}</td>
                                     <td className="px-4 py-2 border border-gray-300">{value.price}</td>
                                     <td className="px-4 py-2 border border-gray-300">{value.width}X{value.height}</td>
-                                    <td className="px-4 py-2 border border-gray-300">
+                                    <td className="px-2 py-2 border border-gray-300">
                                         <button
-                                            className="px-3 py-1 w-32 h-10 font-bold text-md bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none"
+                                            className="w-32 h-10 font-bold text-md bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none"
                                             onClick={() => {
                                                 setEdit(true);
                                                 setEditPriceData({
@@ -126,8 +127,8 @@ function Main() {
                                             Edit
                                         </button>
                                     </td>
-                                    <td className="px-4 py-2 border border-gray-300">
-                                        <button className="px-3 py-1 w-32 h-10 font-bold text-md bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
+                                    <td className="px-2 py-2 border border-gray-300">
+                                        <button className="w-32 h-10 font-bold text-md bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
                                             onClick={() => { setDeleteId(value.price_id), setIsDelete(true) }}
                                         >
                                             <FontAwesomeIcon icon={faTrash} className="mr-2" />
@@ -138,7 +139,7 @@ function Main() {
                             })
                         ) : <tr>
                             <td colSpan="7" className="px-4 py-2 border border-gray-300 text-center">
-                                No products found
+                                No Products Found
                             </td>
                         </tr>}
                     </tbody>
@@ -147,10 +148,25 @@ function Main() {
                     <Edit edit={setEdit} data={editPriceData} changedData={setChangedData} updateData={updatePrice} />
                 )}
                 {isDelete && (
-                    <div className='w-95 h-50 flex flex-col justify-center items-center bg-amber-600 text-2xl font-bold text-white m-auto inset-0 absolute'>
-                        <span>Are You Sure TO delete</span>
-                        <button onClick={handledelete}>OK</button>
-                        <button onClick={() => setIsDelete(false)}>Cancel</button>
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                        <div className="bg-white w-96 p-6 rounded-lg shadow-lg text-center">
+                            <h2 className="text-xl font-bold mb-4 text-red-600">Confirm Deletion</h2>
+                            <p className="text-lg text-gray-700 mb-6">Are you sure you want to delete this ?</p>
+                            <div className="flex justify-center gap-4">
+                                <button
+                                    onClick={handledelete}
+                                    className="px-5 py-2 text-lg bg-red-500 text-white rounded-lg hover:bg-red-600 shadow-md"
+                                >
+                                    Delete
+                                </button>
+                                <button
+                                    onClick={() => setIsDelete(false)}
+                                    className="px-5 py-2 text-lg bg-gray-300 rounded-lg hover:bg-gray-400 shadow-md"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>

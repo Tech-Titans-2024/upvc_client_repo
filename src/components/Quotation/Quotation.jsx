@@ -5,7 +5,6 @@ function Quotation(props)
 {
     const apiUrl = import.meta.env.VITE_API_URL;
     // console.log(props.savedData)
-
     return (
         <>
             {props.quotation && (
@@ -42,12 +41,22 @@ function Quotation(props)
                                     <tbody>
                                         {props.savedData.map((data, index) => (
                                             <tr key={index} className={`bg-white ${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
-                                                <td className="border border-black">
+                                                <td className="border border-black relative text-center w=[40%] pl-3 ml-2">
                                                     <img
                                                         src={`${apiUrl}${data.image}`}
                                                         alt="Product"
-                                                        className="w-44 h-32 object-cover mx-auto rounded"
+                                                        className="w-44 h-32 object-cover rounded mt-8 mx-auto ml-3"
                                                     />
+                                                    <div className="mt-3 flex justify-center items-center font-bold text-sm mb-4 -ml-6">
+                                                        <span>&lt;------</span>
+                                                        <span className="mx-2"> {data.width} </span>
+                                                        <span>------&gt;</span>
+                                                    </div>
+                                                    <div className="absolute top-1/2 right-[-20px] transform -translate-y-1/2 flex flex-col items-center font-bold text-sm space-y-3.5 -mt-2">
+                                                        <span className="inline-block rotate-90 ml-5 mr-5">&lt;------</span>
+                                                        <span className="text-center ml-5 mr-5"> {data.height} </span>
+                                                        <span className="inline-block rotate-90 ml-5 mr-5">------&gt;</span>
+                                                    </div>
                                                 </td>
                                                 <td className="p-4 text-left border border-black">
                                                     <div>
@@ -103,7 +112,7 @@ function Quotation(props)
                                                     <tr>
                                                         <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (18%)</td>
                                                         <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                                                    </tr> 
+                                                    </tr>
                                                 )}
                                                 {props.customer.cusState !== 'Tamil Nadu' && (
                                                     <>
@@ -134,7 +143,8 @@ function Quotation(props)
                     )}
                 </div>
             )}
-            {/* <div id="PdfDesign" style={{ display: 'none' }}>
+            {/* style={{ display: 'none' }} */}
+            <div id="PdfDesign" >
                 <div id="printDesignContent">
                     <div className="p-8 w-[794px] h-[1036px] border border-black shadow-lg rounded-lg">
                         <div className="flex justify-between items-center border-b-2 border-blue-900">
@@ -165,13 +175,13 @@ function Quotation(props)
                         <div className="flex justify-between items-start mt-5">
                             <div>
                                 <p className="text-sm font-semibold text-blue-600">TO :</p>
-                                <p className="text-sm text-gray-800 mt-2">{props.customer.cus_name || "N/A"}</p>
-                                <p className="text-sm text-gray-700">{props.customer.cus_add || "N/A"}</p>
-                                <p className="text-sm text-gray-700">{props.customer.cus_con || "N/A"}</p>
+                                <p className="text-sm text-gray-800 mt-2">{props.customer.cusName || "N/A"}</p>
+                                <p className="text-sm text-gray-700">{props.customer.cusAddress || "N/A"}</p>
+                                <p className="text-sm text-gray-700">{props.customer.cusContact || "N/A"}</p>
                             </div>
                             <div className="text-right">
                                 <p className="text-sm font-medium text-gray-700">
-                                    <span className="text-sm font-semibold text-blue-600">DATE : {formattedDate}</span> 
+                                    <span className="text-sm font-semibold text-blue-600">DATE : {props.customer.date}</span>
                                 </p>
                             </div>
                         </div>
@@ -202,18 +212,18 @@ function Quotation(props)
                         <div className='mb-6'>
                             <div className='bg-blue-600 text-white font-bold text-lg rounded-t-md pl-4 pb-4'>To</div>
                             <div className='font-semibold uppercase pl-4 pb-4 bg-white border border-gray-300 rounded-b-md'>
-                                <p className='mb-1 mt-2'>{props.customer.cus_name}</p>
-                                <p className='mb-1'>{props.customer.cus_add}</p>
-                                <p className='mb-1'>{props.customer.cus_con}</p>
+                                <p className='mb-1 mt-2'>{props.customer.cusName}</p>
+                                <p className='mb-1'>{props.customer.cusAddress}</p>
+                                <p className='mb-1'>{props.customer.cusContact}</p>
                             </div>
                         </div>
                         <div className='grid grid-cols-1 sm:grid-cols-3 gap-x-4 mb-6'>
                             <div className='bg-blue-600 text-white font-bold text-lg rounded-t-md pl-4 pb-4'>Quotation No</div>
                             <div className='bg-blue-600 text-white font-bold text-lg rounded-t-md pl-4 pb-4'>Salesman Id</div>
                             <div className='bg-blue-600 text-white font-bold text-lg rounded-t-md pl-4 pb-4'>Date</div>
-                            <div className='font-semibold p-2 bg-white border border-gray-300 rounded-b-md pl-4 pb-4'>{props.customer.quotation}</div>
-                            <div className='font-semibold p-2 bg-white border border-gray-300 rounded-b-md pl-4 pb-4'>{props.customer.salesper}</div>
-                            <div className='font-semibold p-2 bg-white border border-gray-300 rounded-b-md pl-4 pb-4'>{formattedDate}</div>
+                            <div className='font-semibold p-2 bg-white border border-gray-300 rounded-b-md pl-4 pb-4'>{props.customer.quotationNo}</div>
+                            <div className='font-semibold p-2 bg-white border border-gray-300 rounded-b-md pl-4 pb-4'>{props.customer.salesPerson}</div>
+                            <div className='font-semibold p-2 bg-white border border-gray-300 rounded-b-md pl-4 pb-4'>{props.customer.date}</div>
                         </div>
                         {props.savedData.length > 0 && (
                             <div className='border-none'>
@@ -283,7 +293,7 @@ function Quotation(props)
                                                     <span>{data.price}</span>
                                                 </td>
                                                 <td className="border-b border-r border-black text-center align-middle m-0">
-                                                    <span>{data.totalPrice}</span>
+                                                    <span>{data.totalcost}</span>
                                                 </td>
                                             </tr>
                                         ))}
@@ -292,15 +302,45 @@ function Quotation(props)
                                                 Net Total (Rs.)
                                             </td>
                                             <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
-                                                ₹ {netTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                ₹ {props.customer.netTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                             </td>
                                         </tr>
+                                        {props.customer.cusState === 'Tamil Nadu' && (
+                                            <tr>
+                                                <td colSpan="4" className="border border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
+                                                    CGST (18%)
+                                                </td>
+                                                <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
+                                                    ₹ {props.customer.cgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                </td>
+                                            </tr>
+                                        )}
+                                        {props.customer.cusState !== 'Tamil Nadu' && (
+                                            <>
+                                                <tr>
+                                                    <td colSpan="4" className="border border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
+                                                        SGST (9%)
+                                                    </td>
+                                                    <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
+                                                        ₹ {props.customer.sgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan="4" className="border border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
+                                                        IGST (9%)
+                                                    </td>
+                                                    <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
+                                                        ₹ {props.customer.igst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </td>
+                                                </tr>
+                                            </>
+                                        )}
                                         <tr>
                                             <td colSpan="4" className="border border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
-                                                GST (18%)
+                                                T.P. Cost (Rs.)
                                             </td>
                                             <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
-                                                ₹ {gst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                ₹ {props.customer.tpcost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                             </td>
                                         </tr>
                                         <tr>
@@ -308,7 +348,7 @@ function Quotation(props)
                                                 Grand Total (Rs.)
                                             </td>
                                             <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
-                                                ₹ {gTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                ₹ {props.customer.gTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -317,7 +357,7 @@ function Quotation(props)
                         )}
                     </div>
                 </div>
-            </div> */}
+            </div>
         </>
     )
 }
