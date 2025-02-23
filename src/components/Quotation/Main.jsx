@@ -256,11 +256,11 @@ function Main()
 
     const handleFinish = async () => {
         const printContent = document.getElementById('printDesignContent');
-        const images = printContent.querySelectorAll('image');
-        const imagePromises = Array.from(images).map((image) => {
+        const images = printContent.querySelectorAll('img');
+        const imagePromises = Array.from(images).map((img) => {
             return new Promise((resolve, reject) => {
-                if (image.complete) { resolve() } 
-                else { image.onload = resolve; image.onerror = reject }
+                if (img.complete) { resolve() } 
+                else { img.onload = resolve; img.onerror = reject }
             })
         })
         try {
