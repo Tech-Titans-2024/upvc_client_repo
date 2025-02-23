@@ -242,7 +242,7 @@ function Quotation(props)
                                             <tr key={index} className={`bg-white ${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
                                                 <td className="border-b border-l border-r border-black text-center align-middle m-0">
                                                     <img
-                                                        src={`${apiUrl}${data.img}`}
+                                                        src={`${apiUrl}${data.image}`}
                                                         alt="Product"
                                                         className="w-44 h-[150px] object-cover mx-auto rounded p-2"
                                                     />
