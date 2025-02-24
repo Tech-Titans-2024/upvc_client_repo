@@ -1,10 +1,13 @@
 import React from 'react';
 import Logo from '../../assets/logo.jpeg';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPhone, faEnvelope, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 
 function Quotation(props) 
 {
     const apiUrl = import.meta.env.VITE_API_URL;
     // console.log(props.savedData)
+    
     return (
         <>
             {props.quotation && (
@@ -143,33 +146,38 @@ function Quotation(props)
                     )}
                 </div>
             )}
-            {/* style={{ display: 'none' }} */}
-            <div id="PdfDesign" >
+            <div id="PdfDesign" style={{ display: 'none' }}>
                 <div id="printDesignContent">
-                    <div className="p-8 w-[794px] h-[1036px] border border-black shadow-lg rounded-lg">
-                        <div className="flex justify-between items-center border-b-2 border-blue-900">
-                            <div className="flex items-center space-x-4">
-                                <img src={Logo} alt="Champion Logo" className="h-40" />
+                    <div className="p-8 w-[794px] h-[1036px] border border-black shadow-lg rounded-lg space-y-2">
+                        <div className="text-center flex justify-center items-center">
+                            <img src={Logo} alt="Champion Logo" className="h-40 text-center" />
+                        </div>
+                        <div className="flex justify-between border-b-2 pb-4 border-blue-900">
+                            <div className='flex item-center justify-center gap-2'>
+                                <div className='flex justify-center items-center mt-2'>
+                                    <FontAwesomeIcon icon={faPhone} className='text-2xl mt-1 pb-2.5' />
+                                </div>
+                                <div className=''>
+                                    <p className='text-sm'>95008 57165</p>
+                                    <p className='text-sm'>90954 78176</p>
+                                </div>
                             </div>
-                            <div className="text-right flex flex-col mb-4 space-y-2">
-                                <p className="text-sm font-medium text-gray-700 space-x-2">
-                                    <span className="font-semibold">
-                                        <i className="fas fa-phone-alt mr-2"></i>Phone :
-                                    </span>
-                                    <span>+91 95008 57165 | +91 90954 78176</span>
-                                </p>
-                                <p className="text-sm font-medium text-gray-700 space-x-2">
-                                    <span className="font-semibold">
-                                        <i className="fas fa-envelope mr-2"></i>Email :
-                                    </span>
+                            <div className='flex item-center justify-center gap-2'>
+                                <div className='flex justify-center items-center mt-3'>
+                                    <FontAwesomeIcon icon={faEnvelope} className='text-2xl mt-1 pb-2' />
+                                </div>
+                                <div className='flex justify-center items-center'>
                                     <span>Championupvc1234@gmail.com</span>
-                                </p>
-                                <p className="text-sm font-medium text-gray-700 space-x-2">
-                                    <span className="font-semibold">
-                                        <i className="fas fa-map-marker-alt mr-2"></i>Address :
-                                    </span>
-                                    <span>No : 108, Madurai Road, Manapparai, Trichy - 621 306</span>
-                                </p>
+                                </div>
+                            </div>
+                            <div className='flex item-center justify-center gap-2'>
+                                <div className='flex justify-center items-center mt-2'>
+                                    <FontAwesomeIcon icon={faMapMarkerAlt} className='text-2xl mt-1 pb-2.5' />
+                                </div>
+                                <div className=''>
+                                    <p className='text-sm'>No : 108, Madurai Road, Manapparai,</p>
+                                    <p className='text-sm'>Trichy - 621 306</p>
+                                </div>
                             </div>
                         </div>
                         <div className="flex justify-between items-start mt-5">
@@ -208,7 +216,7 @@ function Quotation(props)
                             <p className="text-center text-sm font-medium">No: 108, Madurai Road, Manapparai, Trichy - 621 306.</p>
                         </div>
                     </div>
-                    <div className='w-[794px] font-sans text-xs leading-[1.2] mt-1'>
+                    <div className='w-[794px] font-sans text-xs leading-[1.2] mt-1 mb-3'>
                         <div className='mb-6'>
                             <div className='bg-blue-600 text-white font-bold text-lg rounded-t-md pl-4 pb-4'>To</div>
                             <div className='font-semibold uppercase pl-4 pb-4 bg-white border border-gray-300 rounded-b-md'>
@@ -240,12 +248,22 @@ function Quotation(props)
                                     <tbody>
                                         {props.savedData.map((data, index) => (
                                             <tr key={index} className={`bg-white ${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
-                                                <td className="border-b border-l border-r border-black text-center align-middle m-0">
+                                                <td className="border-b border-l border-r border-black text-center align-middle m-0 w=[44%] pl-3 ml-2 relative">
                                                     <img
                                                         src={`${apiUrl}${data.image}`}
                                                         alt="Product"
-                                                        className="w-44 h-[150px] object-cover mx-auto rounded p-2"
+                                                        className="w-28 h-32 object-cover rounded mt-8 mx-auto ml-3"
                                                     />
+                                                    <div className="mt-2 flex justify-center items-center font-bold text-sm mb-4 -ml-6">
+                                                        <span>&lt;------</span>
+                                                        <span className="mx-2"> {data.width} </span>
+                                                        <span>------&gt;</span>
+                                                    </div>
+                                                    <div className="absolute top-1/2 right-[-25px] transform -translate-y-1/2 flex flex-col items-center font-bold text-sm space-y-3.5 -mt-2">
+                                                        <span style={{ display: "inline-block", transform: "rotate(90deg)" }} className="ml-5 mr-5">&lt;------</span>
+                                                        <span style={{ display: "inline-block", transform: "rotate(90deg)" }} className="ml-5 mr-5"> {data.height} </span>
+                                                        <span style={{ display: "inline-block", transform: "rotate(90deg)" }} className="ml-5 mr-5">------&gt;</span>
+                                                    </div>
                                                 </td>
                                                 <td className="border-b border-r border-black p-2 align-middle m-0">
                                                     <div className="flex flex-col gap-1">
@@ -262,7 +280,7 @@ function Quotation(props)
                                                         <div className="flex justify-start">
                                                             <span className="w-[30%] font-semibold text-gray-700">Variant</span>
                                                             <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[65%] ml-1 text-gray-700">{data.varient}</span>
+                                                            <span className="w-[65%] ml-1 text-gray-700">{data.variant}</span>
                                                         </div>
                                                         <div className="flex justify-start">
                                                             <span className="w-[30%] font-semibold text-gray-700">Size</span>
@@ -301,16 +319,16 @@ function Quotation(props)
                                             <td colSpan="4" className="border-l border-r border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
                                                 Net Total (Rs.)
                                             </td>
-                                            <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
+                                            <td className="pb-3 pr-2 border-r border-black text-center font-bold">
                                                 ₹ {props.customer.netTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                             </td>
                                         </tr>
                                         {props.customer.cusState === 'Tamil Nadu' && (
                                             <tr>
-                                                <td colSpan="4" className="border border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
+                                                <td colSpan="4" className="border border-b border-black pb-3 pr-2 align-middle m-0 text-right font-bold border-l border-r">
                                                     CGST (18%)
                                                 </td>
-                                                <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
+                                                <td className="pb-3 pr-2 border-b border-r border-t border-black text-center font-bold">
                                                     ₹ {props.customer.cgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </td>
                                             </tr>
@@ -318,15 +336,15 @@ function Quotation(props)
                                         {props.customer.cusState !== 'Tamil Nadu' && (
                                             <>
                                                 <tr>
-                                                    <td colSpan="4" className="border border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
+                                                    <td colSpan="4" className="border border-r border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
                                                         SGST (9%)
                                                     </td>
-                                                    <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
+                                                    <td className="pb-3 pr-2 border-b border-r border-t border-black text-center font-bold">
                                                         ₹ {props.customer.sgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td colSpan="4" className="border border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
+                                                    <td colSpan="4" className="border border-t-0 border-black pb-3 pr-2 align-middle m-0 text-right font-bold border-r border-l">
                                                         IGST (9%)
                                                     </td>
                                                     <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
@@ -336,7 +354,7 @@ function Quotation(props)
                                             </>
                                         )}
                                         <tr>
-                                            <td colSpan="4" className="border border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
+                                            <td colSpan="4" className="border border-t-0 border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
                                                 T.P. Cost (Rs.)
                                             </td>
                                             <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
@@ -355,6 +373,67 @@ function Quotation(props)
                                 </table>
                             </div>
                         )}
+                    </div>
+                    <div className="pt-1 w-[794px] h-[1036px] space-y-2 [page-break-before:always] avoid-page-break fix-border avoid-split" style={{ pageBreakBefore: "always" }}>
+                        <div className='border border-black shadow-lg rounded-lg px-5 py-3'>
+                            <div className='flex'>
+                                <div className='w-[70%]'>
+                                    <h2 className="text-lg font-semibold mb-2 uppercase">Terms & Conditions :</h2>
+                                    <ul className="pl-2 text-sm text-gray-700 space-y-1 mt-4">
+                                        <li><span className='mr-2'>1.</span><span>Transportation Charges Included</span></li>
+                                        <li><span className='mr-2'>2.</span><span>Kindly fix the grill after installation of UPVC windows</span></li>
+                                        <li><span className='mr-2'>3.</span><span>Necessary scaffolding with platform (if required) & power supply has to be supplied by the client</span></li>
+                                        <li><span className='mr-2'>4.</span><span>Any chipping or alteration has to be done by the client.</span></li>
+                                        <li><span className='mr-2'>5.</span><span>Profile Sticker will be removed at the time of installation else client scope</span></li>
+                                        <li><span className='mr-2'>6.</span><span>Power and scaffolding to be provided by client if necessary.</span></li>
+                                        <li><span className='mr-2'>7.</span><span>Fly - Screen mesh and glasses are not covered under warranty</span></li>
+                                        <li><span className='mr-2'>8.</span><span>All disputes subject to Trichy Jurisdictions</span></li>
+                                        <li><span className='mr-2'>9.</span><span>Quotation will be valid for a period of 15 days</span></li>
+                                    </ul>
+                                </div>
+                                <div className="text-center flex justify-center w-[30%]">
+                                    <img src={Logo} alt="Champion Logo" className="h-40 text-center" />
+                                </div>
+                            </div>
+                            <h2 className="text-lg font-semibold mb-2 mt-4 uppercase">Material Description :</h2>
+                            <div className="flex justify-evenly">
+                                <div className='flex flex-col justify-center items-center mt-3'>
+                                    <h3 className="font-semibold">Profile :</h3>
+                                    <img src={Logo} alt="VEKA" className="h-20 my-2" />
+                                    <p className="text-gray-600">With 20 Years of Warranty</p>
+                                </div>
+                                <div className='flex flex-col justify-center items-center mt-3'>
+                                    <h3 className="font-semibold">Reinforcement Steel:</h3>
+                                    <img src={Logo} alt="AM/NS India" className="h-20 my-2" />
+                                    <p style={{ display: 'none' }}>Champion</p>
+                                </div>
+                            </div>
+                            <div className='flex flex-col justify-center items-center mt-4'>
+                                <h3 className="font-semibold">Accessories:</h3>
+                                <div className="flex space-x-4 my-2">
+                                    <img src={Logo} alt="OBEN" className="h-20" />
+                                    <img src={Logo} alt="KM" className="h-20" />
+                                </div>
+                                <p className="text-gray-600">With 10 Years of Warranty</p>
+                            </div>
+                            <h2 className="text-lg font-semibold mb-2 mt-4 uppercase">Payment Terms :</h2>
+                            <p className="text-gray-700 text-sm ml-3">
+                                All Payments for the Quotation cum Work are to be made in advance. All payments should be made payable by A/c payee Cheque/DD to the account of <b>"CHAMPION UPVC WINDOWS AND DOORS"</b>.
+                            </p>
+                            <h2 className="text-lg font-semibold mb-2 mt-4 uppercase">Bank Details :</h2>
+                            <ul className="text-gray-700 text-sm ml-3">
+                                <p><span className='inline-block w-36 font-bold'>Account Name</span>: <span className='ml-2'>CHAMPION UPVC WINDOWS & DOORS</span></p>
+                                <p><span className='inline-block w-36 font-bold'>Account Number</span>: <span className='ml-2'>5020078986640</span></p>
+                                <p><span className='inline-block w-36 font-bold'>Bank Name</span>: <span className='ml-2'>HDFC Bank</span></p>
+                                <p><span className='inline-block w-36 font-bold'>IFSC</span>: <span className='ml-2'>HDFC0005880</span></p>
+                                <p><span className='inline-block w-36 font-bold'>Branch</span>: <span className='ml-2'>HDFC0005880</span></p>
+                            </ul>
+                            <div className="mt-7 bg-blue-800 text-white p-1 pb-6 pl-2 rounded-md shadow-lg mb-5">
+                                <p className="text-white font-semibold text-sm">
+                                    I hereby accept the estimate as per the above-mentioned price & specifications. I have read & understood the terms & conditions & agree to them.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -32,8 +32,8 @@ function Main()
 
         const fetchType = async () => {
 
-            try {
-                let response;
+            try { let response;
+
                 if (currentData.product === 'Door') {
                     response = await axios.get(`${apiUrl}/api/doorTypes`);
                     setType(response.data);
@@ -63,7 +63,6 @@ function Main()
             catch (err) { console.log("Error Fetching Sales Persons:", err) }
         }
 
-
         const quatationNo = async () => {
             try {
                 const QResponse= await axios.get(`${apiUrl}/api/quotationNo`);
@@ -71,16 +70,14 @@ function Main()
                     let Split_no = QResponse.data.match(/(\D+)(\d+)/)
                     let increament=Number(Split_no[2])+1;
                     let New_Q=Split_no[1]+increament.toString();
-                    setCustomer((prevCustomer) => ({
-                        ...prevCustomer,
-                        quotationNo: New_Q
-                    }));
+                    setCustomer((prevCustomer) => ({ ...prevCustomer,  quotationNo: New_Q }))
                 }
-
-            } catch (err) { console.log("Not Applicable"); }
+            } 
+            catch (err) { console.log("Not Applicable"); }
         }
 
         fetchSalesman();
+
         quatationNo();
 
     }, [apiUrl, currentData.product])
@@ -208,28 +205,28 @@ function Main()
     }
 
     const handleSave = () => {
-        // if (currentData.product === 'Door' || currentData.product === 'Window') {
-        //     if (
-        //         currentData.brand === '' || currentData.product === '' || currentData.type === '' || 
-        //         currentData.variant === '' || currentData.width === '' || currentData.height === '' || 
-        //         currentData.price === '' || currentData.glass === '' || currentData.thickness === '' ||
-        //         currentData.color === ''
-        //     ) {
-        //         alert('Please fill in all required Fields .');
-        //         return; 
-        //     }
-        // }
-        // if (currentData.product === 'Louver') {
-        //     if (
-        //         currentData.brand === '' || currentData.product === '' ||
-        //         currentData.variant === '' || currentData.width === '' || currentData.height === '' || 
-        //         currentData.price === '' || currentData.glass === '' || currentData.thickness === '' ||
-        //         currentData.color === ''
-        //     ) {
-        //         alert('Please fill in all required Fields .');
-        //         return; 
-        //     }
-        // }
+        if (currentData.product === 'Door' || currentData.product === 'Window') {
+            if (
+                currentData.brand === '' || currentData.product === '' || currentData.type === '' || 
+                currentData.variant === '' || currentData.width === '' || currentData.height === '' || 
+                currentData.price === '' || currentData.glass === '' || currentData.thickness === '' ||
+                currentData.color === ''
+            ) {
+                alert('Please fill in all required Fields .');
+                return; 
+            }
+        }
+        if (currentData.product === 'Louver') {
+            if (
+                currentData.brand === '' || currentData.product === '' ||
+                currentData.variant === '' || currentData.width === '' || currentData.height === '' || 
+                currentData.price === '' || currentData.glass === '' || currentData.thickness === '' ||
+                currentData.color === ''
+            ) {
+                alert('Please fill in all required Fields .');
+                return; 
+            }
+        }
         setSavedData((prev) => [...prev, currentData]);
         alert("Data saved successfully");
         setCurrentData((prev) => ({
@@ -271,11 +268,20 @@ function Main()
         }))
     }, [savedData]);
 
-    const handleGetQuotation = () => { setQuotation(true) }
+    const handleGetQuotation = () => { 
+        if (
+            !customer.salesPerson || !customer.cusName || !customer.cusAddress || 
+            !customer.cusState || !customer.cusContact
+        ) {
+            alert('Please fill in all required fields.');
+            return; 
+        }
+        setQuotation(true);
+    }
 
     const handleFinish = async () => {
+
         const printContent = document.getElementById('printDesignContent');
-    
         const elements = printContent.querySelectorAll('*');
         elements.forEach(element => {
             const computedStyle = window.getComputedStyle(element);
@@ -288,27 +294,25 @@ function Main()
             if (computedStyle.borderColor.includes('oklch')) {
                 element.style.borderColor = '#000000'; 
             }
-        });
-    
+        })
+
         const images = printContent.querySelectorAll('img');
         const imagePromises = Array.from(images).map((image) => {
             return new Promise((resolve, reject) => {
-                if (image.complete) {
-                    resolve();
-                } else {
+                if (image.complete) { resolve() } 
+                else {
                     image.onload = resolve;
                     image.onerror = () => {
                         console.error(`Failed to load image: ${image.src}`);
                         resolve(); 
-                    };
+                    }
                     image.crossOrigin = 'anonymous'; 
                 }
-            });
-        });
+            })
+        })
     
         try {
             await Promise.all(imagePromises);
-    
             const options = {
                 margin: 0.1,
                 padding: 0.2,
@@ -327,26 +331,18 @@ function Main()
                     orientation: 'portrait',
                     compress: true,
                 },
-            };
-    
-            await html2pdf().from(printContent).set(options).save();
-            console.log('PDF generated successfully!');
-    
-            const data = { customer, savedData };
-            const response = await axios.post(`${apiUrl}/api/quotationSave`, { data });
-    
-            if (response.status === 200) {
-                alert("The Quotation has been Saved Successfully...");
-            } else {
-                console.error('Failed to send Data to Backend:', response.status);
+                pagebreak: { mode: ['css', 'legacy'] }
             }
     
-        } catch (error) {
-            console.error('Error during PDF generation or data save:', error);
-        }
-    };
-    
-    
+            await html2pdf().from(printContent).set(options).save();
+            const data = { customer, savedData };
+            const response = await axios.post(`${apiUrl}/api/quotationSave`, { data });
+            if (response.status === 200) { alert("The Quotation has been Saved Successfully...") } 
+            else { console.error('Failed to send Data to Backend:', response.status) }
+        } 
+        catch (error) { console.error('Error during PDF generation or data save:', error) }
+    }
+
     return (
         <div className='flex flex-col gap-7 p-3'>
             <span className="text-2xl font-semibold text-white bg-slate-500 py-3 px-5">MEASUREMENTS</span>
