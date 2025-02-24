@@ -62,7 +62,26 @@ function Main()
             }
             catch (err) { console.log("Error Fetching Sales Persons:", err) }
         }
+
+
+        const quatationNo = async () => {
+            try {
+                const QResponse= await axios.get(`${apiUrl}/api/quotationNo`);
+                if(QResponse.data){
+                    let Split_no = QResponse.data.match(/(\D+)(\d+)/)
+                    let increament=Number(Split_no[2])+1;
+                    let New_Q=Split_no[1]+increament.toString();
+                    setCustomer((prevCustomer) => ({
+                        ...prevCustomer,
+                        quotationNo: New_Q
+                    }));
+                }
+
+            } catch (err) { console.log("Not Applicable"); }
+        }
+
         fetchSalesman();
+        quatationNo();
 
     }, [apiUrl, currentData.product])
 
@@ -256,42 +275,78 @@ function Main()
 
     const handleFinish = async () => {
         const printContent = document.getElementById('printDesignContent');
+    
+        const elements = printContent.querySelectorAll('*');
+        elements.forEach(element => {
+            const computedStyle = window.getComputedStyle(element);
+                if (computedStyle.color.includes('oklch')) {
+                element.style.color = '#000000';
+            }
+            if (computedStyle.backgroundColor.includes('oklch')) {
+                element.style.backgroundColor = '#1E88E5';
+            }
+            if (computedStyle.borderColor.includes('oklch')) {
+                element.style.borderColor = '#000000'; 
+            }
+        });
+    
         const images = printContent.querySelectorAll('img');
-        const imagePromises = Array.from(images).map((img) => {
+        const imagePromises = Array.from(images).map((image) => {
             return new Promise((resolve, reject) => {
-                if (img.complete) { resolve() } 
-                else { img.onload = resolve; img.onerror = reject }
-            })
-        })
+                if (image.complete) {
+                    resolve();
+                } else {
+                    image.onload = resolve;
+                    image.onerror = () => {
+                        console.error(`Failed to load image: ${image.src}`);
+                        resolve(); 
+                    };
+                    image.crossOrigin = 'anonymous'; 
+                }
+            });
+        });
+    
         try {
             await Promise.all(imagePromises);
+    
             const options = {
                 margin: 0.1,
                 padding: 0.2,
                 filename: 'Quotation.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 3, 
-                    useCORS: true, 
-                    logging: true, 
-                    letterRendering: true 
+                html2canvas: {
+                    scale: 3,
+                    useCORS: true,
+                    logging: true,
+                    letterRendering: true,
+                    backgroundColor: null, 
                 },
-                jsPDF: { 
-                    unit: 'in', 
-                    format: 'letter', 
-                    orientation: 'portrait', 
-                    compress: true 
+                jsPDF: {
+                    unit: 'in',
+                    format: 'letter',
+                    orientation: 'portrait',
+                    compress: true,
                 },
             };
-            html2pdf().from(document.getElementById('printDesignContent')).set(options).save();
+    
+            await html2pdf().from(printContent).set(options).save();
+            console.log('PDF generated successfully!');
+    
             const data = { customer, savedData };
             const response = await axios.post(`${apiUrl}/api/quotationSave`, { data });
-            if (response.status === 200) { alert("The Quotation has been Saved Successfully...")} 
-            else { console.error('Failed to send Data to Backend:', response.status) }
-        } 
-        catch (error) { console.error('Error:', error) }
-    }
-
+    
+            if (response.status === 200) {
+                alert("The Quotation has been Saved Successfully...");
+            } else {
+                console.error('Failed to send Data to Backend:', response.status);
+            }
+    
+        } catch (error) {
+            console.error('Error during PDF generation or data save:', error);
+        }
+    };
+    
+    
     return (
         <div className='flex flex-col gap-7 p-3'>
             <span className="text-2xl font-semibold text-white bg-slate-500 py-3 px-5">MEASUREMENTS</span>
