@@ -95,7 +95,7 @@ function Summary(props)
                                 const fieldKey = field.toLowerCase().replace(/\s+/g, "");
                                 const fieldValue = editingData[fieldKey];
                                 const disabledFields = ["brand", "product", "type", "variant", "mesh", "frame", "lock"];
-                                return fieldValue ? (
+                                return editingData.hasOwnProperty(fieldKey) ? (
                                     <div key={field} className="space-y-2">
                                         <label className="block text-sm font-bold text-gray-700 tracking-wide">
                                             {field.toUpperCase()} :
