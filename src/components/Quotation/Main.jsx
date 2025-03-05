@@ -358,7 +358,7 @@ function Main()
                     <FontAwesomeIcon icon={faSave} className="text-md mr-2" />
                     SAVE
                 </button>
-            </div>
+            </div>  
             {savedData.length > 0 && (
                 <div className='flex flex-col gap-8'>
                     <h2 className="text-2xl font-semibold text-white bg-slate-500 py-3 px-5">ORDER SUMMARY</h2>

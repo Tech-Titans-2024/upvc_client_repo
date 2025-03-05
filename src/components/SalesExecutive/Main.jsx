@@ -24,7 +24,7 @@ const StaffManage = () =>
             catch (err) { alert("Error in Fetching Sales Persons") }
         }
         fetchSalesPersons();
-    }, []);
+    }, [isDelete]);
 
     const toggleAddModal = () => {
         setFormData({
@@ -99,9 +99,11 @@ const StaffManage = () =>
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`${apiUrl}/api/salespersons/${id}`);
+            await axios.delete(`${apiUrl}/api/salespersons/${DeleteId}`);
             setSalesPersons((prev) => prev.filter((person) => person._id !== id));
             alert("Sales Person deleted successfully.");
+            setIsDelete(false);
+            
         }
         catch (err) {
             alert("Error deleting salesperson.");
@@ -173,7 +175,7 @@ const StaffManage = () =>
             </div>
             {/* Add Modal */}
             {isAddModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                <div className="fixed inset-0 bg-opacity-50 backdrop-blur flex justify-center items-center z-50">
                     <div className="bg-white w-[550px] p-6 rounded-lg shadow-lg">
                         <h2 className="text-xl font-bold mb-6 text-center">ADD SALES PERSON</h2>
                         <form>
@@ -253,7 +255,7 @@ const StaffManage = () =>
             )}
             {/* Edit Modal */}
             {isEditModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                <div className="fixed inset-0 bg-opacity-50 backdrop-blur flex justify-center items-center z-50">
                     <div className="bg-white w-[550px] p-6 rounded-lg shadow-lg">
                         <h2 className="text-xl font-bold mb-6 text-center">EDIT SALES PERSON</h2>
                         <form>
@@ -333,7 +335,7 @@ const StaffManage = () =>
             )}
             {/* Delete Modal */}
             {isDelete && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                <div className="fixed inset-0 bg-opacity-50 backdrop-blur flex justify-center items-center z-50">
                     <div className="bg-white w-96 p-6 rounded-lg shadow-lg text-center">
                         <h2 className="text-xl font-bold mb-4 text-red-600">Confirm Deletion</h2>
                         <p className="text-lg text-gray-700 mb-6">Are you sure you want to delete this ?</p>
