@@ -242,15 +242,17 @@ function Main()
         setCustomer((prevState) => {
             const updatedCustomer = { ...prevState, [name]: value };
             if (updatedCustomer.cusState === 'Tamil Nadu') {
-                const cgst = parseFloat(updatedCustomer.netTotal * 18) / 100;
-                const gTotal = parseFloat(updatedCustomer.netTotal) + cgst + parseFloat(updatedCustomer.tpcost);
-                return { ...updatedCustomer, cgst, gTotal };
+                const cgst = parseFloat(updatedCustomer.netTotal * 9) / 100;
+                const sgst = parseFloat(updatedCustomer.netTotal * 9) / 100;
+
+                const gTotal = parseFloat(updatedCustomer.netTotal) + cgst +sgst+ parseFloat(updatedCustomer.tpcost);
+                return { ...updatedCustomer, cgst,sgst, gTotal };
             }
             if (updatedCustomer.cusState === 'Others') {
-                const sgst = parseFloat(updatedCustomer.netTotal * 9) / 100;
+                const cgst = parseFloat(updatedCustomer.netTotal * 9) / 100;
                 const igst = parseFloat(updatedCustomer.netTotal * 9) / 100;
-                const gTotal = parseFloat(updatedCustomer.netTotal) + igst + sgst + parseFloat(updatedCustomer.tpcost);
-                return { ...updatedCustomer, sgst, igst, gTotal };
+                const gTotal = parseFloat(updatedCustomer.netTotal) + igst + cgst + parseFloat(updatedCustomer.tpcost);
+                return { ...updatedCustomer, cgst, igst, gTotal };
             }
             return updatedCustomer;
         })
@@ -337,7 +339,12 @@ function Main()
             await html2pdf().from(printContent).set(options).save();
             const data = { customer, savedData };
             const response = await axios.post(`${apiUrl}/api/quotationSave`, { data });
-            if (response.status === 200) { alert("The Quotation has been Saved Successfully...") } 
+            if (response.status === 200) { 
+                alert("The Quotation has been Saved Successfully...");
+                window.location.reload();
+            
+
+             } 
             else { console.error('Failed to send Data to Backend:', response.status) }
         } 
         catch (error) { console.error('Error during PDF generation or data save:', error) }

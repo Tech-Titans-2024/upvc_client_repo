@@ -1,13 +1,12 @@
 import React from 'react';
 import Logo from '../../assets/logo.jpeg';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPhone, faEnvelope, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPhone, faEnvelope, faMapMarkerAlt} from "@fortawesome/free-solid-svg-icons";
 
-function Quotation(props) 
-{
+function Quotation(props) {
     const apiUrl = import.meta.env.VITE_API_URL;
     // console.log(props.savedData)
-    
+
     return (
         <>
             {props.quotation && (
@@ -109,33 +108,39 @@ function Quotation(props)
                                             <>
                                                 <tr>
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">Net Total (Rs.)</td>
-                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.netTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                                                 </tr>
                                                 {props.customer.cusState === 'Tamil Nadu' && (
-                                                    <tr>
-                                                        <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (18%)</td>
-                                                        <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                                                    </tr>
+                                                    <>
+                                                        <tr>
+                                                            <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (9%)</td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colSpan="4" className="p-2 border border-black text-right font-bold">SGST (9%)</td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.sgst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                                                        </tr>
+                                                    </>
                                                 )}
                                                 {props.customer.cusState !== 'Tamil Nadu' && (
                                                     <>
                                                         <tr>
-                                                            <td colSpan="4" className="p-2 border border-black text-right font-bold">SGST (9%)</td>
-                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.sgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                            <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (9%)</td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                                                         </tr>
                                                         <tr>
                                                             <td colSpan="4" className="p-2 border border-black text-right font-bold">IGST (9%)</td>
-                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.igst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.igst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                                                         </tr>
                                                     </>
                                                 )}
                                                 <tr>
-                                                    <td colSpan="4" className="p-2 border border-black text-right font-bold">T.P. Cost (Rs.)</td>
-                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.tpcost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                    <td colSpan="4" className="p-2 border border-black text-right font-bold">Transport Cost (Rs.)</td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.tpcost.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                                                 </tr>
                                                 <tr>
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">Grand Total (Rs.)</td>
-                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.gTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.gTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                                                 </tr>
                                             </>
                                         )}
@@ -146,7 +151,7 @@ function Quotation(props)
                     )}
                 </div>
             )}
-            <div id="PdfDesign" style={{ display: 'none' }}>
+            <div id="PdfDesign" style={{display: 'none'}}>
                 <div id="printDesignContent">
                     <div className="p-8 w-[794px] h-[1036px] border border-black shadow-lg rounded-lg space-y-2">
                         <div className="text-center flex justify-center items-center">
@@ -260,9 +265,9 @@ function Quotation(props)
                                                         <span>------&gt;</span>
                                                     </div>
                                                     <div className="absolute top-1/2 right-[-25px] transform -translate-y-1/2 flex flex-col items-center font-bold text-sm space-y-3.5 -mt-2">
-                                                        <span style={{ display: "inline-block", transform: "rotate(90deg)" }} className="ml-5 mr-5">&lt;------</span>
-                                                        <span style={{ display: "inline-block", transform: "rotate(90deg)" }} className="ml-5 mr-5"> {data.height} </span>
-                                                        <span style={{ display: "inline-block", transform: "rotate(90deg)" }} className="ml-5 mr-5">------&gt;</span>
+                                                        <span style={{display: "inline-block", transform: "rotate(90deg)"}} className="ml-5 mr-5">&lt;------</span>
+                                                        <span style={{display: "inline-block", transform: "rotate(90deg)"}} className="ml-5 mr-5"> {data.height} </span>
+                                                        <span style={{display: "inline-block", transform: "rotate(90deg)"}} className="ml-5 mr-5">------&gt;</span>
                                                     </div>
                                                 </td>
                                                 <td className="border-b border-r border-black p-2 align-middle m-0">
@@ -320,27 +325,37 @@ function Quotation(props)
                                                 Net Total (Rs.)
                                             </td>
                                             <td className="pb-3 pr-2 border-r border-black text-center font-bold">
-                                                ₹ {props.customer.netTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                ₹ {props.customer.netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                                             </td>
                                         </tr>
                                         {props.customer.cusState === 'Tamil Nadu' && (
-                                            <tr>
-                                                <td colSpan="4" className="border border-b border-black pb-3 pr-2 align-middle m-0 text-right font-bold border-l border-r">
-                                                    CGST (18%)
-                                                </td>
-                                                <td className="pb-3 pr-2 border-b border-r border-t border-black text-center font-bold">
-                                                    ₹ {props.customer.cgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </td>
-                                            </tr>
-                                        )}
-                                        {props.customer.cusState !== 'Tamil Nadu' && (
                                             <>
+                                                <tr>
+                                                    <td colSpan="4" className="border border-b border-black pb-3 pr-2 align-middle m-0 text-right font-bold border-l border-r">
+                                                        CGST (9%)
+                                                    </td>
+                                                    <td className="pb-3 pr-2 border-b border-r border-t border-black text-center font-bold">
+                                                        ₹ {props.customer.cgst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                                    </td>
+                                                </tr>
                                                 <tr>
                                                     <td colSpan="4" className="border border-r border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
                                                         SGST (9%)
                                                     </td>
                                                     <td className="pb-3 pr-2 border-b border-r border-t border-black text-center font-bold">
-                                                        ₹ {props.customer.sgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                        ₹ {props.customer.sgst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                                    </td>
+                                                </tr>
+                                            </>
+                                        )}
+                                        {props.customer.cusState !== 'Tamil Nadu' && (
+                                            <>
+                                                <tr>
+                                                    <td colSpan="4" className="border border-r border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
+                                                        CGST (9%)
+                                                    </td>
+                                                    <td className="pb-3 pr-2 border-b border-r border-t border-black text-center font-bold">
+                                                        ₹ {props.customer.cgst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -348,17 +363,17 @@ function Quotation(props)
                                                         IGST (9%)
                                                     </td>
                                                     <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
-                                                        ₹ {props.customer.igst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                        ₹ {props.customer.igst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                                                     </td>
                                                 </tr>
                                             </>
                                         )}
                                         <tr>
                                             <td colSpan="4" className="border border-t-0 border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
-                                                T.P. Cost (Rs.)
+                                                Transport Cost (Rs.)
                                             </td>
                                             <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
-                                                ₹ {props.customer.tpcost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                ₹ {props.customer.tpcost.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                                             </td>
                                         </tr>
                                         <tr>
@@ -366,7 +381,7 @@ function Quotation(props)
                                                 Grand Total (Rs.)
                                             </td>
                                             <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
-                                                ₹ {props.customer.gTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                ₹ {props.customer.gTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -374,7 +389,7 @@ function Quotation(props)
                             </div>
                         )}
                     </div>
-                    <div className="pt-1 w-[794px] h-[1036px] space-y-2 [page-break-before:always] avoid-page-break fix-border avoid-split" style={{ pageBreakBefore: "always" }}>
+                    <div className="pt-1 w-[794px] h-[1036px] space-y-2 [page-break-before:always] avoid-page-break fix-border avoid-split" style={{pageBreakBefore: "always"}}>
                         <div className='border border-black shadow-lg rounded-lg px-5 py-3'>
                             <div className='flex'>
                                 <div className='w-[70%]'>
@@ -405,7 +420,7 @@ function Quotation(props)
                                 <div className='flex flex-col justify-center items-center mt-3'>
                                     <h3 className="font-semibold">Reinforcement Steel:</h3>
                                     <img src={Logo} alt="AM/NS India" className="h-20 my-2" />
-                                    <p style={{ display: 'none' }}>Champion</p>
+                                    <p style={{display: 'none'}}>Champion</p>
                                 </div>
                             </div>
                             <div className='flex flex-col justify-center items-center mt-4'>
