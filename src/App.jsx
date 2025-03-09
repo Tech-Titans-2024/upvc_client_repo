@@ -1,6 +1,6 @@
 
-import React, { useEffect } from 'react';
-import { useNavigate, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login/Login';
 import Layout from './components/Layout/Layout';
 import Dashboard from './components/Dashboard/Main';
@@ -18,13 +18,6 @@ import PeriodReport from './components/Report/Period';
 
 function App() 
 {
-	const navigate = useNavigate();
-	useEffect(() => {
-		const token = localStorage.getItem("token");  // Check if logged in
-		if (token) {
-		  navigate("./components/Dashboard/Main");  // Redirect to dashboard
-		}
-	  }, []);
 	return (
 		<Router>
 			<Routes>
