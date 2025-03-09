@@ -22,7 +22,7 @@ function App()
 	useEffect(() => {
 		const token = localStorage.getItem("token");  // Check if logged in
 		if (token) {
-		  navigate("/dashboard");  // Redirect to dashboard
+		  navigate("./components/Dashboard/Main");  // Redirect to dashboard
 		}
 	  }, []);
 	return (
