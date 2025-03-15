@@ -12,7 +12,7 @@ function Summary(props)
         setEditingData({ ...props.savedData[index] });
         setEditingIndex(index);
         setIsPopupOpen(true);
-    }
+    } 
 
     const handleSaveEdit = () => {
         const updatedData = [...props.savedData];
@@ -25,7 +25,7 @@ function Summary(props)
         const { name, value } = e.target;
         setEditingData((prev) => ({ ...prev, [name]: value }));
     }
-
+    
     return (
         <>
             <table className="table-auto border-collapse border-2 border-black">
