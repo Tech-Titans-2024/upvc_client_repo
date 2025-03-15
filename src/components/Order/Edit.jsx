@@ -1,0 +1,405 @@
+import axios from 'axios'
+import React, {useEffect, useState} from 'react'
+
+function Edit(props) {
+    const [edit, setEdit] = useState(false)
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const [position, setPosition] = useState()
+    const [formData, setFormData] = useState({
+        feet: "", // Will store the calculated value
+    });
+    const [quotationNo, setQuoatationNo] = useState()
+    const [unit, setUnit] = useState("feet");
+    // Initialize the state with data
+    useEffect(() => {
+        console.log("Data in useEffect:", props.quotations[props.quotationNo]?.product?.[position]);
+        if (props.quotations[props.quatationNo].product[position]) {
+            setFormData(props.quotations[props.quatationNo].product[position]);
+            // console.log("use",formData);
+
+        }
+        // props.Q_no(props.quotations[props.quatationNo].quotation_no)
+        setQuoatationNo(props.quotations[props.quatationNo].quotation_no)
+
+    }, [props.quotations, props.quotationNo, position]);
+
+    // console.log("formdat", formData);
+    // console.log("no",props.quotations[props.quatationNo].quotation_no);
+    // console.log("pos",props.quotations[props.quatationNo].product[position]);
+
+
+    const handleChange = async (e) => {
+        const { name, value, type } = e.target;
+    
+        if (type === "radio") {
+            setUnit(value); // Update unit selection
+            return;
+        }
+    
+        setFormData((prevData) => {
+            const updatedData = {
+                ...prevData,
+                [name]: value, // Update the changed field
+            };
+    
+            const updatedWidth = parseFloat(updatedData.width) || 0;
+            const updatedHeight = parseFloat(updatedData.height) || 0;
+            const price = parseFloat(updatedData.price) || 0;
+            const quantity = parseFloat(updatedData.quantity) || 1;
+            const addCost = parseFloat(updatedData.adcost) || 0;
+    
+            let updatedArea, areaInFeet, areaInMM;
+    
+            // Area calculation based on selected unit
+            if (unit === 'mm') {
+                areaInMM = updatedWidth * updatedHeight;
+                areaInFeet = areaInMM / (304.8 * 304.8);
+                updatedArea = areaInMM.toFixed(2);
+            } else if (unit === 'feet') {
+                areaInFeet = updatedWidth * updatedHeight;
+                areaInMM = areaInFeet * (304.8 * 304.8);
+                updatedArea = areaInFeet.toFixed(2);
+            }
+    
+            // Calculate total price and total cost
+            const totalQtyPrice = (quantity * price * areaInFeet).toFixed(2);
+            const totalCost = (parseFloat(totalQtyPrice) + addCost).toFixed(2);
+    
+            return {
+                ...updatedData,
+                area: updatedArea,
+                feet: areaInFeet.toFixed(2),
+                totalqtyprice: totalQtyPrice,
+                totalcost: totalCost,
+            };
+        });
+    
+        // Call the API after the state is updated to ensure latest data
+        const priceData = async () => {
+            const response = await axios.post(`${apiUrl}/api/pricelist`, {
+                height: parseFloat(value) || parseFloat(formData.height), // Updated height
+                width: parseFloat(value) || parseFloat(formData.width),   // Updated width
+                selectedProduct: formData.product,
+                selectedType: formData.type,
+                selectedVariant: formData.variant,
+                brand: formData.brand,
+            });
+    
+            if (response.data?.data !== undefined) {
+                const fetchedPrice = parseFloat(response.data.data).toFixed(2);
+                setFormData((prev) => ({
+                    ...prev,
+                    price: fetchedPrice,
+                }));
+            }
+        };
+    
+        // Only call priceData when height or width is changed
+        if (name === "height" || name === "width") {
+            priceData();
+        }
+    };
+    
+    const handleSave = async () => {
+        // Ensure numeric values are correctly formatted
+        const updatedFormData = {
+            ...formData,
+            quantity: Number(formData.quantity),
+            totalqtyprice: Number(formData.totalqtyprice),
+            totalcost: Number(formData.totalcost),
+            area: Number(formData.area),
+            feet: Number(formData.feet)
+        };
+
+        try {
+            const response = await axios.post(`${apiUrl}/api/editsaveqtn`, {
+                formData: updatedFormData,  // Send the cleaned data
+                quotationNo,
+                position
+            });
+
+            if (response.status === 200) {
+                alert(response.data.message);
+            } else {
+                alert("Error occurred while updating.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Failed to update product.");
+        }
+        setEdit(false)
+    };
+
+    // console.log("ADAT",props.quotations[props.quatationNo].product[position])
+    return (
+        <>
+            <>
+                <div className="fixed inset-0 bg-transparent bg-opacity-60 backdrop-blur-md flex justify-center items-center z-1">
+                    <div className="bg-white p-8 rounded-2xl shadow-2xl w-11/12 max-w-6xl">
+                        <div className="max-h-[500px] overflow-y-auto">
+                            <label htmlFor="" onClick={() => props.isEdit(false)}>X</label>
+
+                            <table className="table-auto w-full border-collapse border-2 border-black">
+                                <thead>
+                                    <tr className="bg-orange-300 h-14">
+                                        <th className="border-2 border-black px-4 py-2 uppercase font-bold">Brand</th>
+                                        <th className="border-2 border-black px-4 py-2 uppercase font-bold">Type</th>
+                                        <th className="border-2 border-black px-4 py-2 uppercase font-bold">Variant</th>
+                                        <th className="border-2 border-black px-4 py-2 uppercase font-bold">Width</th>
+                                        <th className="border-2 border-black px-4 py-2 uppercase font-bold">Height</th>
+                                        <th className="border-2 border-black px-4 py-2 uppercase font-bold">Total</th>
+                                        <th className="border-2 border-black px-4 py-2 uppercase font-bold" colSpan={2}>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {props.quotations[props.quatationNo].product.map((value, index) => (
+                                        <tr key={index}>
+                                            <td className="border-2 border-black font-bold py-3 text-center">{value.brand}</td>
+                                            <td className="border-2 border-black font-bold py-3 text-center">{value.type}</td>
+                                            <td className="border-2 border-black font-bold py-3 text-center">{value.variant}</td>
+                                            <td className="border-2 border-black font-bold py-3 text-center">{value.width}</td>
+                                            <td className="border-2 border-black font-bold py-3 text-center">{value.height}</td>
+                                            <td className="border-2 border-black font-bold py-3 text-center">{value.totalcost}</td>
+                                            <td className="border-2 border-black font-bold w-[12%] p-2">
+                                                <button className="bg-blue-500 text-white text-lg w-[100%] py-2.5 rounded-lg" onClick={() => {setEdit(true), setPosition(index)}}>Edit</button>
+                                            </td>
+                                            <td className="border-2 border-black font-bold w-[12%] p-2">
+                                                <button className="bg-red-500 text-white text-lg w-[100%] py-2.5 rounded-lg">Delete</button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </>
+
+
+            {edit && (
+                <div className='fixed z-50 top-0 left-0 w-full h-full flex items-center justify-center bg-transparent bg-opacity-30 backdrop-blur-md'>
+                    <div className='flex flex-col border-2 border-black rounded-lg bg-white bg-opacity-80 p-5 relative'>
+                        <label className='absolute top-3 right-3 text-black cursor-pointer' onClick={() => setEdit(false)}>X</label>
+                        <div className="grid grid-cols-5 gap-7 gap-y-10 p-7 border-b-2 border-black py-12">
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Brand : </label>
+                                <input type="text" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.brand || ""}
+                                    readOnly
+                                />
+
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Product : </label>
+                                <input type="text" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.product || ""}
+                                    readOnly
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Type : </label>
+
+                                <input type="text" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.type || ""}
+                                    readOnly
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Variant : </label>
+                                <input type="text" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.variant || ""}
+                                    readOnly
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Mesh : </label>
+                                <input type="text" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.mesh || ""}
+                                    readOnly
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Frame Series : </label>
+                                <input
+                                    type="text"
+                                    className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.frame || ""} // Ensure it's set to an empty string by default
+                                    name='frame'
+                                    disabled={!formData.frame?.trim()} // Disable if empty or blank space
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Lock Type : </label>
+                                <input type="text" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.lock || ""}
+                                    name='lock'
+                                    onChange={handleChange}
+
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Unit:</label>
+                                <div className="flex gap-4">
+                                    <label className="flex items-center gap-2">
+                                        <input
+                                            type="radio"
+                                            name="unit"
+                                            value="feet"
+                                            checked={unit === "feet"}
+                                            onChange={handleChange}
+                                        />
+                                        Feet
+                                    </label>
+                                    <label className="flex items-center gap-2">
+                                        <input
+                                            type="radio"
+                                            name="unit"
+                                            value="mm"
+                                            checked={unit === "mm"}
+                                            onChange={handleChange}
+                                        />
+                                        mm
+                                    </label>
+                                </div>
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Width : </label>
+                                <input type="number" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.width || ""}
+                                    name='width'
+                                    onChange={handleChange}
+
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Height : </label>
+                                <input type="number" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.height || ""}
+                                    name='height'
+                                    onChange={handleChange}
+
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">
+                                    {unit === "feet" ? "Sq Ft" : "Sq M"}:
+                                </label>
+                                <input
+                                    type="text"
+                                    className="w-full p-3 bg-gray-200 border-2 border-black rounded-md focus:outline-none"
+                                    value={formData.feet}
+                                    readOnly
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Area : </label>
+                                <input type="text" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.area || ""}
+                                    readOnly
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Price:</label>
+                                <input type="text" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.price || ""}
+                                    name='price'
+                                    onChange={handleChange}
+
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Quantity:</label>
+                                <input type="number" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.quantity || ""}
+                                    name='quantity'
+                                    onChange={handleChange}
+                                    onWheel={(e) => e.target.blur()}
+
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Total Price:</label>
+                                <input type="text" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.totalqtyprice || ""}
+                                    readOnly
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Glass : </label>
+                                <select className="w-full p-3 bg-white border-2 border-black rounded-md"
+                                    value={formData.glass || ""}
+                                    name='glass'
+                                    onChange={handleChange}
+
+                                >
+
+
+                                    <option className='p-2 text-md'>Select</option>
+                                    <option className='p-2 text-md'>Normal Glass</option>
+                                    <option className='p-2 text-md'>Toughened Glass</option>
+                                </select>
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Glass Thickness : </label>
+                                <input type="text" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.thickness || ""}
+                                    name='thickness'
+                                    onChange={handleChange}
+
+
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">COLOUR : </label>
+                                <select className="w-full p-3 bg-white border-2 border-black rounded-md"
+                                    value={formData.color || ""}
+                                    name='color'
+                                    onChange={handleChange}
+
+                                >
+
+                                    <option className='p-2 text-md'>Select</option>
+                                    <option className='p-2 text-md'>Mahogany</option>
+                                    <option className='p-2 text-md'>White</option>
+                                    <option className='p-2 text-md'>Rustic Oak</option>
+                                    <option className='p-2 text-md'>Golden Oak</option>
+                                    <option className='p-2 text-md'>Black</option>
+                                    <option className='p-2 text-md'>Anthracite Grey</option>
+                                    <option className='p-2 text-md'>Walnut</option>
+                                </select>
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">Addl Cost : </label>
+                                <input type="text" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.adcost || ""}
+                                    name='adcost'
+                                    onChange={handleChange}
+
+                                />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase ">Total Cost : </label>
+                                <input type="text" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                    value={formData.totalcost || ""}
+                                    name='frame'
+                                    onChange={handleChange}
+
+                                />
+                            </div>
+                            <button onClick={handleSave}>Save</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
+
+        </>
+    )
+
+
+
+}
+
+export default Edit

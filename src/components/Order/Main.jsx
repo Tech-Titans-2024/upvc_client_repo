@@ -1,26 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCheck, faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
+import Edit from './Edit';
 
-function Main() 
-{
+function Main() {
     const [quotations, setQuotations] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState('Unconfirmed');
+    const [edit, setEdit] = useState(false);
+    const [quotationPos, setQuotationPos] = useState()
+    const [quataion_no, setQuotation_no] = useState()
+    const [productPos, setProductPos] = useState()
+    const [isDelete, setIsDelete] = useState(false)
+    const [deleteId, setDeleteId] = useState()
     const apiUrl = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchQuotationDetails = async () => {
             try {
-                const response = await axios.post(`${apiUrl}/api/quotationsDetails`, { selectedStatus });
+                const response = await axios.post(`${apiUrl}/api/quotationsDetails`, {selectedStatus});
                 setQuotations(response.data);
             }
-            catch (error) { console.error(error) }
+            catch (error) {console.error(error)}
         }
         fetchQuotationDetails()
     }, [apiUrl, selectedStatus])
 
-    const handleChange = (event) => { setSelectedStatus(event.target.value) }
+    const handleChange = (event) => {setSelectedStatus(event.target.value)}
+
+    // console.log("pro pos", quataion_no);
 
     const confirmOrder = async (order) => {
         try {
@@ -28,7 +36,23 @@ function Main()
             alert('Order Confirmed successfully!');
             window.location.reload();
         }
-        catch (error) { console.error(error) }
+        catch (error) {console.error(error)}
+    }
+
+
+    const handledelete=async()=>{
+        try{
+            const response=await axios.post(`${apiUrl}/api/deleteQuotation`,{deleteId})
+            if(response.data.status === 200){
+                alert(response.data)
+            }
+            else{
+                alert("Quotation Not deleted")
+            }
+        }catch(err){
+            console.log("error in delete quotation",err);
+            
+        }
     }
 
     return (
@@ -106,6 +130,7 @@ function Main()
                                     <td className="px-4 py-2 border border-gray-300">
                                         <button
                                             className="px-3 py-1 w-32 h-10 font-bold text-md bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none"
+                                            onClick={() => {setEdit(true), setQuotationPos(index)}}
                                         >
                                             <FontAwesomeIcon icon={faEdit} className="mr-2" />
                                             Edit
@@ -114,6 +139,10 @@ function Main()
                                     <td className="px-4 py-2 border border-gray-300">
                                         <button
                                             className="px-3 py-1 w-32 h-10 font-bold text-md bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
+                                            onClick={() => {
+                                                setIsDelete(true), setDeleteId(quotation.
+                                                    quotation_no)
+                                            }}
                                         >
                                             <FontAwesomeIcon icon={faTrash} className="mr-2" />
                                             Delete
@@ -133,6 +162,33 @@ function Main()
                         )}
                     </tbody>
                 </table>
+            )}
+
+            {edit && (
+                <Edit isEdit={setEdit} quotations={quotations} quatationNo={quotationPos} Q_no={quataion_no} productPos={productPos} />
+            )}
+
+            {isDelete && (
+                <div className="fixed inset-0 bg-opacity-50 backdrop-blur flex justify-center items-center z-50">
+                    <div className="bg-white w-96 p-6 rounded-lg shadow-lg text-center">
+                        <h2 className="text-xl font-bold mb-4 text-red-600">Confirm Deletion</h2>
+                        <p className="text-lg text-gray-700 mb-6">Are you sure you want to delete this ?</p>
+                        <div className="flex justify-center gap-4">
+                            <button
+                                onClick={handledelete}
+                                className="px-5 py-2 text-lg bg-red-500 text-white rounded-lg hover:bg-red-600 shadow-md"
+                            >
+                                Delete
+                            </button>
+                            <button
+                                onClick={() => setIsDelete(false)}
+                                className="px-5 py-2 text-lg bg-gray-300 rounded-lg hover:bg-gray-400 shadow-md"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     )

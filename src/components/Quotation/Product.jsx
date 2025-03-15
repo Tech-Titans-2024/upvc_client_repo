@@ -55,6 +55,7 @@ function Product(props)
                             <option key={index}>{variantItem}</option>
                         ))}
                     </select>
+                        
                 </div>
                 {(props.currentData.product === 'Window' || props.currentData.product === 'Louver') && (
                     <>
