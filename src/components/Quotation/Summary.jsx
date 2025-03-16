@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faTimes, faSave } from '@fortawesome/free-solid-svg-icons';
+import React, {useState} from 'react';
+import axios from 'axios';
 
-function Summary(props) 
-{
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faEdit, faTrash, faTimes, faSave} from '@fortawesome/free-solid-svg-icons';
+
+function Summary(props) {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [editingData, setEditingData] = useState(null);
+    // const [editingData, setEditingData] = useState(null);
     const [editingIndex, setEditingIndex] = useState(null);
+    const [editingData, setEditingData] = useState({
+        width: "",
+        height: "",
+        area: "",
+        feet: "",
+        unit: "feet", // Default unit
+    });
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const handleEditRow = (index) => {
-        setEditingData({ ...props.savedData[index] });
+        setEditingData({...props.savedData[index]});
         setEditingIndex(index);
         setIsPopupOpen(true);
-    } 
+    }
 
     const handleSaveEdit = () => {
         const updatedData = [...props.savedData];
@@ -21,11 +30,92 @@ function Summary(props)
         setIsPopupOpen(false);
     }
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setEditingData((prev) => ({ ...prev, [name]: value }));
-    }
-    
+    // const calculateTotalQtyPrice = (feet, price, quantity) => {
+    //     return (parseFloat(feet) * parseFloat(price) * parseFloat(quantity)).toFixed(2);
+    // };
+
+    // const calculateTotalQtyPrice = (data) => {
+    //     const feet = parseFloat(data.feet) || 0;
+    //     const price = parseFloat(data.price) || 0;
+    //     const quantity = parseFloat(data.quantity) || 0;
+
+    //     return (feet * price * quantity).toFixed(2);
+    // };
+
+
+    const calculateTotalQtyPrice = (data) => {
+        const feet = isNaN(parseFloat(data.feet)) ? 0 : parseFloat(data.feet);
+        const price = isNaN(parseFloat(data.price)) ? 0 : parseFloat(data.price);
+        const quantity = isNaN(parseFloat(data.quantity)) ? 0 : parseFloat(data.quantity);
+
+        return (feet * price * quantity).toFixed(2);
+    };
+
+    const handleChange = async (e) => {
+        const {name, value} = e.target;
+
+        const updatedData = {
+            ...editingData,
+            [name]: value,
+        };
+
+        // Handle changes for width, height, and unit
+        if (["width", "height", "unit"].includes(name)) {
+            const width = parseFloat(updatedData.width) || 0;
+            const height = parseFloat(updatedData.height) || 0;
+
+            if (updatedData.unit === "feet") {
+                updatedData.feet = (width * height).toFixed(2);
+            } else if (updatedData.unit === "mm") {
+                const widthInFeet = width / 304.8;
+                const heightInFeet = height / 304.8;
+                updatedData.feet = (widthInFeet * heightInFeet).toFixed(2);
+            }
+        }
+
+        // Recalculate totalQtyPrice whenever relevant fields change
+        if (["price", "feet", "quantity", "width", "height", "unit"].includes(name)) {
+            updatedData.totalQtyPrice = calculateTotalQtyPrice(updatedData);
+        }
+
+        setEditingData(updatedData);
+
+        // Fetch price dynamically when width or height changes
+        if (["width", "height"].includes(name)) {
+            try {
+                const response = await axios.post(`${apiUrl}/api/pricelist`, {
+                    height: updatedData.height,
+                    width: updatedData.width,
+                    selectedProduct: updatedData.product,
+                    selectedType: updatedData.type,
+                    selectedVariant: updatedData.variant,
+                    brand: updatedData.brand,
+                });
+
+                if (response.data?.data !== undefined) {
+                    const fetchedPrice = parseFloat(response.data.data) || 0;
+
+                    setEditingData((prev) => ({
+                        ...prev,
+                        price: fetchedPrice,
+                        totalQtyPrice: calculateTotalQtyPrice({
+                            ...prev,
+                            price: fetchedPrice,
+                        }),
+                    }));
+                    console.log(editingData.totalQtyPrice)
+                }
+            } catch (error) {
+                console.error("Error fetching price:", error);
+            }
+        }
+    };
+
+
+
+
+
+
     return (
         <>
             <table className="table-auto border-collapse border-2 border-black">
@@ -95,18 +185,43 @@ function Summary(props)
                                 const fieldKey = field.toLowerCase().replace(/\s+/g, "");
                                 const fieldValue = editingData[fieldKey];
                                 const disabledFields = ["brand", "product", "type", "variant", "mesh", "frame", "lock"];
+
                                 return editingData.hasOwnProperty(fieldKey) ? (
                                     <div key={field} className="space-y-2">
+                                        {field === "Width" && (
+                                            <div className="flex space-x-4">
+                                                <label>
+                                                    <input
+                                                        type="radio"
+                                                        name="unit"
+                                                        value="feet"
+                                                        checked={editingData.unit === "feet"}
+                                                        onChange={handleChange}
+                                                    /> Feet
+                                                </label>
+                                                <label>
+                                                    <input
+                                                        type="radio"
+                                                        name="unit"
+                                                        value="mm"
+                                                        checked={editingData.unit === "mm"}
+                                                        onChange={handleChange}
+                                                    /> MM
+                                                </label>
+                                            </div>
+                                        )}
+
                                         <label className="block text-sm font-bold text-gray-700 tracking-wide">
                                             {field.toUpperCase()} :
                                         </label>
+
                                         <input
                                             type="text"
                                             name={fieldKey}
                                             value={fieldValue || ""}
                                             onChange={handleChange}
                                             disabled={disabledFields.includes(fieldKey)}
-                                            className="w-full border border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm"
+                                            className={`w-full border border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm`}
                                             placeholder={`Enter ${field}`}
                                         />
                                     </div>
