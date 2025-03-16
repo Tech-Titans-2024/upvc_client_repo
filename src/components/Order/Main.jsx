@@ -1,50 +1,52 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck, faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Edit from './Edit';
 
 function Main() {
     const [quotations, setQuotations] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState('Unconfirmed');
     const [edit, setEdit] = useState(false);
-    const [quotationPos, setQuotationPos] = useState()
-    const [quataion_no, setQuotation_no] = useState()
-    const [productPos, setProductPos] = useState()
-    const [isDelete, setIsDelete] = useState(false)
-    const [deleteId, setDeleteId] = useState()
+    const [quotationPos, setQuotationPos] = useState();
+    const [quataion_no, setQuotation_no] = useState();
+    const [productPos, setProductPos] = useState();
+    const [isDelete, setIsDelete] = useState(false);
+    const [deleteId, setDeleteId] = useState();
+    const [searchTerm, setSearchTerm] = useState(''); // Added for search functionality
     const apiUrl = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchQuotationDetails = async () => {
             try {
-                const response = await axios.post(`${apiUrl}/api/quotationsDetails`, {selectedStatus});
+                const response = await axios.post(`${apiUrl}/api/quotationsDetails`, { selectedStatus });
                 setQuotations(response.data);
+            } catch (error) {
+                console.error(error);
             }
-            catch (error) {console.error(error)}
-        }
-        fetchQuotationDetails()
-    }, [apiUrl, selectedStatus,isDelete,edit])
+        };
+        fetchQuotationDetails();
+    }, [apiUrl, selectedStatus, isDelete, edit]);
 
-    const handleChange = (event) => {setSelectedStatus(event.target.value)}
-
-    // console.log("pro pos", quataion_no);
+    const handleChange = (event) => {
+        setSelectedStatus(event.target.value);
+    };
 
     const confirmOrder = async (order) => {
         try {
             await axios.post(`${apiUrl}/api/orderConfirm`, order);
             alert('Order Confirmed successfully!');
             window.location.reload();
+        } catch (error) {
+            console.error(error);
         }
-        catch (error) {console.error(error)}
-    }
-
+    };
 
     const handleDelete = async () => {
         try {
             const response = await axios.post(`${apiUrl}/api/deleteQuotation`, { deleteId });
             if (response.status === 200) {
-                alert(response.data.message); // Correctly alerts the message
+                alert(response.data.message);
                 setIsDelete(false);
             } else {
                 alert("Quotation Not deleted");
@@ -54,7 +56,14 @@ function Main() {
             alert("An error occurred while deleting the quotation.");
         }
     };
-    
+
+    // Filter quotations based on search term
+    const filteredQuotations = quotations.filter(quotation =>
+        quotation.quotation_no.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        quotation.cus_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        quotation.cus_address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        quotation.cus_contact.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="w-full h-full bg-white p-2">
@@ -65,6 +74,8 @@ function Main() {
                     type="text"
                     placeholder="Search..."
                     className="w-80 p-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+                    value={searchTerm} // Bind search term
+                    onChange={(e) => setSearchTerm(e.target.value)} // Update search term
                 />
             </div>
             <div className="mb-4 flex items-center gap-3">
@@ -108,8 +119,8 @@ function Main() {
                         </tr>
                     </thead>
                     <tbody>
-                        {quotations.length > 0 ? (
-                            quotations.map((quotation, index) => (
+                        {filteredQuotations.length > 0 ? ( // Use filteredQuotations instead of quotations
+                            filteredQuotations.map((quotation, index) => (
                                 <tr key={index} className="uppercase text-center hover:bg-gray-100">
                                     <td className="px-4 py-2 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.quotation_no}</td>
                                     <td className="px-4 py-2 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.date}</td>
@@ -131,7 +142,7 @@ function Main() {
                                     <td className="px-4 py-2 border border-gray-300">
                                         <button
                                             className="px-3 py-1 w-32 h-10 font-bold text-md bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none"
-                                            onClick={() => {setEdit(true), setQuotationPos(index)}}
+                                            onClick={() => { setEdit(true), setQuotationPos(index) }}
                                         >
                                             <FontAwesomeIcon icon={faEdit} className="mr-2" />
                                             Edit
@@ -141,8 +152,7 @@ function Main() {
                                         <button
                                             className="px-3 py-1 w-32 h-10 font-bold text-md bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
                                             onClick={() => {
-                                                setIsDelete(true), setDeleteId(quotation.
-                                                    quotation_no)
+                                                setIsDelete(true), setDeleteId(quotation.quotation_no)
                                             }}
                                         >
                                             <FontAwesomeIcon icon={faTrash} className="mr-2" />
@@ -192,7 +202,7 @@ function Main() {
                 </div>
             )}
         </div>
-    )
+    );
 }
 
-export default Main
+export default Main;

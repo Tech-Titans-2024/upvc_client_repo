@@ -10,6 +10,7 @@ const Main = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [formData, setFormData] = useState({ cus_name: "", cus_contact: "", cus_address: "" });
+  const [searchTerm, setSearchTerm] = useState(""); // Added for search functionality
 
   useEffect(() => {
     const fetchCustomer = async () => {
@@ -69,6 +70,13 @@ const Main = () => {
     }
   };
 
+  // Filter customers based on search term
+  const filteredCustomers = cusDetails.filter((customer) =>
+    customer.cus_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    customer.cus_contact.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    customer.cus_address.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="w-full h-screen bg-gray-100 p-6">
       <h1 className="text-black text-3xl font-bold text-center mb-6">Customer Details</h1>
@@ -83,6 +91,8 @@ const Main = () => {
             type="text"
             placeholder="Search ..."
             className="w-80 p-3 border-2 text-md border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500"
+            value={searchTerm} // Bind search term
+            onChange={(e) => setSearchTerm(e.target.value)} // Update search term
           />
         </div>
       </div>
@@ -103,7 +113,7 @@ const Main = () => {
 
           {/* Table Body */}
           <tbody>
-            {cusDetails.map((item, index) => (
+            {filteredCustomers.map((item, index) => ( // Use filteredCustomers instead of cusDetails
               <tr
                 key={index}
                 className="text-gray-700 text-md h-12 even:bg-gray-100 hover:bg-blue-100 transition duration-200"
