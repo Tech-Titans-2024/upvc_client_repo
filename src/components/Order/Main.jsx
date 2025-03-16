@@ -21,12 +21,11 @@ function Main() {
             try {
                 const response = await axios.post(`${apiUrl}/api/quotationsDetails`, { selectedStatus });
                 setQuotations(response.data);
-            } catch (error) {
-                console.error(error);
             }
-        };
-        fetchQuotationDetails();
-    }, [apiUrl, selectedStatus, isDelete, edit]);
+            catch (error) {console.error(error)}
+        }
+        fetchQuotationDetails()
+    }, [apiUrl, selectedStatus, isDelete, edit])
 
     const handleChange = (event) => {
         setSelectedStatus(event.target.value);
@@ -44,7 +43,7 @@ function Main() {
 
     const handleDelete = async () => {
         try {
-            const response = await axios.post(`${apiUrl}/api/deleteQuotation`, { deleteId });
+            const response = await axios.post(`${apiUrl}/api/deleteQuotation`, {deleteId});
             if (response.status === 200) {
                 alert(response.data.message);
                 setIsDelete(false);
@@ -56,6 +55,7 @@ function Main() {
             alert("An error occurred while deleting the quotation.");
         }
     };
+
 
     // Filter quotations based on search term
     const filteredQuotations = quotations.filter(quotation =>
@@ -114,8 +114,8 @@ function Main() {
                             <th className="border border-gray-300 py-6 px-4 w-32 whitespace-nowrap overflow-hidden text-ellipsis">Address</th>
                             <th className="border border-gray-300 py-6 px-4 whitespace-nowrap overflow-hidden text-ellipsis">Contact No</th>
                             {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-6 px-4">Confirm</th>}
-                            <th className="border border-gray-300 py-6 px-4">Edit</th>
-                            <th className="border border-gray-300 py-6 px-4">Delete</th>
+                            {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-6 px-4">Edit</th>}
+                            {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-6 px-4">Delete</th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -129,36 +129,40 @@ function Main() {
                                     <td className="px-4 py-2 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.cus_address}</td>
                                     <td className="px-4 py-2 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.cus_contact}</td>
                                     {selectedStatus === "Unconfirmed" && (
-                                        <td className="px-4 py-2 border border-gray-300">
-                                            <button
-                                                className="px-3 py-1 w-32 h-10 font-bold text-md bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none"
-                                                onClick={() => confirmOrder(quotation)}
-                                            >
-                                                <FontAwesomeIcon icon={faCheck} className="mr-2" />
-                                                Confirm
-                                            </button>
-                                        </td>
+                                        <>
+                                            <td className="px-4 py-2 border border-gray-300">
+                                                <button
+                                                    className="px-3 py-1 w-32 h-10 font-bold text-md bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none"
+                                                    onClick={() => confirmOrder(quotation)}
+                                                >
+                                                    <FontAwesomeIcon icon={faCheck} className="mr-2" />
+                                                    Confirm
+                                                </button>
+                                            </td>
+                                            <td className="px-4 py-2 border border-gray-300">
+                                                <button
+                                                    className="px-3 py-1 w-32 h-10 font-bold text-md bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none"
+                                                    onClick={() => {setEdit(true), setQuotationPos(index)}}
+                                                >
+                                                    <FontAwesomeIcon icon={faEdit} className="mr-2" />
+                                                    Edit
+                                                </button>
+                                            </td>
+                                            <td className="px-4 py-2 border border-gray-300">
+                                                <button
+                                                    className="px-3 py-1 w-32 h-10 font-bold text-md bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
+                                                    onClick={() => {
+                                                        setIsDelete(true), setDeleteId(quotation.
+                                                            quotation_no)
+                                                    }}
+                                                >
+                                                    <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </>
                                     )}
-                                    <td className="px-4 py-2 border border-gray-300">
-                                        <button
-                                            className="px-3 py-1 w-32 h-10 font-bold text-md bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none"
-                                            onClick={() => { setEdit(true), setQuotationPos(index) }}
-                                        >
-                                            <FontAwesomeIcon icon={faEdit} className="mr-2" />
-                                            Edit
-                                        </button>
-                                    </td>
-                                    <td className="px-4 py-2 border border-gray-300">
-                                        <button
-                                            className="px-3 py-1 w-32 h-10 font-bold text-md bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
-                                            onClick={() => {
-                                                setIsDelete(true), setDeleteId(quotation.quotation_no)
-                                            }}
-                                        >
-                                            <FontAwesomeIcon icon={faTrash} className="mr-2" />
-                                            Delete
-                                        </button>
-                                    </td>
+                                    
                                 </tr>
                             ))
                         ) : (
