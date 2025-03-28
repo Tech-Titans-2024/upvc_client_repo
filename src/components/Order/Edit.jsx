@@ -8,16 +8,23 @@ function Edit(props) {
     const [formData, setFormData] = useState({
         feet: "", // Will store the calculated value
     });
+    const [totalcost, setTotalCost] = useState();
+    const [productCost, setProductCost] = useState();
     const [quotationNo, setQuoatationNo] = useState()
     const [unit, setUnit] = useState("feet");
     const [customerState, setCustomerState] = useState('Tamil Nadu'); // Default state
     
     // Initialize the state with data
     useEffect(() => {
-        console.log("Data in useEffect:", props.quotations[props.quotationNo]?.product?.[position]);
+        // console.log("Data in useEffect:", props.quotations[props.quotationNo]?.product?.[position]);
         if (props.quotations[props.quatationNo].product[position]) {
             setFormData(props.quotations[props.quatationNo].product[position]);
         }
+        setTotalCost(props.quotations[props.quatationNo].netTotal)
+        // console.log(totalcost)
+        // setProductCost(props.quotations[props.quatationNo].product[position]?.totalcost)
+        // console.log(productCost)
+
         setQuoatationNo(props.quotations[props.quatationNo].quotation_no)
         
         // Get customer state from parent component if available
@@ -48,27 +55,27 @@ function Edit(props) {
     };
 
     const handleChange = async (e) => {
-        const { name, value, type } = e.target;
-    
+        const {name, value, type} = e.target;
+
         if (type === "radio") {
             setUnit(value); // Update unit selection
             return;
         }
-    
+
         setFormData((prevData) => {
             const updatedData = {
                 ...prevData,
                 [name]: value, // Update the changed field
             };
-    
+
             const updatedWidth = parseFloat(updatedData.width) || 0;
             const updatedHeight = parseFloat(updatedData.height) || 0;
             const price = parseFloat(updatedData.price) || 0;
             const quantity = parseFloat(updatedData.quantity) || 1;
             const addCost = parseFloat(updatedData.adcost) || 0;
-    
+
             let updatedArea, areaInFeet, areaInMM;
-    
+
             // Area calculation based on selected unit
             if (unit === 'mm') {
                 areaInMM = updatedWidth * updatedHeight;
@@ -79,14 +86,14 @@ function Edit(props) {
                 areaInMM = areaInFeet * (304.8 * 304.8);
                 updatedArea = areaInFeet.toFixed(2);
             }
-    
+
             // Calculate total price and total cost
             const totalQtyPrice = (quantity * price * areaInFeet).toFixed(2);
             const totalCost = (parseFloat(totalQtyPrice) + addCost).toFixed(2);
             
             // Calculate GST
             const gstCalculations = calculateGST(parseFloat(totalCost));
-            
+        
             return {
                 ...updatedData,
                 area: updatedArea,
@@ -96,7 +103,7 @@ function Edit(props) {
                 ...gstCalculations // Include GST calculations in formData
             };
         });
-    
+
         // Call the API after the state is updated to ensure latest data
         const priceData = async () => {
             const response = await axios.post(`${apiUrl}/api/pricelist`, {
@@ -107,7 +114,7 @@ function Edit(props) {
                 selectedVariant: formData.variant,
                 brand: formData.brand,
             });
-    
+
             if (response.data?.data !== undefined) {
                 const fetchedPrice = parseFloat(response.data.data).toFixed(2);
                 setFormData((prev) => ({
@@ -116,15 +123,16 @@ function Edit(props) {
                 }));
             }
         };
-    
+
         // Only call priceData when height or width is changed
         if (name === "height" || name === "width") {
             priceData();
         }
     };
-    
+
     const handleSave = async () => {
         // Ensure numeric values are correctly formatted
+
         const updatedFormData = {
             ...formData,
             quantity: Number(formData.quantity),
@@ -138,15 +146,35 @@ function Edit(props) {
             gTotal: Number(formData.gTotal || formData.totalcost)
         };
 
+        // const selectedProduct = props.quotations?.[props.quotationNo]?.product?.[position];
+        // const previousCost = selectedProduct?.totalcost || 0; // Ensure fallback for undefined values
+
+        // if (previousCost !== undefined) {
+        //     console.log("Previous Cost:", previousCost);
+        //     console.log("Updated Cost:", updatedFormData.totalcost);
+
+        //     setTotalCost((prevTotal) => {
+        //         const newTotal = prevTotal - previousCost + updatedFormData.totalcost;
+        //         return newTotal;
+        //     });
+
+        //     console.log('Final Total Cost:', updatedFormData.totalcost);
+        // } else {
+        //     console.log("Previous Cost is undefined");
+        // }
+
+
+        // console.log("minus", totalcost)
         try {
             const response = await axios.post(`${apiUrl}/api/editsaveqtn`, {
-                formData: updatedFormData,  // Send the cleaned data
+                formData: updatedFormData,
                 quotationNo,
                 position
             });
-
+        
             if (response.status === 200) {
                 alert(response.data.message);
+                await setTotalCost(response.data.calculatedTotal);  // Ensure fresh data
             } else {
                 alert("Error occurred while updating.");
             }
@@ -154,6 +182,32 @@ function Edit(props) {
             console.error("Error:", error);
             alert("Failed to update product.");
         }
+        
+
+
+        console.log("q no", totalcost)
+
+
+        // try {
+        //     const response = await axios.post(`${apiUrl}/api/getqoutationcost`, { quotationNo });
+        //     if (response.status === 200) {
+        //         console.log("DATA SUCCESS", response.data);
+
+        //         const { product } = response.data;
+
+        //         // Calculate total product cost only (excluding transport cost)
+        //         const totalProductCost = product.reduce((acc, item) => acc + (item.totalcost || 0), 0);
+
+        //         setTotalCost(totalProductCost);
+        //     } else {
+        //         console.log("Error: Unexpected response status");
+        //     }
+        // } catch (e) {
+        //     console.log("Error fetching cost:", e);
+        // }
+
+
+
         setEdit(false)
     };
 
