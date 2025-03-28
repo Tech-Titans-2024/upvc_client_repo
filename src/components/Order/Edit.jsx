@@ -10,23 +10,42 @@ function Edit(props) {
     });
     const [quotationNo, setQuoatationNo] = useState()
     const [unit, setUnit] = useState("feet");
+    const [customerState, setCustomerState] = useState('Tamil Nadu'); // Default state
+    
     // Initialize the state with data
     useEffect(() => {
         console.log("Data in useEffect:", props.quotations[props.quotationNo]?.product?.[position]);
         if (props.quotations[props.quatationNo].product[position]) {
             setFormData(props.quotations[props.quatationNo].product[position]);
-            // console.log("use",formData);
-
         }
-        // props.Q_no(props.quotations[props.quatationNo].quotation_no)
         setQuoatationNo(props.quotations[props.quatationNo].quotation_no)
-
+        
+        // Get customer state from parent component if available
+        if (props.quotations[props.quatationNo].customer) {
+            setCustomerState(props.quotations[props.quatationNo].customer.cusState || 'Tamil Nadu');
+        }
     }, [props.quotations, props.quotationNo, position]);
 
-    // console.log("formdat", formData);
-    // console.log("no",props.quotations[props.quatationNo].quotation_no);
-    // console.log("pos",props.quotations[props.quatationNo].product[position]);
-
+    const calculateGST = (totalcost) => {
+        const cgst = totalcost * 0.09; // Always 9% CGST
+        let sgst = 0;
+        let igst = 0;
+        
+        if (customerState === 'Tamil Nadu') {
+            sgst = totalcost * 0.09; // 9% SGST
+        } else {
+            igst = totalcost * 0.09; // 9% IGST
+        }
+    
+        const gTotal = totalcost + cgst + sgst + igst;
+        
+        return {
+            cgst: cgst.toFixed(2),
+            sgst: sgst.toFixed(2),
+            igst: igst.toFixed(2),
+            gTotal: gTotal.toFixed(2)
+        };
+    };
 
     const handleChange = async (e) => {
         const { name, value, type } = e.target;
@@ -64,13 +83,17 @@ function Edit(props) {
             // Calculate total price and total cost
             const totalQtyPrice = (quantity * price * areaInFeet).toFixed(2);
             const totalCost = (parseFloat(totalQtyPrice) + addCost).toFixed(2);
-    
+            
+            // Calculate GST
+            const gstCalculations = calculateGST(parseFloat(totalCost));
+            
             return {
                 ...updatedData,
                 area: updatedArea,
                 feet: areaInFeet.toFixed(2),
                 totalqtyprice: totalQtyPrice,
                 totalcost: totalCost,
+                ...gstCalculations // Include GST calculations in formData
             };
         });
     
@@ -108,7 +131,11 @@ function Edit(props) {
             totalqtyprice: Number(formData.totalqtyprice),
             totalcost: Number(formData.totalcost),
             area: Number(formData.area),
-            feet: Number(formData.feet)
+            feet: Number(formData.feet),
+            cgst: Number(formData.cgst || 0),
+            sgst: Number(formData.sgst || 0),
+            igst: Number(formData.igst || 0),
+            gTotal: Number(formData.gTotal || formData.totalcost)
         };
 
         try {
@@ -130,7 +157,6 @@ function Edit(props) {
         setEdit(false)
     };
 
-    // console.log("ADAT",props.quotations[props.quatationNo].product[position])
     return (
         <>
             <>
@@ -159,7 +185,7 @@ function Edit(props) {
                                             <td className="border-2 border-black font-bold py-3 text-center">{value.variant}</td>
                                             <td className="border-2 border-black font-bold py-3 text-center">{value.width}</td>
                                             <td className="border-2 border-black font-bold py-3 text-center">{value.height}</td>
-                                            <td className="border-2 border-black font-bold py-3 text-center">{value.totalcost}</td>
+                                            <td className="border-2 border-black font-bold py-3 text-center">{value.gTotal || value.totalcost}</td>
                                             <td className="border-2 border-black font-bold w-[12%] p-2">
                                                 <button className="bg-blue-500 text-white text-lg w-[100%] py-2.5 rounded-lg" onClick={() => {setEdit(true), setPosition(index)}}>Edit</button>
                                             </td>
@@ -378,13 +404,30 @@ function Edit(props) {
 
                                 />
                             </div>
-                            <div className="flex flex-col gap-4">
-                                <label className="font-semibold ml-1 uppercase ">Total Cost : </label>
-                                <input type="text" className='w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-                                    value={formData.totalcost || ""}
-                                    name='frame'
-                                    onChange={handleChange}
+                            {/* CGST - Always shown (9%) */}
+<div className="flex flex-col gap-4">
+    <label className="font-semibold ml-1 uppercase">CGST (9%)</label>
+    <input type="text" className='w-full p-3 bg-gray-200 border-2 border-black rounded-md'
+        value={formData.cgst || "0.00"}
+        readOnly
+    />
+</div>
 
+{/* SGST/IGST - Conditional */}
+<div className="flex flex-col gap-4">
+    <label className="font-semibold ml-1 uppercase">
+        {customerState === 'Tamil Nadu' ? 'SGST (9%)' : 'IGST (9%)'}
+    </label>
+    <input type="text" className='w-full p-3 bg-gray-200 border-2 border-black rounded-md'
+        value={customerState === 'Tamil Nadu' ? (formData.sgst || "0.00") : (formData.igst || "0.00")}
+        readOnly
+    />
+</div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase ">Grand Total : </label>
+                                <input type="text" className='w-full p-3 bg-gray-200 border-2 border-black rounded-md focus:outline-none'
+                                    value={formData.gTotal || formData.totalcost || ""}
+                                    readOnly
                                 />
                             </div>
                             <button onClick={handleSave}>Save</button>
@@ -392,14 +435,8 @@ function Edit(props) {
                     </div>
                 </div>
             )}
-
-
-
         </>
     )
-
-
-
 }
 
 export default Edit
