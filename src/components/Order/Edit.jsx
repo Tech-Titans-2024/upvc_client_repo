@@ -217,7 +217,9 @@ function Edit(props) {
                 <div className="fixed inset-0 bg-transparent bg-opacity-60 backdrop-blur-md flex justify-center items-center z-1">
                     <div className="bg-white p-8 rounded-2xl shadow-2xl w-11/12 max-w-6xl">
                         <div className="max-h-[500px] overflow-y-auto">
+                            <div className='flex justify-end'>
                             <label htmlFor="" onClick={() => props.isEdit(false)}>X</label>
+                            </div>
 
                             <table className="table-auto w-full border-collapse border-2 border-black">
                                 <thead>
@@ -484,7 +486,7 @@ function Edit(props) {
                                     readOnly
                                 />
                             </div>
-                            <button onClick={handleSave}>Save</button>
+                            <button onClick={handleSave} className='bg-green-400 border rounded-2xl mt-8 h-16'>Save</button>
                         </div>
                     </div>
                 </div>

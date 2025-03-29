@@ -41,63 +41,61 @@ function Quotation(props)
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {props.qtnViewDetails.product?.map((data, index) => (
+                                    {props.savedData.map((data, index) => (
                                             <tr key={index} className={`bg-white ${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
-                                                <td className="border border-black relative text-center w-[30%] pl-3">
+                                                <td className="border border-black relative text-center w=[40%] pl-3 ml-2">
                                                     <img
                                                         src={`${apiUrl}${data.image}`}
                                                         alt="Product"
-                                                        className="w-44 h-32 flex object-cover rounded mt-12 ml-12"
+                                                        className="w-44 h-32 object-cover rounded mt-8 mx-auto ml-3"
                                                     />
-                                                    <div className="mt-6 -ml-8 font-bold text-sm mb-6">
+                                                    <div className="mt-3 flex justify-center items-center font-bold text-sm mb-4 -ml-6">
                                                         <span>&lt;------</span>
-                                                        <span className="mx-2">{data.width}</span>
+                                                        <span className="mx-2"> {data.width} </span>
                                                         <span>------&gt;</span>
                                                     </div>
-                                                    <div className="absolute top-1/2 right-[-1px] transform -translate-y-1/2 flex flex-col items-center font-bold text-sm space-y-3.5 -mt-3">
+                                                    <div className="absolute top-1/2 right-[-20px] transform -translate-y-1/2 flex flex-col items-center font-bold text-sm space-y-3.5 -mt-2">
                                                         <span className="inline-block rotate-90 ml-5 mr-5">&lt;------</span>
                                                         <span className="text-center ml-5 mr-5"> {data.height} </span>
                                                         <span className="inline-block rotate-90 ml-5 mr-5">------&gt;</span>
                                                     </div>
                                                 </td>
-                                                <td className="p-4 pl-8 text-left border border-black">
+                                                <td className="p-4 text-left border border-black">
                                                     <div>
                                                         <div className="flex">
-                                                            <span className="w-[29%] font-bold">Product</span>
+                                                            <span className="w-[25%] font-bold">Product</span>
                                                             <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[70%] ml-2">{data.product}</span>
+                                                            <span className="w-[70%] ml-1">{data.product}</span>
                                                         </div>
                                                         <div className="flex">
-                                                            <span className="w-[29%] font-bold">Type</span>
+                                                            <span className="w-[25%] font-bold">Type</span>
                                                             <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[70%] ml-2">{data.type}</span>
+                                                            <span className="w-[70%] ml-1">{data.type}</span>
                                                         </div>
                                                         <div className="flex">
-                                                            <span className="w-[29%] font-bold">Variant</span>
+                                                            <span className="w-[25%] font-bold">Variant</span>
                                                             <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[70%] ml-2">{data.variant}</span>
+                                                            <span className="w-[70%] ml-1">{data.variant}</span>
                                                         </div>
                                                         <div className="flex">
-                                                            <span className="w-[29%] font-bold">Size</span>
+                                                            <span className="w-[25%] font-bold">Size</span>
                                                             <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[70%] ml-2">
-                                                                W = {data.width}, H = {data.height}
-                                                            </span>
+                                                            <span className="w-[70%] ml-1">W = {data.width}, H = {data.height}</span>
                                                         </div>
                                                         <div className="flex">
-                                                            <span className="w-[29%] font-bold">Area</span>
+                                                            <span className="w-[25%] font-bold">Area</span>
                                                             <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[70%] ml-2">{data.area}</span>
+                                                            <span className="w-[70%] ml-1">{data.area}</span>
                                                         </div>
                                                         <div className="flex">
-                                                            <span className="w-[29%] font-bold">Glass</span>
+                                                            <span className="w-[25%] font-bold">Glass</span>
                                                             <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[70%] ml-2">{data.glass}</span>
+                                                            <span className="w-[70%] ml-1">{data.glass}</span>
                                                         </div>
                                                         <div className="flex">
-                                                            <span className="w-[29%] font-bold">Color</span>
+                                                            <span className="w-[25%] font-bold">Color</span>
                                                             <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[70%] ml-2">{data.color}</span>
+                                                            <span className="w-[70%] ml-1">{data.color}</span>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -106,56 +104,43 @@ function Quotation(props)
                                                 <td className="p-3 border border-black text-center">{data.totalcost}</td>
                                             </tr>
                                         ))}
-                                        {props.qtnViewDetails && (
+                                        {props.customer && (
                                             <>
                                                 <tr>
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">Net Total (Rs.)</td>
-                                                    <td className="p-2 border border-black text-center font-bold">
-                                                        ₹ {(props.qtnViewDetails.netTotal ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                    </td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                                                 </tr>
-                                                {props.qtnViewDetails.cus_state === 'Tamil Nadu' ? (
+                                                {props.customer.cusState === 'Tamil Nadu' && (
                                                     <>
                                                         <tr>
                                                             <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (9%)</td>
-                                                            <td className="p-2 border border-black text-center font-bold">
-                                                                ₹ {(props.qtnViewDetails.cgst ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                            </td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                                                         </tr>
                                                         <tr>
                                                             <td colSpan="4" className="p-2 border border-black text-right font-bold">SGST (9%)</td>
-                                                            <td className="p-2 border border-black text-center font-bold">
-                                                                ₹ {(props.qtnViewDetails.sgst ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                            </td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.sgst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                                                         </tr>
                                                     </>
-                                                ) : (
+                                                )}
+                                                {props.customer.cusState !== 'Tamil Nadu' && (
                                                     <>
                                                         <tr>
                                                             <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (9%)</td>
-                                                            <td className="p-2 border border-black text-center font-bold">
-                                                                ₹ {(props.qtnViewDetails.cgst ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                            </td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                                                         </tr>
                                                         <tr>
                                                             <td colSpan="4" className="p-2 border border-black text-right font-bold">IGST (9%)</td>
-                                                            <td className="p-2 border border-black text-center font-bold">
-                                                                ₹ {(props.qtnViewDetails.igst ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                            </td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.igst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                                                         </tr>
                                                     </>
                                                 )}
                                                 <tr>
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">Transport Cost (Rs.)</td>
-                                                    <td className="p-2 border border-black text-center font-bold">
-                                                        ₹ {(props.qtnViewDetails.tpcost ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                    </td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.tpcost.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                                                 </tr>
                                                 <tr>
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">Grand Total (Rs.)</td>
-                                                    <td className="p-2 border border-black text-center font-bold">
-                                                        ₹ {(props.qtnViewDetails.gTotal ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                    </td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.gTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                                                 </tr>
                                             </>
                                         )}
