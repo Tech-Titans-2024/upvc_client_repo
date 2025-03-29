@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faEdit, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Edit from './Edit';
+import View from './View';
 
 function Main() {
     const [quotations, setQuotations] = useState([]);
@@ -13,7 +14,9 @@ function Main() {
     const [productPos, setProductPos] = useState();
     const [isDelete, setIsDelete] = useState(false);
     const [deleteId, setDeleteId] = useState();
-    const [searchTerm, setSearchTerm] = useState(''); // Added for search functionality
+    const [searchTerm, setSearchTerm] = useState('');
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+    const [qtnViewDetails, setQtnViewDetails] = useState(false);
     const apiUrl = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
@@ -22,48 +25,52 @@ function Main() {
                 const response = await axios.post(`${apiUrl}/api/quotationsDetails`, { selectedStatus });
                 setQuotations(response.data);
             }
-            catch (error) {console.error(error)}
+            catch (error) { console.error(error) }
         }
         fetchQuotationDetails()
     }, [apiUrl, selectedStatus, isDelete, edit])
 
-    const handleChange = (event) => {
-        setSelectedStatus(event.target.value);
-    };
+    const handleChange = (event) => { setSelectedStatus(event.target.value) }
 
     const confirmOrder = async (order) => {
         try {
             await axios.post(`${apiUrl}/api/orderConfirm`, order);
             alert('Order Confirmed successfully!');
             window.location.reload();
-        } catch (error) {
-            console.error(error);
         }
-    };
+        catch (error) { console.error(error) }
+    }
 
     const handleDelete = async () => {
         try {
-            const response = await axios.post(`${apiUrl}/api/deleteQuotation`, {deleteId});
+            const response = await axios.post(`${apiUrl}/api/deleteQuotation`, { deleteId });
             if (response.status === 200) {
                 alert(response.data.message);
                 setIsDelete(false);
-            } else {
-                alert("Quotation Not deleted");
             }
-        } catch (err) {
+            else { alert("Quotation Not deleted") }
+        }
+        catch (err) {
             console.error("Error in delete quotation", err);
             alert("An error occurred while deleting the quotation.");
         }
-    };
+    }
 
-
-    // Filter quotations based on search term
     const filteredQuotations = quotations.filter(quotation =>
         quotation.quotation_no.toLowerCase().includes(searchTerm.toLowerCase()) ||
         quotation.cus_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         quotation.cus_address.toLowerCase().includes(searchTerm.toLowerCase()) ||
         quotation.cus_contact.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    )
+
+    const viewQuotation = async (qtnId) => {
+        setIsViewModalOpen(true);
+        try {
+            const response = await axios.post(`${apiUrl}/api/viewQtn`, { qtnId })
+            setQtnViewDetails(response.data)
+        }
+        catch (error) { }
+    }
 
     return (
         <div className="w-full h-full bg-white p-2">
@@ -74,8 +81,8 @@ function Main() {
                     type="text"
                     placeholder="Search..."
                     className="w-80 p-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
-                    value={searchTerm} // Bind search term
-                    onChange={(e) => setSearchTerm(e.target.value)} // Update search term
+                    value={searchTerm} 
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
             <div className="mb-4 flex items-center gap-3">
@@ -116,18 +123,19 @@ function Main() {
                             {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-6 px-4">Confirm</th>}
                             {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-6 px-4">Edit</th>}
                             {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-6 px-4">Delete</th>}
+                            {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-6 px-4">View</th>}
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredQuotations.length > 0 ? ( // Use filteredQuotations instead of quotations
+                        {filteredQuotations.length > 0 ? (
                             filteredQuotations.map((quotation, index) => (
                                 <tr key={index} className="uppercase text-center hover:bg-gray-100">
-                                    <td className="px-4 py-2 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.quotation_no}</td>
-                                    <td className="px-4 py-2 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.date}</td>
-                                    <td className="px-4 py-2 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.sales_person}</td>
-                                    <td className="px-4 py-2 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.cus_name}</td>
-                                    <td className="px-4 py-2 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.cus_address}</td>
-                                    <td className="px-4 py-2 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.cus_contact}</td>
+                                    <td className="px-4 py-6 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.quotation_no}</td>
+                                    <td className="px-4 py-6 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.date}</td>
+                                    <td className="px-4 py-6 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.sales_person}</td>
+                                    <td className="px-4 py-6 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.cus_name}</td>
+                                    <td className="px-4 py-6 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.cus_address}</td>
+                                    <td className="px-4 py-6 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.cus_contact}</td>
                                     {selectedStatus === "Unconfirmed" && (
                                         <>
                                             <td className="px-4 py-2 border border-gray-300">
@@ -142,7 +150,7 @@ function Main() {
                                             <td className="px-4 py-2 border border-gray-300">
                                                 <button
                                                     className="px-3 py-1 w-32 h-10 font-bold text-md bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none"
-                                                    onClick={() => {setEdit(true), setQuotationPos(index)}}
+                                                    onClick={() => { setEdit(true), setQuotationPos(index) }}
                                                 >
                                                     <FontAwesomeIcon icon={faEdit} className="mr-2" />
                                                     Edit
@@ -162,7 +170,19 @@ function Main() {
                                             </td>
                                         </>
                                     )}
-                                    
+                                    {selectedStatus === 'Unconfirmed' && (
+                                        <>
+                                            <td className="px-4 py-2 border border-gray-300">
+                                                <button
+                                                    className="px-3 py-1 w-32 h-10 font-bold text-md bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none"
+                                                    onClick={() => viewQuotation(quotation.quotation_no)}
+                                                >
+                                                    <FontAwesomeIcon icon={faEye} className="mr-2" />
+                                                    View
+                                                </button>
+                                            </td>
+                                        </>
+                                    )}
                                 </tr>
                             ))
                         ) : (
@@ -205,8 +225,11 @@ function Main() {
                     </div>
                 </div>
             )}
+
+            <View viewQuotation={viewQuotation} isViewModalOpen={isViewModalOpen} qtnViewDetails={qtnViewDetails} />
+       
         </div>
-    );
+    )
 }
 
 export default Main;
