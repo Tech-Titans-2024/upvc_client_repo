@@ -28,32 +28,57 @@ function Sales() {
 
         fetchReport();
     }, [apiUrl]);
+    console.log("Sample dates from API:", report.slice(0, 5).map(item => item.date));
 
     useEffect(() => {
         let filteredData = report;
-
+    
         // Filter by search term (sales person name)
         if (searchTerm) {
             filteredData = filteredData.filter(item =>
                 item.sales_person.toLowerCase().includes(searchTerm.toLowerCase())
             );
         }
-
+    
         // Filter by date range
-        if (fromDate && toDate) {
-            filteredData = filteredData.filter(item => {
-                const itemDate = new Date(item.date + 'T00:00:00Z'); // Ensure time is set to midnight UTC
-                const from = new Date(fromDate + 'T00:00:00Z');
-                const to = new Date(toDate + 'T00:00:00Z');
-                return itemDate >= from && itemDate <= to;
-            });
+        if (fromDate || toDate) {
+            try {
+                const from = fromDate ? new Date(fromDate) : null;
+                const to = toDate ? new Date(toDate) : null;
+                
+                if (to) {
+                    // Set time to end of day for 'to' date to include entire day
+                    to.setHours(23, 59, 59, 999);
+                }
+    
+                filteredData = filteredData.filter(item => {
+                    try {
+                        // Parse the item date (DD-MM-YYYY format)
+                        const [day, month, year] = item.date.split('-');
+                        const itemDate = new Date(`${year}-${month}-${day}`);
+                        
+                        // Check if the date is valid
+                        if (isNaN(itemDate.getTime())) {
+                            console.error('Invalid date:', item.date);
+                            return false;
+                        }
+                        
+                        return (!from || itemDate >= from) && (!to || itemDate <= to);
+                    } catch (e) {
+                        console.error('Error parsing item date:', item.date, e);
+                        return false;
+                    }
+                });
+            } catch (e) {
+                console.error('Error parsing filter dates:', e);
+            }
         }
-
+    
         // Filter by selected sales person
         if (selectedSalesPerson) {
             filteredData = filteredData.filter(item => item.sales_person === selectedSalesPerson);
         }
-
+    
         setFilteredReport(filteredData);
     }, [searchTerm, fromDate, toDate, selectedSalesPerson, report]);
 

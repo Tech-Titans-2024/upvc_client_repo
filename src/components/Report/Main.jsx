@@ -18,7 +18,7 @@ function Report()
             <div className='flex gap-10 w-[100%] h-24'>
                 <button className='w-[33%] bg-blue-500 hover:bg-blue-600 rounded-xl font-bold text-xl text-white' onClick={() => {handlePage('1')}}>Product Wise</button>
                 <button className='w-[33%] bg-blue-500 hover:bg-blue-600 rounded-xl font-bold text-xl text-white' onClick={() => {handlePage('2')}}>Sales Wise</button>
-                <button className='w-[33%] bg-blue-500 hover:bg-blue-600 rounded-xl font-bold text-xl text-white' onClick={() => {handlePage('3')}}>Period Wise</button>
+                {/* <button className='w-[33%] bg-blue-500 hover:bg-blue-600 rounded-xl font-bold text-xl text-white' onClick={() => {handlePage('3')}}>Period Wise</button> */}
             </div>
         </div>
     )
