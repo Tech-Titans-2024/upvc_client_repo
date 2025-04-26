@@ -21,7 +21,8 @@ function Main()
     const [currentData, setCurrentData] = useState({
         brand: 'Veka', product: 'Door', type: '', variant: '', mesh: 'No', frame: '',
         lock: '', width: '', height: '', feet: '', area: '', price: '', quantity: '1',
-        totalqtyprice: '', glass: '', thickness: '', color: '', adcost: '0', totalcost: '', image: ''
+        totalqtyprice: '', glass: '', thickness: '', color: '', adcost: '0', totalcost: '', 
+        image: '', floor: ''  // Add this new field
     })
     const [customer, setCustomer] = useState({
         salesPerson: '', quotationNo: '', tpcost: '0', cusName: '', cusAddress: '', cusContact: '',
