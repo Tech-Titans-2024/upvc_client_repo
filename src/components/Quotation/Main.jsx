@@ -283,12 +283,23 @@ function Main()
     }
 
     const handleFinish = async () => {
-
+        // Debug: Log initial data before processing
+        console.log("Initial savedData:", JSON.stringify(savedData, null, 2));
+        console.log("Initial customer data:", JSON.stringify(customer, null, 2));
+    
         const printContent = document.getElementById('printDesignContent');
+        
+        // Debug: Verify print content exists
+        if (!printContent) {
+            console.error("Print content element not found!");
+            return;
+        }
+    
+        // Style adjustments for PDF
         const elements = printContent.querySelectorAll('*');
         elements.forEach(element => {
             const computedStyle = window.getComputedStyle(element);
-                if (computedStyle.color.includes('oklch')) {
+            if (computedStyle.color.includes('oklch')) {
                 element.style.color = '#000000';
             }
             if (computedStyle.backgroundColor.includes('oklch')) {
@@ -297,13 +308,15 @@ function Main()
             if (computedStyle.borderColor.includes('oklch')) {
                 element.style.borderColor = '#000000'; 
             }
-        })
-
+        });
+    
+        // Image loading handling
         const images = printContent.querySelectorAll('img');
         const imagePromises = Array.from(images).map((image) => {
             return new Promise((resolve, reject) => {
-                if (image.complete) { resolve() } 
-                else {
+                if (image.complete) { 
+                    resolve(); 
+                } else {
                     image.onload = resolve;
                     image.onerror = () => {
                         console.error(`Failed to load image: ${image.src}`);
@@ -311,11 +324,13 @@ function Main()
                     }
                     image.crossOrigin = 'anonymous'; 
                 }
-            })
-        })
-    
+            });
+        });
+        
         try {
             await Promise.all(imagePromises);
+            
+            // PDF generation options
             const options = {
                 margin: 0.1,
                 padding: 0.2,
@@ -335,20 +350,45 @@ function Main()
                     compress: true,
                 },
                 pagebreak: { mode: ['css', 'legacy'] }
-            }
-    
+            };
+        
             await html2pdf().from(printContent).set(options).save();
-            const data = { customer, savedData };
+            
+            // Prepare and log final data before sending
+            const data = { 
+                customer, 
+                savedData: savedData.map(item => ({
+                    ...item,
+                    floor: item.floor || '' // Ensure floor exists
+                }))
+            };
+            
+            console.log("Final data being sent to server:", JSON.stringify(data, null, 2));
+            console.log("Sample product data:", {
+                brand: data.savedData[0]?.brand,
+                floor: data.savedData[0]?.floor,
+                otherFields: "..." 
+            });
+    
             const response = await axios.post(`${apiUrl}/api/quotationSave`, { data });
+            
             if (response.status === 200) { 
+                console.log("Server response:", response.data);
                 alert("The Quotation has been Saved Successfully...");
                 window.location.reload();
-            
-
-             } 
-            else { console.error('Failed to send Data to Backend:', response.status) }
+            } else { 
+                console.error('Failed to send Data to Backend:', {
+                    status: response.status,
+                    data: response.data
+                }); 
+            }
         } 
-        catch (error) { console.error('Error during PDF generation or data save:', error) }
+        catch (error) { 
+            console.error('Error during process:', {
+                error: error.response?.data || error.message,
+                stack: error.stack
+            });
+        }
     }
 
     return (

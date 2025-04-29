@@ -239,10 +239,13 @@ function Product(props)
                 <div className="flex flex-col gap-4">
     <label className="font-semibold ml-1 uppercase">Floor : </label>
     <input
-        type="text"
+        type="number"
         className="w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         value={props.currentData.floor || ''}
-        onChange={(e) => props.handleInputChange('floor', e.target.value)}
+        onChange={(e) => {
+            const value = e.target.value;
+            props.handleInputChange('floor', value === '' ? '' : Number(value));
+        }}
         placeholder="Floor number (optional)"
     />
 </div>
