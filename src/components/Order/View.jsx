@@ -64,7 +64,7 @@ function View(props)
     return (
         <>
             {props.isViewModalOpen && (
-                <>
+                <>  
                     <div className="fixed inset-0 bg-gray-900/100 flex justify-center items-center z-50">
                         <div className="p-6 bg-gray-50 border border-gray-300 rounded-md shadow-md max-w-6xl w-full max-h-[91vh] overflow-y-auto">
                             <div className="mb-6">

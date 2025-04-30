@@ -55,13 +55,12 @@ function Main() {
             alert("An error occurred while deleting the quotation.");
         }
     }
-
     const filteredQuotations = quotations.filter(quotation =>
-        quotation.quotation_no.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        quotation.quotation_no.toString().includes(searchTerm) ||
         quotation.cus_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         quotation.cus_address.toLowerCase().includes(searchTerm.toLowerCase()) ||
         quotation.cus_contact.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    );
 
     const viewQuotation = async (qtnId) => {
         setIsViewModalOpen(true);

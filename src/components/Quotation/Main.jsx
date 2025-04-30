@@ -64,22 +64,27 @@ function Main()
             catch (err) { console.log("Error Fetching Sales Persons:", err) }
         }
 
-        const quatationNo = async () => {
-            try {
-                const QResponse= await axios.get(`${apiUrl}/api/quotationNo`);
-                if(QResponse.data){
-                    let Split_no = QResponse.data.match(/(\D+)(\d+)/)
-                    let increament=Number(Split_no[2])+1;
-                    let New_Q=Split_no[1]+increament.toString();
-                    setCustomer((prevCustomer) => ({ ...prevCustomer,  quotationNo: New_Q }))
-                }
-            } 
-            catch (err) { console.log("Not Applicable"); }
-        }
+        // const quatationNo = async () => {
+        //     try {
+        //         const QResponse= await axios.get(`${apiUrl}/api/quotationNo`);
+        //         if(QResponse.data){
+        //             // let Split_no = QResponse.data.match(/(\D+)(\d+)/)
+        //             // let increament=Number(Split_no[2])+1;
+        //             // let New_Q=Split_no[1]+increament.toString();
+        //             let New_Q=QResponse.data+1
+        //             console.log("nUm",QResponse.data);
+        //             console.log("HVDHVDHV");
+                    
+                    
+        //             setCustomer((prevCustomer) => ({ ...prevCustomer,  quotationNo: New_Q }))
+        //         }
+        //     } 
+        //     catch (err) { console.log("Not Applicable"); }
+        // }
 
         fetchSalesman();
 
-        quatationNo();
+        // quatationNo();
 
     }, [apiUrl, currentData.product])
 
@@ -205,7 +210,27 @@ function Main()
         }
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
+
+
+        try {
+            const QResponse = await axios.get(`${apiUrl}/api/quotationNo`);
+            if (QResponse.data !== undefined) {
+                let New_Q = QResponse.data + 1;
+                console.log("Fetched quotation number:", QResponse.data);
+                console.log("New quotation number:", New_Q);
+        
+                setCustomer((prevCustomer) => ({
+                    ...prevCustomer,
+                    quotationNo: New_Q
+                }));
+            } else {
+                console.log("No data received in response");
+            }
+        } catch (err) {
+            console.error("Error fetching quotation number:", err.message);
+        }
+        
         if (currentData.product === 'Door' || currentData.product === 'Window') {
             if (
                 currentData.brand === '' || currentData.product === '' || currentData.type === '' || 
@@ -234,6 +259,30 @@ function Main()
             ...prev, width: "", height: "", area: "", price: "", glass: "", totalqtyprice: '',
             color: "", adcost: "0", quantity: "1", total: "", image: "", totalcost: ''
         }))
+
+
+
+
+
+        
+    }
+
+    const quatationNo = async () => {
+        try {
+            const QResponse= await axios.get(`${apiUrl}/api/quotationNo`);
+            if(QResponse.data){
+                // let Split_no = QResponse.data.match(/(\D+)(\d+)/)
+                // let increament=Number(Split_no[2])+1;
+                // let New_Q=Split_no[1]+increament.toString();
+                let New_Q=QResponse.data+1
+                console.log("nUm",QResponse.data);
+                console.log("HVDHVDHV");
+                
+                
+                setCustomer((prevCustomer) => ({ ...prevCustomer,  quotationNo: New_Q }))
+            }
+        } 
+        catch (err) { console.log("Not Applicable"); }
     }
 
     const handleDeleteRow = (index) => { setSavedData((prev) => prev.filter((_, i) => i !== index)) }
@@ -296,7 +345,7 @@ function Main()
         }
     
         // Style adjustments for PDF
-        const elements = printContent.querySelectorAll('*');
+        const elements = printContent.querySelectorAll('*'); 
         elements.forEach(element => {
             const computedStyle = window.getComputedStyle(element);
             if (computedStyle.color.includes('oklch')) {
