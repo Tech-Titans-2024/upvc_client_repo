@@ -80,7 +80,7 @@ function Main() {
                     type="text"
                     placeholder="Search..."
                     className="w-80 p-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
-                    value={searchTerm} 
+                    value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
@@ -225,8 +225,12 @@ function Main() {
                 </div>
             )}
 
-            <View viewQuotation={viewQuotation} isViewModalOpen={isViewModalOpen} qtnViewDetails={qtnViewDetails} />
-       
+            <View
+                viewQuotation={viewQuotation}
+                isViewModalOpen={isViewModalOpen}
+                qtnViewDetails={qtnViewDetails}
+                closeModal={() => setIsViewModalOpen(false)}
+            />
         </div>
     )
 }

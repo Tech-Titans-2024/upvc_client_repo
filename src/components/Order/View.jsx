@@ -4,9 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone, faEnvelope, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import html2pdf from 'html2pdf.js';
 
-function View(props) 
-{
+function View(props) {
     const apiUrl = import.meta.env.VITE_API_URL;
+
+    const{closeModal}=props;
 
     const handleFinish = async () => {
 
@@ -60,13 +61,23 @@ function View(props)
         }
         catch (error) { console.error('Error during PDF generation or data save:', error) }
     }
+    if (!props.isViewModalOpen) return null;
 
     return (
         <>
             {props.isViewModalOpen && (
-                <>  
+                <>
                     <div className="fixed inset-0 bg-gray-900/100 flex justify-center items-center z-50">
                         <div className="p-6 bg-gray-50 border border-gray-300 rounded-md shadow-md max-w-6xl w-full max-h-[91vh] overflow-y-auto">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-xl font-bold">Quotation Details</h2>
+                                <button
+                                    onClick={closeModal}
+                                    className="text-gray-700 font-bold text-lg hover:text-red-500 transition duration-200"
+                                >
+                                    X
+                                </button>
+                            </div>
                             <div className="mb-6">
                                 <div className="bg-blue-600 text-white font-bold text-lg p-3 rounded-t-md">To</div>
                                 <div className="font-semibold uppercase p-4 bg-white border border-gray-300 rounded-b-md">
