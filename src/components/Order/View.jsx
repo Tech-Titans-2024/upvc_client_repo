@@ -7,7 +7,7 @@ import html2pdf from 'html2pdf.js';
 function View(props) {
     const apiUrl = import.meta.env.VITE_API_URL;
 
-    const{closeModal}=props;
+    const { closeModal } = props;
 
     const handleFinish = async () => {
 
@@ -67,8 +67,13 @@ function View(props) {
         <>
             {props.isViewModalOpen && (
                 <>
-                    <div className="fixed inset-0 bg-gray-900/100 flex justify-center items-center z-50">
-                        <div className="p-6 bg-gray-50 border border-gray-300 rounded-md shadow-md max-w-6xl w-full max-h-[91vh] overflow-y-auto">
+                    <div
+                        className="fixed inset-0 flex justify-center items-center z-50"
+                        style={{
+                            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black
+                            backdropFilter: 'blur(10px)', // Blur effect
+                        }}
+                    >                        <div className="p-6 bg-gray-50 border border-gray-300 rounded-md shadow-md max-w-6xl w-full max-h-[91vh] overflow-y-auto">
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-xl font-bold">Quotation Details</h2>
                                 <button

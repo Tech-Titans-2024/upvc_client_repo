@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 
 function Edit(props) {
     const [edit, setEdit] = useState(false)
@@ -13,7 +13,7 @@ function Edit(props) {
     const [quotationNo, setQuoatationNo] = useState()
     const [unit, setUnit] = useState("feet");
     const [customerState, setCustomerState] = useState('Tamil Nadu'); // Default state
-    
+
     // Initialize the state with data
     useEffect(() => {
         // console.log("Data in useEffect:", props.quotations[props.quotationNo]?.product?.[position]);
@@ -26,7 +26,7 @@ function Edit(props) {
         // console.log(productCost)
 
         setQuoatationNo(props.quotations[props.quatationNo].quotation_no)
-        
+
         // Get customer state from parent component if available
         if (props.quotations[props.quatationNo].customer) {
             setCustomerState(props.quotations[props.quatationNo].customer.cusState || 'Tamil Nadu');
@@ -37,15 +37,15 @@ function Edit(props) {
         const cgst = totalcost * 0.09; // Always 9% CGST
         let sgst = 0;
         let igst = 0;
-        
+
         if (customerState === 'Tamil Nadu') {
             sgst = totalcost * 0.09; // 9% SGST
         } else {
             igst = totalcost * 0.09; // 9% IGST
         }
-    
+
         const gTotal = totalcost + cgst + sgst + igst;
-        
+
         return {
             cgst: cgst.toFixed(2),
             sgst: sgst.toFixed(2),
@@ -55,7 +55,7 @@ function Edit(props) {
     };
 
     const handleChange = async (e) => {
-        const {name, value, type} = e.target;
+        const { name, value, type } = e.target;
 
         if (type === "radio") {
             setUnit(value); // Update unit selection
@@ -90,10 +90,10 @@ function Edit(props) {
             // Calculate total price and total cost
             const totalQtyPrice = (quantity * price * areaInFeet).toFixed(2);
             const totalCost = (parseFloat(totalQtyPrice) + addCost).toFixed(2);
-            
+
             // Calculate GST
             const gstCalculations = calculateGST(parseFloat(totalCost));
-        
+
             return {
                 ...updatedData,
                 area: updatedArea,
@@ -171,7 +171,7 @@ function Edit(props) {
                 quotationNo,
                 position
             });
-        
+
             if (response.status === 200) {
                 alert(response.data.message);
                 await setTotalCost(response.data.calculatedTotal);  // Ensure fresh data
@@ -182,7 +182,7 @@ function Edit(props) {
             console.error("Error:", error);
             alert("Failed to update product.");
         }
-        
+
 
 
         console.log("q no", totalcost)
@@ -218,7 +218,14 @@ function Edit(props) {
                     <div className="bg-white p-8 rounded-2xl shadow-2xl w-11/12 max-w-6xl">
                         <div className="max-h-[500px] overflow-y-auto">
                             <div className='flex justify-end'>
-                            <label htmlFor="" onClick={() => props.isEdit(false)}>X</label>
+                                <label
+                                    htmlFor=""
+                                    onClick={() => props.isEdit(false)}
+                                    className="text-gray-700 font-bold text-lg cursor-pointer hover:text-red-500 transition duration-200"
+                                    title="Close"
+                                >
+                                    X
+                                </label>
                             </div>
 
                             <table className="table-auto w-full border-collapse border-2 border-black">
@@ -243,7 +250,7 @@ function Edit(props) {
                                             <td className="border-2 border-black font-bold py-3 text-center">{value.height}</td>
                                             <td className="border-2 border-black font-bold py-3 text-center">{value.gTotal || value.totalcost}</td>
                                             <td className="border-2 border-black font-bold w-[12%] p-2">
-                                                <button className="bg-blue-500 text-white text-lg w-[100%] py-2.5 rounded-lg" onClick={() => {setEdit(true), setPosition(index)}}>Edit</button>
+                                                <button className="bg-blue-500 text-white text-lg w-[100%] py-2.5 rounded-lg" onClick={() => { setEdit(true), setPosition(index) }}>Edit</button>
                                             </td>
                                             <td className="border-2 border-black font-bold w-[12%] p-2">
                                                 <button className="bg-red-500 text-white text-lg w-[100%] py-2.5 rounded-lg">Delete</button>
@@ -261,7 +268,13 @@ function Edit(props) {
             {edit && (
                 <div className='fixed z-50 top-0 left-0 w-full h-full flex items-center justify-center bg-transparent bg-opacity-30 backdrop-blur-md'>
                     <div className='flex flex-col border-2 border-black rounded-lg bg-white bg-opacity-80 p-5 relative'>
-                        <label className='absolute top-3 right-3 text-black cursor-pointer' onClick={() => setEdit(false)}>X</label>
+                        <label
+                            className='absolute top-3 right-3 bg-red-500 text-white font-bold text-lg cursor-pointer hover:bg-red-600 transition duration-200 px-3 py-1 rounded-full shadow-md'
+                            onClick={() => setEdit(false)}
+                            title="Close"
+                        >
+                            X
+                        </label>
                         <div className="grid grid-cols-5 gap-7 gap-y-10 p-7 border-b-2 border-black py-12">
                             <div className="flex flex-col gap-4">
                                 <label className="font-semibold ml-1 uppercase">Brand : </label>
@@ -461,24 +474,24 @@ function Edit(props) {
                                 />
                             </div>
                             {/* CGST - Always shown (9%) */}
-<div className="flex flex-col gap-4">
-    <label className="font-semibold ml-1 uppercase">CGST (9%)</label>
-    <input type="text" className='w-full p-3 bg-gray-200 border-2 border-black rounded-md'
-        value={formData.cgst || "0.00"}
-        readOnly
-    />
-</div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">CGST (9%)</label>
+                                <input type="text" className='w-full p-3 bg-gray-200 border-2 border-black rounded-md'
+                                    value={formData.cgst || "0.00"}
+                                    readOnly
+                                />
+                            </div>
 
-{/* SGST/IGST - Conditional */}
-<div className="flex flex-col gap-4">
-    <label className="font-semibold ml-1 uppercase">
-        {customerState === 'Tamil Nadu' ? 'SGST (9%)' : 'IGST (9%)'}
-    </label>
-    <input type="text" className='w-full p-3 bg-gray-200 border-2 border-black rounded-md'
-        value={customerState === 'Tamil Nadu' ? (formData.sgst || "0.00") : (formData.igst || "0.00")}
-        readOnly
-    />
-</div>
+                            {/* SGST/IGST - Conditional */}
+                            <div className="flex flex-col gap-4">
+                                <label className="font-semibold ml-1 uppercase">
+                                    {customerState === 'Tamil Nadu' ? 'SGST (9%)' : 'IGST (9%)'}
+                                </label>
+                                <input type="text" className='w-full p-3 bg-gray-200 border-2 border-black rounded-md'
+                                    value={customerState === 'Tamil Nadu' ? (formData.sgst || "0.00") : (formData.igst || "0.00")}
+                                    readOnly
+                                />
+                            </div>
                             <div className="flex flex-col gap-4">
                                 <label className="font-semibold ml-1 uppercase ">Grand Total : </label>
                                 <input type="text" className='w-full p-3 bg-gray-200 border-2 border-black rounded-md focus:outline-none'
@@ -486,8 +499,15 @@ function Edit(props) {
                                     readOnly
                                 />
                             </div>
-                            <button onClick={handleSave} className='bg-green-400 border rounded-2xl mt-8 h-16'>Save</button>
+                            <button
+                                onClick={handleSave}
+                                className="bg-green-500 text-white font-bold text-lg px-2 py-2 rounded-full shadow-md hover:bg-green-600 transition duration-200"
+                            >
+                                Save
+                            </button>
+
                         </div>
+
                     </div>
                 </div>
             )}
