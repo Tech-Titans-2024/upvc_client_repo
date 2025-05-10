@@ -55,9 +55,9 @@ function Product(props)
                             <option key={index}>{variantItem}</option>
                         ))}
                     </select>
-                        
+                         
                 </div>
-                {(props.currentData.product === 'Window' || props.currentData.product === 'Louver') && (
+                {(props.currentData.product === 'Window') && (
                     <>
                         <div className="flex flex-col gap-4">
                             <label className="font-semibold ml-1 uppercase">Mesh : </label>
@@ -73,7 +73,7 @@ function Product(props)
                         </div>
                     </>
                 )}
-                {props.currentData.brand === 'Veka' && (props.currentData.type === 'Sliding Window' || props.currentData.type === 'Open Window') && (
+                {(props.currentData.brand === 'Veka' && props.currentData.product === 'Window') && (props.currentData.type === 'Sliding Window' || props.currentData.type === 'Open Window') && (
                     <div className="flex flex-col gap-4">
                         <label className="font-semibold ml-1 uppercase">Frame Series : </label>
                         <select
@@ -102,7 +102,7 @@ function Product(props)
                         </select>
                     </div>
                 )}
-                {(props.currentData.type === 'Sliding Window' || props.currentData.type === 'Open Window' || props.currentData.type === 'Sliding Door' || props.currentData.type === 'Open Door') && (
+                {(props.currentData.product === 'Window')&&(props.currentData.type === 'Sliding Window' || props.currentData.type === 'Open Window' || props.currentData.type === 'Sliding Door' || props.currentData.type === 'Open Door') && (
                     <div className="flex flex-col gap-4">
                         <label className="font-semibold ml-1 uppercase">Lock Type : </label>
                         <input

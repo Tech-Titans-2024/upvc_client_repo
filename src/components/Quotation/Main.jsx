@@ -257,7 +257,7 @@ function Main()
         alert("Data saved successfully");
         setCurrentData((prev) => ({
             ...prev, width: "", height: "", area: "", price: "", glass: "", totalqtyprice: '',
-            color: "", adcost: "0", quantity: "1", total: "", image: "", totalcost: ''
+            color: "", adcost: "0", quantity: "1", total: "", image: "", totalcost: '',feet:'',thickness:''
         }))
 
 

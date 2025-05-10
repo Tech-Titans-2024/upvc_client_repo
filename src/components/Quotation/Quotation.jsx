@@ -97,6 +97,11 @@ function Quotation(props)
                                                             <span className="w-[5%] text-center">:</span>
                                                             <span className="w-[70%] ml-1">{data.color}</span>
                                                         </div>
+                                                        <div className="flex">
+                                                            <span className="w-[25%] font-bold">Floor</span>
+                                                            <span className="w-[5%] text-center">:</span>
+                                                            <span className="w-[70%] ml-1">{data.floor}</span>
+                                                        </div>
                                                     </div>
                                                 </td>
                                                 <td className="p-3 border border-black text-center">{data.quantity}</td>
@@ -302,10 +307,15 @@ function Quotation(props)
                                                             <span className="w-[5%] text-center">:</span>
                                                             <span className="w-[65%] ml-1 text-gray-700">{data.glass}</span>
                                                         </div>
-                                                        <div className="flex justify-start pb-3">
+                                                        <div className="flex justify-start">
                                                             <span className="w-[30%] font-semibold text-gray-700">Color</span>
                                                             <span className="w-[5%] text-center">:</span>
                                                             <span className="w-[65%] ml-1 text-gray-700">{data.color}</span>
+                                                        </div>
+                                                        <div className="flex justify-start pb-3">
+                                                            <span className="w-[30%] font-semibold text-gray-700">Floor</span>
+                                                            <span className="w-[5%] text-center">:</span>
+                                                            <span className="w-[65%] ml-1 text-gray-700">{data.floor}</span>
                                                         </div>
                                                     </div>
                                                 </td>
