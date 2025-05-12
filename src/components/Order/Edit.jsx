@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 
 function Edit(props) {
     const [edit, setEdit] = useState(false)
@@ -13,6 +13,9 @@ function Edit(props) {
     const [quotationNo, setQuoatationNo] = useState()
     const [unit, setUnit] = useState("feet");
     const [customerState, setCustomerState] = useState('Tamil Nadu'); // Default state
+    const [isDelete, setIsDelete] = useState(false);
+    const [deleteIndex, setDeleteIndex] = useState(null);
+    const [deleteQuotationNo, setDeleteQuotationNo] = useState(null);
 
     // Initialize the state with data
     useEffect(() => {
@@ -32,6 +35,8 @@ function Edit(props) {
             setCustomerState(props.quotations[props.quatationNo].customer.cusState || 'Tamil Nadu');
         }
     }, [props.quotations, props.quotationNo, position]);
+
+
 
     const calculateGST = (totalcost) => {
         const cgst = totalcost * 0.09; // Always 9% CGST
@@ -54,8 +59,9 @@ function Edit(props) {
         };
     };
 
+
     const handleChange = async (e) => {
-        const { name, value, type } = e.target;
+        const {name, value, type} = e.target;
 
         if (type === "radio") {
             setUnit(value); // Update unit selection
@@ -185,7 +191,6 @@ function Edit(props) {
 
 
 
-        console.log("q no", totalcost)
 
 
         // try {
@@ -210,6 +215,40 @@ function Edit(props) {
 
         setEdit(false)
     };
+
+
+
+
+    const handleConfirmDelete = async () => {
+        try {
+            const response = await axios.post(`${apiUrl}/api/deleteProduct`, {
+                index: deleteIndex,
+                quotation_no: deleteQuotationNo,
+            });
+
+            // console.log("Delete successful", response.data);
+
+            const updatedQuotations = [...props.quotations];
+            const targetQuotation = updatedQuotations.find(q => q.quotation_no === deleteQuotationNo);
+
+            if (targetQuotation) {
+                targetQuotation.product.splice(deleteIndex, 1);
+
+                if (targetQuotation.product.length === 0) {
+                    alert("All products are deleted.");
+                }
+            }
+
+            if (props.setQuotations) {
+                props.setQuotations(updatedQuotations);
+            }
+
+            setIsDelete(false);
+        } catch (err) {
+            console.error("Delete failed", err);
+        }
+    };
+
 
     return (
         <>
@@ -241,22 +280,50 @@ function Edit(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {props.quotations[props.quatationNo].product.map((value, index) => (
-                                        <tr key={index}>
-                                            <td className="border-2 border-black font-bold py-3 text-center">{value.brand}</td>
-                                            <td className="border-2 border-black font-bold py-3 text-center">{value.type}</td>
-                                            <td className="border-2 border-black font-bold py-3 text-center">{value.variant}</td>
-                                            <td className="border-2 border-black font-bold py-3 text-center">{value.width}</td>
-                                            <td className="border-2 border-black font-bold py-3 text-center">{value.height}</td>
-                                            <td className="border-2 border-black font-bold py-3 text-center">{value.gTotal || value.totalcost}</td>
-                                            <td className="border-2 border-black font-bold w-[12%] p-2">
-                                                <button className="bg-blue-500 text-white text-lg w-[100%] py-2.5 rounded-lg" onClick={() => { setEdit(true), setPosition(index) }}>Edit</button>
-                                            </td>
-                                            <td className="border-2 border-black font-bold w-[12%] p-2">
-                                                <button className="bg-red-500 text-white text-lg w-[100%] py-2.5 rounded-lg">Delete</button>
+                                    {props.quotations[props.quatationNo].product.length > 0 ? (
+                                        props.quotations[props.quatationNo].product.map((value, index) => (
+                                            <tr key={index}>
+                                                <td className="border-2 border-black font-bold py-3 text-center">{value.brand}</td>
+                                                <td className="border-2 border-black font-bold py-3 text-center">{value.type}</td>
+                                                <td className="border-2 border-black font-bold py-3 text-center">{value.variant}</td>
+                                                <td className="border-2 border-black font-bold py-3 text-center">{value.width}</td>
+                                                <td className="border-2 border-black font-bold py-3 text-center">{value.height}</td>
+                                                <td className="border-2 border-black font-bold py-3 text-center">
+                                                    {value.gTotal || value.totalcost}
+                                                </td>
+                                                <td className="border-2 border-black font-bold w-[12%] p-2">
+                                                    <button
+                                                        className="bg-blue-500 text-white text-lg w-full py-2.5 rounded-lg"
+                                                        onClick={() => {
+                                                            setEdit(true);
+                                                            setPosition(index);
+                                                        }}
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                </td>
+                                                <td className="border-2 border-black font-bold w-[12%] p-2">
+                                                    <button
+                                                        className="bg-red-500 text-white text-lg w-full py-2.5 rounded-lg cursor-pointer"
+                                                        onClick={() => {
+                                                            setDeleteIndex(index);
+                                                            setDeleteQuotationNo(quotationNo);
+                                                            setIsDelete(true);
+                                                        }}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="8" className="text-center py-6 text-gray-600 font-medium">
+                                                No products available.
                                             </td>
                                         </tr>
-                                    ))}
+                                    )}
+
                                 </tbody>
                             </table>
                         </div>
@@ -511,6 +578,34 @@ function Edit(props) {
                     </div>
                 </div>
             )}
+
+
+
+
+
+            {isDelete && (
+                <div className="fixed inset-0 bg-opacity-50 backdrop-blur flex justify-center items-center z-50">
+                    <div className="bg-white w-96 p-6 rounded-lg shadow-lg text-center">
+                        <h2 className="text-xl font-bold mb-4 text-red-600">Confirm Deletion</h2>
+                        <p className="text-lg text-gray-700 mb-6">Are you sure you want to delete this?</p>
+                        <div className="flex justify-center gap-4">
+                            <button
+                                onClick={handleConfirmDelete}
+                                className="px-5 py-2 text-lg bg-red-500 text-white rounded-lg hover:bg-red-600 shadow-md"
+                            >
+                                Delete
+                            </button>
+                            <button
+                                onClick={() => setIsDelete(false)}
+                                className="px-5 py-2 text-lg bg-gray-300 rounded-lg hover:bg-gray-400 shadow-md"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </>
     )
 }
