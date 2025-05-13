@@ -67,6 +67,7 @@ function Main() {
         try {
             const response = await axios.post(`${apiUrl}/api/viewQtn`, { qtnId })
             setQtnViewDetails(response.data)
+            
         }
         catch (error) { }
     }

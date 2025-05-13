@@ -1,13 +1,13 @@
 import React from 'react';
 import Logo from '../../assets/logo.jpeg';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPhone, faEnvelope, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPhone, faEnvelope, faMapMarkerAlt} from "@fortawesome/free-solid-svg-icons";
 import html2pdf from 'html2pdf.js';
 
 function View(props) {
     const apiUrl = import.meta.env.VITE_API_URL;
 
-    const { closeModal } = props;
+    const {closeModal} = props;
 
     const handleFinish = async () => {
 
@@ -15,15 +15,15 @@ function View(props) {
         const elements = printContent.querySelectorAll('*');
         elements.forEach(element => {
             const computedStyle = window.getComputedStyle(element);
-            if (computedStyle.color.includes('oklch')) { element.style.color = '#000000' }
-            if (computedStyle.backgroundColor.includes('oklch')) { element.style.backgroundColor = '#1E88E5' }
-            if (computedStyle.borderColor.includes('oklch')) { element.style.borderColor = '#000000' }
+            if (computedStyle.color.includes('oklch')) {element.style.color = '#000000'}
+            if (computedStyle.backgroundColor.includes('oklch')) {element.style.backgroundColor = '#1E88E5'}
+            if (computedStyle.borderColor.includes('oklch')) {element.style.borderColor = '#000000'}
         })
 
         const images = printContent.querySelectorAll('img');
         const imagePromises = Array.from(images).map((image) => {
             return new Promise((resolve, reject) => {
-                if (image.complete) { resolve() }
+                if (image.complete) {resolve()}
                 else {
                     image.onload = resolve;
                     image.onerror = () => {
@@ -41,7 +41,7 @@ function View(props) {
                 margin: 0.1,
                 padding: 0.2,
                 filename: 'Quotation.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
+                image: {type: 'jpeg', quality: 0.98},
                 html2canvas: {
                     scale: 3,
                     useCORS: true,
@@ -55,11 +55,11 @@ function View(props) {
                     orientation: 'portrait',
                     compress: true,
                 },
-                pagebreak: { mode: ['css', 'legacy'] }
+                pagebreak: {mode: ['css', 'legacy']}
             }
             await html2pdf().from(printContent).set(options).save();
         }
-        catch (error) { console.error('Error during PDF generation or data save:', error) }
+        catch (error) {console.error('Error during PDF generation or data save:', error)}
     }
     if (!props.isViewModalOpen) return null;
 
@@ -175,6 +175,11 @@ function View(props) {
                                                             <span className="w-[5%] text-center">:</span>
                                                             <span className="w-[70%] ml-2">{data.color}</span>
                                                         </div>
+                                                        <div className="flex">
+                                                            <span className="w-[29%] font-bold">Floor</span>
+                                                            <span className="w-[5%] text-center">:</span>
+                                                            <span className="w-[70%] ml-2">{data.floor}</span>
+                                                        </div>
                                                     </div>
                                                 </td>
                                                 <td className="p-3 border border-black text-center">{data.quantity}</td>
@@ -189,7 +194,7 @@ function View(props) {
                                                 <tr>
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">Net Total (Rs.)</td>
                                                     <td className="p-2 border border-black text-center font-bold">
-                                                        ₹ {(props.qtnViewDetails.netTotal ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                        ₹ {(props.qtnViewDetails.netTotal ?? 0).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                                                     </td>
                                                 </tr>
                                                 {props.qtnViewDetails.cus_state === 'Tamil Nadu' ? (
@@ -197,13 +202,13 @@ function View(props) {
                                                         <tr>
                                                             <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (9%)</td>
                                                             <td className="p-2 border border-black text-center font-bold">
-                                                                ₹ {(props.qtnViewDetails.cgst ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                                ₹ {(props.qtnViewDetails.cgst ?? 0).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td colSpan="4" className="p-2 border border-black text-right font-bold">SGST (9%)</td>
                                                             <td className="p-2 border border-black text-center font-bold">
-                                                                ₹ {(props.qtnViewDetails.sgst ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                                ₹ {(props.qtnViewDetails.sgst ?? 0).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                                                             </td>
                                                         </tr>
                                                     </>
@@ -212,13 +217,13 @@ function View(props) {
                                                         <tr>
                                                             <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (9%)</td>
                                                             <td className="p-2 border border-black text-center font-bold">
-                                                                ₹ {(props.qtnViewDetails.cgst ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                                ₹ {(props.qtnViewDetails.cgst ?? 0).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td colSpan="4" className="p-2 border border-black text-right font-bold">IGST (9%)</td>
                                                             <td className="p-2 border border-black text-center font-bold">
-                                                                ₹ {(props.qtnViewDetails.igst ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                                ₹ {(props.qtnViewDetails.igst ?? 0).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                                                             </td>
                                                         </tr>
                                                     </>
@@ -226,13 +231,14 @@ function View(props) {
                                                 <tr>
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">Transport Cost (Rs.)</td>
                                                     <td className="p-2 border border-black text-center font-bold">
-                                                        ₹ {(props.qtnViewDetails.tpcost ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                        ₹ {(props.qtnViewDetails.tp_cost ?? 0).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                                                     </td>
                                                 </tr>
+
                                                 <tr>
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">Grand Total (Rs.)</td>
                                                     <td className="p-2 border border-black text-center font-bold">
-                                                        ₹ {(props.qtnViewDetails.gTotal ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                        ₹ {(props.qtnViewDetails.gTotal ?? 0).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                                                     </td>
                                                 </tr>
                                             </>
@@ -250,7 +256,7 @@ function View(props) {
                             </div>
                         </div>
                     </div>
-                    <div id="PdfDesign" style={{ display: 'none' }}>
+                    <div id="PdfDesign" style={{display: 'none'}}>
                         <div id="printDesignContent">
                             <div className="p-8 w-[794px] h-[1036px] border border-black shadow-lg rounded-lg space-y-2">
                                 <div className="text-center flex justify-center items-center">
@@ -363,9 +369,9 @@ function View(props) {
                                                             <span>------&gt;</span>
                                                         </div>
                                                         <div className="absolute top-1/2 right-[-25px] transform -translate-y-1/2 flex flex-col items-center font-bold text-sm space-y-3.5 -mt-2">
-                                                            <span style={{ display: "inline-block", transform: "rotate(90deg)" }} className="ml-5 mr-5">&lt;------</span>
-                                                            <span style={{ display: "inline-block", transform: "rotate(90deg)" }} className="ml-5 mr-5"> {data.height} </span>
-                                                            <span style={{ display: "inline-block", transform: "rotate(90deg)" }} className="ml-5 mr-5">------&gt;</span>
+                                                            <span style={{display: "inline-block", transform: "rotate(90deg)"}} className="ml-5 mr-5">&lt;------</span>
+                                                            <span style={{display: "inline-block", transform: "rotate(90deg)"}} className="ml-5 mr-5"> {data.height} </span>
+                                                            <span style={{display: "inline-block", transform: "rotate(90deg)"}} className="ml-5 mr-5">------&gt;</span>
                                                         </div>
                                                     </td>
                                                     <td className="border-b border-r border-black p-2 align-middle m-0">
@@ -400,10 +406,15 @@ function View(props) {
                                                                 <span className="w-[5%] text-center">:</span>
                                                                 <span className="w-[65%] ml-1 text-gray-700">{data.glass}</span>
                                                             </div>
-                                                            <div className="flex justify-start pb-3">
+                                                            <div className="flex justify-start">
                                                                 <span className="w-[30%] font-semibold text-gray-700">Color</span>
                                                                 <span className="w-[5%] text-center">:</span>
                                                                 <span className="w-[65%] ml-1 text-gray-700">{data.color}</span>
+                                                            </div>
+                                                            <div className="flex justify-start pb-3">
+                                                                <span className="w-[30%] font-semibold text-gray-700">Floor</span>
+                                                                <span className="w-[5%] text-center">:</span>
+                                                                <span className="w-[65%] ml-1 text-gray-700">{data.floor}</span>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -423,7 +434,7 @@ function View(props) {
                                                     Net Total (Rs.)
                                                 </td>
                                                 <td className="pb-3 pr-2 border-r border-black text-center font-bold">
-                                                    ₹ {props.qtnViewDetails.netTotal?.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || "0.00"}
+                                                    ₹ {props.qtnViewDetails.netTotal?.toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2}) || "0.00"}
                                                 </td>
                                             </tr>
                                             {props.qtnViewDetails.cus_state === "Tamil Nadu" ? (
@@ -433,7 +444,7 @@ function View(props) {
                                                             CGST (9%)
                                                         </td>
                                                         <td className="pb-3 pr-2 border-b border-r border-t border-black text-center font-bold">
-                                                            ₹ {props.qtnViewDetails.cgst?.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || "0.00"}
+                                                            ₹ {props.qtnViewDetails.cgst?.toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2}) || "0.00"}
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -441,7 +452,7 @@ function View(props) {
                                                             SGST (9%)
                                                         </td>
                                                         <td className="pb-3 pr-2 border-b border-r border-t-0 border-black text-center font-bold">
-                                                            ₹ {props.qtnViewDetails.sgst?.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || "0.00"}
+                                                            ₹ {props.qtnViewDetails.sgst?.toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2}) || "0.00"}
                                                         </td>
                                                     </tr>
                                                 </>
@@ -452,7 +463,7 @@ function View(props) {
                                                             CGST (9%)
                                                         </td>
                                                         <td className="pb-3 pr-2 border-b border-r border-t border-black text-center font-bold">
-                                                            ₹ {props.qtnViewDetails.cgst?.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || "0.00"}
+                                                            ₹ {props.qtnViewDetails.cgst?.toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2}) || "0.00"}
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -460,7 +471,7 @@ function View(props) {
                                                             IGST (9%)
                                                         </td>
                                                         <td className="pb-3 pr-2 border-b border-r border-t-0 border-black text-center font-bold">
-                                                            ₹ {props.qtnViewDetails.igst?.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || "0.00"}
+                                                            ₹ {props.qtnViewDetails.igst?.toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2}) || "0.00"}
                                                         </td>
                                                     </tr>
                                                 </>
@@ -470,7 +481,7 @@ function View(props) {
                                                     Transport Cost (Rs.)
                                                 </td>
                                                 <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
-                                                    ₹ {props.qtnViewDetails.tpcost?.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || "0.00"}
+                                                    ₹ {props.qtnViewDetails.tpcost?.toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2}) || "0.00"}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -478,14 +489,14 @@ function View(props) {
                                                     Grand Total (Rs.)
                                                 </td>
                                                 <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
-                                                    ₹ {props.qtnViewDetails.gTotal?.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || "0.00"}
+                                                    ₹ {props.qtnViewDetails.gTotal?.toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2}) || "0.00"}
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div className="pt-1 w-[794px] h-[1036px] space-y-2 [page-break-before:always] avoid-page-break fix-border avoid-split" style={{ pageBreakBefore: "always" }}>
+                            <div className="pt-1 w-[794px] h-[1036px] space-y-2 [page-break-before:always] avoid-page-break fix-border avoid-split" style={{pageBreakBefore: "always"}}>
                                 <div className='border border-black shadow-lg rounded-lg px-5 py-3'>
                                     <div className='flex'>
                                         <div className='w-[70%]'>
@@ -516,7 +527,7 @@ function View(props) {
                                         <div className='flex flex-col justify-center items-center mt-3'>
                                             <h3 className="font-semibold">Reinforcement Steel:</h3>
                                             <img src={Logo} alt="AM/NS India" className="h-20 my-2" />
-                                            <p style={{ display: 'none' }}>Champion</p>
+                                            <p style={{display: 'none'}}>Champion</p>
                                         </div>
                                     </div>
                                     <div className='flex flex-col justify-center items-center mt-4'>
