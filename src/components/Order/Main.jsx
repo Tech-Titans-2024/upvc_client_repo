@@ -67,7 +67,7 @@ function Main() {
         try {
             const response = await axios.post(`${apiUrl}/api/viewQtn`, { qtnId })
             setQtnViewDetails(response.data)
-            
+
         }
         catch (error) { }
     }
@@ -111,73 +111,68 @@ function Main() {
                 </label>
             </div>
             {selectedStatus && (
-                <table className="w-full bg-white shadow-md rounded-lg border-collapse mt-2 text-center">
+                <table className="w-full bg-white shadow-md rounded-lg border-collapse mt-2 text-center text-base">
                     <thead>
-                        <tr className="py-6 bg-blue-500 text-white text-lg">
-                            <th className="border border-gray-300 py-6 px-4 whitespace-nowrap overflow-hidden text-ellipsis">Qtn No</th>
-                            <th className="border border-gray-300 py-6 px-4 w-32 whitespace-nowrap overflow-hidden text-ellipsis">Date</th>
-                            <th className="border border-gray-300 py-6 px-4 whitespace-nowrap overflow-hidden text-ellipsis">Staff ID</th>
-                            <th className="border border-gray-300 py-6 px-4 whitespace-nowrap overflow-hidden text-ellipsis">Cus Name</th>
-                            <th className="border border-gray-300 py-6 px-4 w-32 whitespace-nowrap overflow-hidden text-ellipsis">Address</th>
-                            <th className="border border-gray-300 py-6 px-4 whitespace-nowrap overflow-hidden text-ellipsis">Contact No</th>
-                            {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-6 px-4">Confirm</th>}
-                            {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-6 px-4">Edit</th>}
-                            {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-6 px-4">Delete</th>}
-                            {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-6 px-4">View</th>}
+                        <tr className="py-3 bg-blue-500 text-white text-lg">
+                            <th className="border border-gray-300 py-3 px-2">Qtn No</th>
+                            <th className="border border-gray-300 py-3 px-2">Date</th>
+                            <th className="border border-gray-300 py-3 px-2">Staff ID</th>
+                            <th className="border border-gray-300 py-3 px-2">Cus Name</th>
+                            <th className="border border-gray-300 py-3 px-2">Address</th>
+                            <th className="border border-gray-300 py-3 px-2">Contact No</th>
+                            {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-3 px-2">Confirm</th>}
+                            {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-3 px-2">Edit</th>}
+                            {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-3 px-2">Delete</th>}
+                            {selectedStatus === "Unconfirmed" && <th className="border border-gray-300 py-3 px-2">View</th>}
                         </tr>
                     </thead>
                     <tbody>
                         {filteredQuotations.length > 0 ? (
                             filteredQuotations.map((quotation, index) => (
                                 <tr key={index} className="uppercase text-center hover:bg-gray-100">
-                                    <td className="px-4 py-6 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.quotation_no}</td>
-                                    <td className="px-4 py-6 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.date}</td>
-                                    <td className="px-4 py-6 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.sales_person}</td>
-                                    <td className="px-4 py-6 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.cus_name}</td>
-                                    <td className="px-4 py-6 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.cus_address}</td>
-                                    <td className="px-4 py-6 border border-gray-300 whitespace-nowrap overflow-hidden text-ellipsis">{quotation.cus_contact}</td>
+                                    <td className="px-2 py-3 border border-gray-300">{quotation.quotation_no}</td>
+                                    <td className="px-2 py-3 border border-gray-300">{quotation.date}</td>
+                                    <td className="px-2 py-3 border border-gray-300">{quotation.sales_person}</td>
+                                    <td className="px-2 py-3 border border-gray-300">{quotation.cus_name}</td>
+                                    <td className="px-2 py-3 border border-gray-300">{quotation.cus_address}</td>
+                                    <td className="px-2 py-3 border border-gray-300">{quotation.cus_contact}</td>
                                     {selectedStatus === "Unconfirmed" && (
                                         <>
-                                            <td className="px-4 py-2 border border-gray-300">
+                                            <td className="px-2 py-2 border border-gray-300">
                                                 <button
-                                                    className="px-3 py-1 w-32 h-10 font-bold text-md bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none"
+                                                    className="px-3 py-2 font-bold text-sm bg-green-500 text-white rounded hover:bg-green-600"
                                                     onClick={() => confirmOrder(quotation)}
                                                 >
-                                                    <FontAwesomeIcon icon={faCheck} className="mr-2" />
+                                                    <FontAwesomeIcon icon={faCheck} className="mr-1" />
                                                     Confirm
                                                 </button>
                                             </td>
-                                            <td className="px-4 py-2 border border-gray-300">
+                                            <td className="px-2 py-2 border border-gray-300">
                                                 <button
-                                                    className="px-3 py-1 w-32 h-10 font-bold text-md bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none"
-                                                    onClick={() => { setEdit(true), setQuotationPos(index) }}
+                                                    className="px-3 py-2 font-bold text-sm bg-teal-600 text-white rounded hover:bg-teal-700"
+                                                    onClick={() => { setEdit(true); setQuotationPos(index); }}
                                                 >
-                                                    <FontAwesomeIcon icon={faEdit} className="mr-2" />
+                                                    <FontAwesomeIcon icon={faEdit} className="mr-1" />
                                                     Edit
                                                 </button>
                                             </td>
-                                            <td className="px-4 py-2 border border-gray-300">
+                                            <td className="px-2 py-2 border border-gray-300">
                                                 <button
-                                                    className="px-3 py-1 w-32 h-10 font-bold text-md bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
+                                                    className="px-3 py-2 font-bold text-sm bg-red-500 text-white rounded hover:bg-red-600"
                                                     onClick={() => {
-                                                        setIsDelete(true), setDeleteId(quotation.
-                                                            quotation_no)
+                                                        setIsDelete(true); setDeleteId(quotation.quotation_no);
                                                     }}
                                                 >
-                                                    <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                                                    <FontAwesomeIcon icon={faTrash} className="mr-1" />
                                                     Delete
                                                 </button>
                                             </td>
-                                        </>
-                                    )}
-                                    {selectedStatus === 'Unconfirmed' && (
-                                        <>
-                                            <td className="px-4 py-2 border border-gray-300">
+                                            <td className="px-2 py-2 border border-gray-300">
                                                 <button
-                                                    className="px-3 py-1 w-32 h-10 font-bold text-md bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none"
+                                                    className="px-3 py-2 font-bold text-sm bg-green-500 text-white rounded hover:bg-green-600"
                                                     onClick={() => viewQuotation(quotation.quotation_no)}
                                                 >
-                                                    <FontAwesomeIcon icon={faEye} className="mr-2" />
+                                                    <FontAwesomeIcon icon={faEye} className="mr-1" />
                                                     View
                                                 </button>
                                             </td>
@@ -188,8 +183,8 @@ function Main() {
                         ) : (
                             <tr>
                                 <td
-                                    colSpan={selectedStatus === "Unconfirmed" ? 9 : 8}
-                                    className="px-4 py-6 border border-gray-300 text-center"
+                                    colSpan={selectedStatus === "Unconfirmed" ? 10 : 7}
+                                    className="px-2 py-4 border border-gray-300 text-center"
                                 >
                                     No Quotations Found
                                 </td>
@@ -198,7 +193,6 @@ function Main() {
                     </tbody>
                 </table>
             )}
-
             {edit && (
                 <Edit isEdit={setEdit} quotations={quotations} quatationNo={quotationPos} Q_no={quataion_no} productPos={productPos} />
             )}

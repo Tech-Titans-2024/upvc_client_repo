@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 
 function Edit(props) {
     const [edit, setEdit] = useState(false)
@@ -61,7 +61,7 @@ function Edit(props) {
 
 
     const handleChange = async (e) => {
-        const {name, value, type} = e.target;
+        const { name, value, type } = e.target;
 
         if (type === "radio") {
             setUnit(value); // Update unit selection
@@ -256,12 +256,13 @@ function Edit(props) {
                 <div className="fixed inset-0 bg-transparent bg-opacity-60 backdrop-blur-md flex justify-center items-center z-1">
                     <div className="bg-white p-8 rounded-2xl shadow-2xl w-11/12 max-w-6xl">
                         <div className="max-h-[500px] overflow-y-auto">
-                            <div className='flex justify-end'>
+                            <div className="flex justify-end mb-2">
                                 <label
-                                    htmlFor=""
+                                    type="button"
                                     onClick={() => props.isEdit(false)}
-                                    className="text-gray-700 font-bold text-lg cursor-pointer hover:text-red-500 transition duration-200"
+                                    className="bg-red-500 text-white font-bold text-lg w-9 h-9 flex items-center justify-center rounded-full shadow-md hover:bg-red-600"
                                     title="Close"
+                                    aria-label="Close"
                                 >
                                     X
                                 </label>
