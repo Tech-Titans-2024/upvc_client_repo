@@ -21,8 +21,8 @@ function Main()
     const [currentData, setCurrentData] = useState({
         brand: 'Veka', product: 'Door', type: '', variant: '', mesh: 'No', frame: '',
         lock: '', width: '', height: '', feet: '', area: '', price: '', quantity: '1',
-        totalqtyprice: '', glass: '', thickness: '', color: '', adcost: '0', totalcost: '', 
-        image: '', floor: ''  // Add this new field
+        totalqtyprice: '', glass: '', thickness: '', color: '', adcost: '0', totalcost: '',
+        image: '', floor: '' 
     })
     const [customer, setCustomer] = useState({
         salesPerson: '', quotationNo: '', tpcost: '0', cusName: '', cusAddress: '', cusContact: '',
@@ -33,7 +33,8 @@ function Main()
 
         const fetchType = async () => {
 
-            try { let response;
+            try {
+                let response;
 
                 if (currentData.product === 'Door') {
                     response = await axios.get(`${apiUrl}/api/doorTypes`);
@@ -74,8 +75,8 @@ function Main()
         //             let New_Q=QResponse.data+1
         //             console.log("nUm",QResponse.data);
         //             console.log("HVDHVDHV");
-                    
-                    
+
+
         //             setCustomer((prevCustomer) => ({ ...prevCustomer,  quotationNo: New_Q }))
         //         }
         //     } 
@@ -106,6 +107,20 @@ function Main()
                 ...prev, width: 0, height: 0, totalcost: 0,
                 totalqtyprice: 0, price: 0, area: 0, feet: 0,
             }));
+        }
+
+        if (name === 'brand') {
+            setCurrentData((prev) => ({
+                ...prev, product: "Door"
+            }))
+            try {
+                const response = await axios.post(`${apiUrl}/api/variantTypes`, {
+                    selected_type: value,
+                    selected_category: "Door",
+                })
+                setVariant(response.data);
+            }
+            catch (error) { console.error('Error fetching Variant Types:', error) }
         }
 
         if (name === 'type') {
@@ -211,77 +226,56 @@ function Main()
     }
 
     const handleSave = async () => {
-
-
         try {
             const QResponse = await axios.get(`${apiUrl}/api/quotationNo`);
             if (QResponse.data !== undefined) {
                 let New_Q = QResponse.data + 1;
-                console.log("Fetched quotation number:", QResponse.data);
-                console.log("New quotation number:", New_Q);
-        
                 setCustomer((prevCustomer) => ({
-                    ...prevCustomer,
-                    quotationNo: New_Q
+                    ...prevCustomer, quotationNo: New_Q
                 }));
-            } else {
-                console.log("No data received in response");
             }
-        } catch (err) {
-            console.error("Error fetching quotation number:", err.message);
+            else { console.log("No data received in response") }
         }
-        
+        catch (err) { console.error("Error fetching quotation number:", err.message) }
+
         if (currentData.product === 'Door' || currentData.product === 'Window') {
             if (
-                currentData.brand === '' || currentData.product === '' || currentData.type === '' || 
-                currentData.variant === '' || currentData.width === '' || currentData.height === '' || 
+                currentData.brand === '' || currentData.product === '' || currentData.type === '' ||
+                currentData.variant === '' || currentData.width === '' || currentData.height === '' ||
                 currentData.price === '' || currentData.glass === '' || currentData.thickness === '' ||
                 currentData.color === ''
             ) {
                 alert('Please fill in all required Fields .');
-                return; 
+                return;
             }
         }
         if (currentData.product === 'Louver') {
             if (
                 currentData.brand === '' || currentData.product === '' ||
-                currentData.variant === '' || currentData.width === '' || currentData.height === '' || 
+                currentData.variant === '' || currentData.width === '' || currentData.height === '' ||
                 currentData.price === '' || currentData.glass === '' || currentData.thickness === '' ||
                 currentData.color === ''
             ) {
                 alert('Please fill in all required Fields .');
-                return; 
+                return;
             }
         }
         setSavedData((prev) => [...prev, currentData]);
         alert("Data saved successfully");
         setCurrentData((prev) => ({
-            ...prev, width: "", height: "", area: "", price: "", glass: "", totalqtyprice: '',
-            color: "", adcost: "0", quantity: "1", total: "", image: "", totalcost: '',feet:'',thickness:''
+            ...prev, width: "", height: "", area: "", price: "", glass: "", totalqtyprice: '', floor: '',
+            color: "", adcost: "0", quantity: "1", total: "", image: "", totalcost: '', feet: '', thickness: ''
         }))
-
-
-
-
-
-        
     }
 
     const quatationNo = async () => {
         try {
-            const QResponse= await axios.get(`${apiUrl}/api/quotationNo`);
-            if(QResponse.data){
-                // let Split_no = QResponse.data.match(/(\D+)(\d+)/)
-                // let increament=Number(Split_no[2])+1;
-                // let New_Q=Split_no[1]+increament.toString();
-                let New_Q=QResponse.data+1
-                console.log("nUm",QResponse.data);
-                console.log("HVDHVDHV");
-                
-                
-                setCustomer((prevCustomer) => ({ ...prevCustomer,  quotationNo: New_Q }))
+            const QResponse = await axios.get(`${apiUrl}/api/quotationNo`);
+            if (QResponse.data) {
+                let New_Q = QResponse.data + 1
+                setCustomer((prevCustomer) => ({ ...prevCustomer, quotationNo: New_Q }))
             }
-        } 
+        }
         catch (err) { console.log("Not Applicable"); }
     }
 
@@ -294,9 +288,8 @@ function Main()
             if (updatedCustomer.cusState === 'Tamil Nadu') {
                 const cgst = parseFloat(updatedCustomer.netTotal * 9) / 100;
                 const sgst = parseFloat(updatedCustomer.netTotal * 9) / 100;
-
-                const gTotal = parseFloat(updatedCustomer.netTotal) + cgst +sgst+ parseFloat(updatedCustomer.tpcost);
-                return { ...updatedCustomer, cgst,sgst, gTotal };
+                const gTotal = parseFloat(updatedCustomer.netTotal) + cgst + sgst + parseFloat(updatedCustomer.tpcost);
+                return { ...updatedCustomer, cgst, sgst, gTotal };
             }
             if (updatedCustomer.cusState === 'Others') {
                 const cgst = parseFloat(updatedCustomer.netTotal * 9) / 100;
@@ -320,32 +313,25 @@ function Main()
         }))
     }, [savedData]);
 
-    const handleGetQuotation = () => { 
+    const handleGetQuotation = () => {
         if (
-            !customer.salesPerson || !customer.cusName || !customer.cusAddress || 
+            !customer.salesPerson || !customer.cusName || !customer.cusAddress ||
             !customer.cusState || !customer.cusContact
         ) {
             alert('Please fill in all required fields.');
-            return; 
+            return;
         }
         setQuotation(true);
     }
 
     const handleFinish = async () => {
-        // Debug: Log initial data before processing
-        console.log("Initial savedData:", JSON.stringify(savedData, null, 2));
-        console.log("Initial customer data:", JSON.stringify(customer, null, 2));
-    
+
         const printContent = document.getElementById('printDesignContent');
-        
-        // Debug: Verify print content exists
         if (!printContent) {
             console.error("Print content element not found!");
             return;
         }
-    
-        // Style adjustments for PDF
-        const elements = printContent.querySelectorAll('*'); 
+        const elements = printContent.querySelectorAll('*');
         elements.forEach(element => {
             const computedStyle = window.getComputedStyle(element);
             if (computedStyle.color.includes('oklch')) {
@@ -355,31 +341,28 @@ function Main()
                 element.style.backgroundColor = '#1E88E5';
             }
             if (computedStyle.borderColor.includes('oklch')) {
-                element.style.borderColor = '#000000'; 
+                element.style.borderColor = '#000000';
             }
         });
-    
-        // Image loading handling
+
         const images = printContent.querySelectorAll('img');
         const imagePromises = Array.from(images).map((image) => {
             return new Promise((resolve, reject) => {
-                if (image.complete) { 
-                    resolve(); 
-                } else {
+                if (image.complete) { resolve() }
+                else {
                     image.onload = resolve;
                     image.onerror = () => {
                         console.error(`Failed to load image: ${image.src}`);
-                        resolve(); 
+                        resolve();
                     }
-                    image.crossOrigin = 'anonymous'; 
+                    image.crossOrigin = 'anonymous';
                 }
             });
         });
-        
+
         try {
             await Promise.all(imagePromises);
-            
-            // PDF generation options
+
             const options = {
                 margin: 0.1,
                 padding: 0.2,
@@ -390,7 +373,7 @@ function Main()
                     useCORS: true,
                     logging: true,
                     letterRendering: true,
-                    backgroundColor: null, 
+                    backgroundColor: null,
                 },
                 jsPDF: {
                     unit: 'in',
@@ -400,43 +383,30 @@ function Main()
                 },
                 pagebreak: { mode: ['css', 'legacy'] }
             };
-        
+
             await html2pdf().from(printContent).set(options).save();
-            
-            // Prepare and log final data before sending
-            const data = { 
-                customer, 
+
+            const data = {
+                customer,
                 savedData: savedData.map(item => ({
                     ...item,
-                    floor: item.floor || '' // Ensure floor exists
+                    floor: item.floor || ''
                 }))
-            };
-            
-            console.log("Final data being sent to server:", JSON.stringify(data, null, 2));
-            console.log("Sample product data:", {
-                brand: data.savedData[0]?.brand,
-                floor: data.savedData[0]?.floor,
-                otherFields: "..." 
-            });
-    
+            }
+
             const response = await axios.post(`${apiUrl}/api/quotationSave`, { data });
-            
-            if (response.status === 200) { 
+
+            if (response.status === 200) {
                 console.log("Server response:", response.data);
                 alert("The Quotation has been Saved Successfully...");
                 window.location.reload();
-            } else { 
-                console.error('Failed to send Data to Backend:', {
-                    status: response.status,
-                    data: response.data
-                }); 
             }
-        } 
-        catch (error) { 
-            console.error('Error during process:', {
-                error: error.response?.data || error.message,
-                stack: error.stack
-            });
+            else {
+                console.error('Failed to send Data to Backend:', { status: response.status, data: response.data });
+            }
+        }
+        catch (error) {
+            console.error('Error during process:', { error: error.response?.data || error.message, stack: error.stack });
         }
     }
 
@@ -455,7 +425,7 @@ function Main()
                     <FontAwesomeIcon icon={faSave} className="text-md mr-2" />
                     SAVE
                 </button>
-            </div>  
+            </div>
             {savedData.length > 0 && (
                 <div className='flex flex-col gap-8'>
                     <h2 className="text-2xl font-semibold text-white bg-slate-500 py-3 px-5">ORDER SUMMARY</h2>

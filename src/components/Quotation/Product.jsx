@@ -1,6 +1,7 @@
 import React from 'react'
 
-function Product(props) {
+function Product(props) 
+{
     return (
         <div className='flex flex-col border-2 border-black rounded-lg bg-blue-300'>
             <div className="grid grid-cols-5 gap-7 gap-y-10 p-7 border-b-2 border-black py-12">
@@ -236,7 +237,7 @@ function Product(props) {
                     </select>
                 </div>
                 <div className="flex flex-col gap-4">
-                    <label className="font-semibold ml-1 uppercase">Floor : </label>
+                    <label className="font-semibold ml-1 uppercase">Floor No : </label>
                     <input
                         type="number"
                         className="w-full p-3 bg-white border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -245,7 +246,6 @@ function Product(props) {
                             const value = e.target.value;
                             props.handleInputChange('floor', value === '' ? '' : Number(value));
                         }}
-                        placeholder="Floor number (optional)"
                     />
                 </div>
                 <div className="flex flex-col gap-4">

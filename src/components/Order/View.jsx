@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone, faEnvelope, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import html2pdf from 'html2pdf.js';
 
-function View(props) {
+function View(props) 
+{
     const apiUrl = import.meta.env.VITE_API_URL;
-
     const { closeModal } = props;
 
     const handleFinish = async () => {
@@ -70,8 +70,8 @@ function View(props) {
                     <div
                         className="fixed inset-0 flex justify-center items-center z-50"
                         style={{
-                            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black
-                            backdropFilter: 'blur(10px)', // Blur effect
+                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                            backdropFilter: 'blur(10px)',
                         }}
                     >                        <div className="p-6 bg-gray-50 border border-gray-300 rounded-md shadow-md max-w-6xl w-full max-h-[91vh] overflow-y-auto">
                             <div className="flex justify-between items-center mb-4">
@@ -163,9 +163,9 @@ function View(props) {
                                                             </span>
                                                         </div>
                                                         <div className="flex">
-                                                            <span className="w-[29%] font-bold">Area</span>
+                                                            <span className="w-[29%] font-bold">Feet</span>
                                                             <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[70%] ml-2">{data.area}</span>
+                                                            <span className="w-[70%] ml-2">{data.feet} ft</span>
                                                         </div>
                                                         <div className="flex">
                                                             <span className="w-[29%] font-bold">Glass</span>
@@ -177,19 +177,19 @@ function View(props) {
                                                             <span className="w-[5%] text-center">:</span>
                                                             <span className="w-[70%] ml-2">{data.color}</span>
                                                         </div>
-                                                        <div className="flex">
-                                                            <span className="w-[29%] font-bold">Floor</span>
-                                                            <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[70%] ml-2">{data.floor}</span>
-                                                        </div>
+                                                        {data.floor !== null && (
+                                                            <div className="flex">
+                                                                <span className="w-[29%] font-bold">Floor</span>
+                                                                <span className="w-[5%] text-center">:</span>
+                                                                <span className="w-[70%] ml-2">{data.floor}</span>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </td>
                                                 <td className="p-3 border border-black text-center">{data.quantity}</td>
                                                 <td className="p-3 border border-black text-center">{data.price}</td>
                                                 <td className="p-3 border border-black text-center">{data.totalcost}</td>
-
                                             </tr>
-
                                         ))}
                                         {props.qtnViewDetails && (
                                             <>
@@ -378,46 +378,48 @@ function View(props) {
                                                     </td>
                                                     <td className="border-b border-r border-black p-2 align-middle m-0">
                                                         <div className="flex flex-col gap-1">
-                                                            <div className="flex justify-start">
+                                                            <div className="flex justify-start ml-2">
                                                                 <span className="w-[30%] font-semibold text-gray-700">Product</span>
                                                                 <span className="w-[5%] text-center">:</span>
                                                                 <span className="w-[65%] ml-1 text-gray-700">{data.product}</span>
                                                             </div>
-                                                            <div className="flex justify-start">
+                                                            <div className="flex justify-start ml-2">
                                                                 <span className="w-[30%] font-semibold text-gray-700">Type</span>
                                                                 <span className="w-[5%] text-center">:</span>
                                                                 <span className="w-[65%] ml-1 text-gray-700">{data.type}</span>
                                                             </div>
-                                                            <div className="flex justify-start">
+                                                            <div className="flex justify-start ml-2">
                                                                 <span className="w-[30%] font-semibold text-gray-700">Variant</span>
                                                                 <span className="w-[5%] text-center">:</span>
                                                                 <span className="w-[65%] ml-1 text-gray-700">{data.variant}</span>
                                                             </div>
-                                                            <div className="flex justify-start">
+                                                            <div className="flex justify-start ml-2">
                                                                 <span className="w-[30%] font-semibold text-gray-700">Size</span>
                                                                 <span className="w-[5%] text-center">:</span>
                                                                 <span className="w-[65%] ml-1 text-gray-700">W = {data.width}, H = {data.height}</span>
                                                             </div>
-                                                            <div className="flex justify-start">
-                                                                <span className="w-[30%] font-semibold text-gray-700">Area</span>
+                                                            <div className="flex justify-start ml-2">
+                                                                <span className="w-[30%] font-semibold text-gray-700">Feet</span>
                                                                 <span className="w-[5%] text-center">:</span>
-                                                                <span className="w-[65%] ml-1 text-gray-700">{data.area}</span>
+                                                                <span className="w-[65%] ml-1 text-gray-700">{data.feet} ft</span>
                                                             </div>
-                                                            <div className="flex justify-start">
+                                                            <div className="flex justify-start ml-2">
                                                                 <span className="w-[30%] font-semibold text-gray-700">Glass</span>
                                                                 <span className="w-[5%] text-center">:</span>
                                                                 <span className="w-[65%] ml-1 text-gray-700">{data.glass}</span>
                                                             </div>
-                                                            <div className="flex justify-start">
+                                                            <div className="flex justify-start ml-2">
                                                                 <span className="w-[30%] font-semibold text-gray-700">Color</span>
                                                                 <span className="w-[5%] text-center">:</span>
                                                                 <span className="w-[65%] ml-1 text-gray-700">{data.color}</span>
                                                             </div>
-                                                            <div className="flex justify-start pb-3">
-                                                                <span className="w-[30%] font-semibold text-gray-700">Floor</span>
-                                                                <span className="w-[5%] text-center">:</span>
-                                                                <span className="w-[65%] ml-1 text-gray-700">{data.floor}</span>
-                                                            </div>
+                                                            {data.floor !== null && (
+                                                                <div className="flex justify-start ml-2 pb-3">
+                                                                    <span className="w-[30%] font-semibold text-gray-700">Floor</span>
+                                                                    <span className="w-[5%] text-center">:</span>
+                                                                    <span className="w-[65%] ml-1 text-gray-700">{data.floor}</span>
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </td>
                                                     <td className="border-b border-r border-black text-center align-middle m-0">

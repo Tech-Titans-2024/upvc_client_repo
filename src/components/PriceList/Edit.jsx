@@ -1,7 +1,6 @@
 import React, { useReducer } from "react";
 
-function handleChangeData(changeData, action) 
-{
+function handleChangeData(changeData, action) {
     switch (action.work) {
         case "changeData":
             return { ...changeData, [action.field]: action.value };
@@ -22,8 +21,7 @@ function Edit(props)
 
     return (
         <div
-        className="fixed inset-0 bg-opacity-50 backdrop-blur flex justify-center items-center z-50"
-
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 transition-opacity duration-300"
             onClick={() => props.edit(false)}
         >
             <div

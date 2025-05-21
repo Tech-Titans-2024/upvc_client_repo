@@ -4,16 +4,16 @@ import axios from 'axios';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faEdit, faTrash, faTimes, faSave} from '@fortawesome/free-solid-svg-icons';
 
-function Summary(props) {
+function Summary(props) 
+{
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    // const [editingData, setEditingData] = useState(null);
     const [editingIndex, setEditingIndex] = useState(null);
     const [editingData, setEditingData] = useState({
         width: "",
         height: "",
         area: "",
         feet: "",
-        unit: "feet", // Default unit
+        unit: "feet",
     });
     const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -30,57 +30,34 @@ function Summary(props) {
         setIsPopupOpen(false);
     }
 
-    // const calculateTotalQtyPrice = (feet, price, quantity) => {
-    //     return (parseFloat(feet) * parseFloat(price) * parseFloat(quantity)).toFixed(2);
-    // };
-
-    // const calculateTotalQtyPrice = (data) => {
-    //     const feet = parseFloat(data.feet) || 0;
-    //     const price = parseFloat(data.price) || 0;
-    //     const quantity = parseFloat(data.quantity) || 0;
-
-    //     return (feet * price * quantity).toFixed(2);
-    // };
-
-
     const calculateTotalQtyPrice = (data) => {
         const feet = isNaN(parseFloat(data.feet)) ? 0 : parseFloat(data.feet);
         const price = isNaN(parseFloat(data.price)) ? 0 : parseFloat(data.price);
         const quantity = isNaN(parseFloat(data.quantity)) ? 0 : parseFloat(data.quantity);
-
         return (feet * price * quantity).toFixed(2);
     };
 
     const handleChange = async (e) => {
         const {name, value} = e.target;
+        const updatedData = { ...editingData, [name]: value }
 
-        const updatedData = {
-            ...editingData,
-            [name]: value,
-        };
-
-        // Handle changes for width, height, and unit
         if (["width", "height", "unit"].includes(name)) {
             const width = parseFloat(updatedData.width) || 0;
             const height = parseFloat(updatedData.height) || 0;
-
-            if (updatedData.unit === "feet") {
-                updatedData.feet = (width * height).toFixed(2);
-            } else if (updatedData.unit === "mm") {
+            if (updatedData.unit === "feet") { updatedData.feet = (width * height).toFixed(2) } 
+            else if (updatedData.unit === "mm") {
                 const widthInFeet = width / 304.8;
                 const heightInFeet = height / 304.8;
                 updatedData.feet = (widthInFeet * heightInFeet).toFixed(2);
             }
         }
 
-        // Recalculate totalQtyPrice whenever relevant fields change
         if (["price", "feet", "quantity", "width", "height", "unit"].includes(name)) {
             updatedData.totalQtyPrice = calculateTotalQtyPrice(updatedData);
         }
 
         setEditingData(updatedData);
 
-        // Fetch price dynamically when width or height changes
         if (["width", "height"].includes(name)) {
             try {
                 const response = await axios.post(`${apiUrl}/api/pricelist`, {
@@ -94,7 +71,6 @@ function Summary(props) {
 
                 if (response.data?.data !== undefined) {
                     const fetchedPrice = parseFloat(response.data.data) || 0;
-
                     setEditingData((prev) => ({
                         ...prev,
                         price: fetchedPrice,
@@ -103,18 +79,11 @@ function Summary(props) {
                             price: fetchedPrice,
                         }),
                     }));
-                    console.log(editingData.totalQtyPrice)
                 }
-            } catch (error) {
-                console.error("Error fetching price:", error);
-            }
+            } 
+            catch (error) { console.error("Error fetching price:", error) }
         }
-    };
-
-
-
-
-
+    }
 
     return (
         <>
@@ -124,10 +93,10 @@ function Summary(props) {
                         <th className="border-2 border-black px-4 py-2 uppercase font-bold">Brand</th>
                         <th className="border-2 border-black px-4 py-2 uppercase font-bold">Type</th>
                         <th className="border-2 border-black px-4 py-2 uppercase font-bold">Variant</th>
-                        <th className="border-2 border-black px-4 py-2 uppercase font-bold">Width</th>
-                        <th className="border-2 border-black px-4 py-2 uppercase font-bold">Height</th>
+                        <th className="border-2 border-black px-2 py-2 uppercase font-bold">Width</th>
+                        <th className="border-2 border-black px-2 py-2 uppercase font-bold">Height</th>
                         <th className="border-2 border-black px-4 py-2 uppercase font-bold">Total</th>
-                        <th className="border-2 border-black px-4 py-2 uppercase font-bold" colSpan={2}>Actions</th>
+                        <th className="border-2 border-black px-10 py-2 uppercase font-bold">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -138,7 +107,7 @@ function Summary(props) {
                                     {data[field] || "N/A"}
                                 </td>
                             ))}
-                            <td className="border-2 border-black font-bold font-lg w-[12%] p-2">
+                            {/* <td className="border-2 border-black font-bold font-lg w-[12%] p-2">
                                 <button
                                     className="bg-blue-500 text-white text-lg w-[100%] py-2.5 rounded-lg"
                                     onClick={() => handleEditRow(index)}
@@ -146,8 +115,8 @@ function Summary(props) {
                                     <FontAwesomeIcon icon={faEdit} className="text-md mr-2" />
                                     Edit
                                 </button>
-                            </td>
-                            <td className="border-2 border-black font-bold w-[12%] p-2">
+                            </td> */}
+                            <td className="border-2 border-black font-bold w-[12%] p-3">
                                 <button
                                     className="bg-red-500 text-white text-lg w-[100%] py-2.5 rounded-lg"
                                     onClick={() => props.handleDeleteRow(index)}

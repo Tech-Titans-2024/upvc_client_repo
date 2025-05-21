@@ -4,7 +4,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-function Main() 
+function Main()
 {
     const apiUrl = import.meta.env.VITE_API_URL;
     const [edit, setEdit] = useState(false);
@@ -148,7 +148,7 @@ function Main()
                     <Edit edit={setEdit} data={editPriceData} changedData={setChangedData} updateData={updatePrice} />
                 )}
                 {isDelete && (
-                    <div className="fixed inset-0 bg-opacity-50 backdrop-blur flex justify-center items-center z-50">
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 transition-opacity duration-300">
                         <div className="bg-white w-96 p-6 rounded-lg shadow-lg text-center">
                             <h2 className="text-xl font-bold mb-4 text-red-600">Confirm Deletion</h2>
                             <p className="text-lg text-gray-700 mb-6">Are you sure you want to delete this ?</p>

@@ -41,7 +41,7 @@ function Quotation(props)
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {props.savedData.map((data, index) => (
+                                        {props.savedData.map((data, index) => (
                                             <tr key={index} className={`bg-white ${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
                                                 <td className="border border-black relative text-center w=[40%] pl-3 ml-2">
                                                     <img
@@ -83,9 +83,9 @@ function Quotation(props)
                                                             <span className="w-[70%] ml-1">W = {data.width}, H = {data.height}</span>
                                                         </div>
                                                         <div className="flex">
-                                                            <span className="w-[25%] font-bold">Area</span>
+                                                            <span className="w-[25%] font-bold">Feet</span>
                                                             <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[70%] ml-1">{data.area}</span>
+                                                            <span className="w-[70%] ml-1">{data.feet} ft</span>
                                                         </div>
                                                         <div className="flex">
                                                             <span className="w-[25%] font-bold">Glass</span>
@@ -97,11 +97,13 @@ function Quotation(props)
                                                             <span className="w-[5%] text-center">:</span>
                                                             <span className="w-[70%] ml-1">{data.color}</span>
                                                         </div>
-                                                        <div className="flex">
-                                                            <span className="w-[25%] font-bold">Floor</span>
-                                                            <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[70%] ml-1">{data.floor}</span>
-                                                        </div>
+                                                        {data.floor !== "" && (
+                                                            <div className="flex">
+                                                                <span className="w-[25%] font-bold">Floor</span>
+                                                                <span className="w-[5%] text-center">:</span>
+                                                                <span className="w-[70%] ml-1">{data.floor}</span>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </td>
                                                 <td className="p-3 border border-black text-center">{data.quantity}</td>
@@ -113,17 +115,17 @@ function Quotation(props)
                                             <>
                                                 <tr>
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">Net Total (Rs.)</td>
-                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.netTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.netTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                                 </tr>
                                                 {props.customer.cusState === 'Tamil Nadu' && (
                                                     <>
                                                         <tr>
                                                             <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (9%)</td>
-                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                                         </tr>
                                                         <tr>
                                                             <td colSpan="4" className="p-2 border border-black text-right font-bold">SGST (9%)</td>
-                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.sgst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.sgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                                         </tr>
                                                     </>
                                                 )}
@@ -131,21 +133,21 @@ function Quotation(props)
                                                     <>
                                                         <tr>
                                                             <td colSpan="4" className="p-2 border border-black text-right font-bold">CGST (9%)</td>
-                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.cgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                                         </tr>
                                                         <tr>
                                                             <td colSpan="4" className="p-2 border border-black text-right font-bold">IGST (9%)</td>
-                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.igst.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                                                            <td className="p-2 border border-black text-center font-bold">₹ {props.customer.igst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                                         </tr>
                                                     </>
                                                 )}
                                                 <tr>
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">Transport Cost (Rs.)</td>
-                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.tpcost.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.tpcost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                                 </tr>
                                                 <tr>
                                                     <td colSpan="4" className="p-2 border border-black text-right font-bold">Grand Total (Rs.)</td>
-                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.gTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                                                    <td className="p-2 border border-black text-center font-bold">₹ {props.customer.gTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                                 </tr>
                                             </>
                                         )}
@@ -277,46 +279,48 @@ function Quotation(props)
                                                 </td>
                                                 <td className="border-b border-r border-black p-2 align-middle m-0">
                                                     <div className="flex flex-col gap-1">
-                                                        <div className="flex justify-start">
+                                                        <div className="flex justify-start ml-2">
                                                             <span className="w-[30%] font-semibold text-gray-700">Product</span>
                                                             <span className="w-[5%] text-center">:</span>
                                                             <span className="w-[65%] ml-1 text-gray-700">{data.product}</span>
                                                         </div>
-                                                        <div className="flex justify-start">
+                                                        <div className="flex justify-start ml-2">
                                                             <span className="w-[30%] font-semibold text-gray-700">Type</span>
                                                             <span className="w-[5%] text-center">:</span>
                                                             <span className="w-[65%] ml-1 text-gray-700">{data.type}</span>
                                                         </div>
-                                                        <div className="flex justify-start">
+                                                        <div className="flex justify-start ml-2">
                                                             <span className="w-[30%] font-semibold text-gray-700">Variant</span>
                                                             <span className="w-[5%] text-center">:</span>
                                                             <span className="w-[65%] ml-1 text-gray-700">{data.variant}</span>
                                                         </div>
-                                                        <div className="flex justify-start">
+                                                        <div className="flex justify-start ml-2">
                                                             <span className="w-[30%] font-semibold text-gray-700">Size</span>
                                                             <span className="w-[5%] text-center">:</span>
                                                             <span className="w-[65%] ml-1 text-gray-700">W = {data.width}, H = {data.height}</span>
                                                         </div>
-                                                        <div className="flex justify-start">
-                                                            <span className="w-[30%] font-semibold text-gray-700">Area</span>
+                                                        <div className="flex justify-start ml-2">
+                                                            <span className="w-[30%] font-semibold text-gray-700">Feet</span>
                                                             <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[65%] ml-1 text-gray-700">{data.area}</span>
+                                                            <span className="w-[65%] ml-1 text-gray-700">{data.area} ft</span>
                                                         </div>
-                                                        <div className="flex justify-start">
+                                                        <div className="flex justify-start ml-2">
                                                             <span className="w-[30%] font-semibold text-gray-700">Glass</span>
                                                             <span className="w-[5%] text-center">:</span>
                                                             <span className="w-[65%] ml-1 text-gray-700">{data.glass}</span>
                                                         </div>
-                                                        <div className="flex justify-start">
+                                                        <div className="flex justify-start ml-2">
                                                             <span className="w-[30%] font-semibold text-gray-700">Color</span>
                                                             <span className="w-[5%] text-center">:</span>
                                                             <span className="w-[65%] ml-1 text-gray-700">{data.color}</span>
                                                         </div>
-                                                        <div className="flex justify-start pb-3">
-                                                            <span className="w-[30%] font-semibold text-gray-700">Floor</span>
-                                                            <span className="w-[5%] text-center">:</span>
-                                                            <span className="w-[65%] ml-1 text-gray-700">{data.floor}</span>
-                                                        </div>
+                                                        {data.floor != "" && (
+                                                            <div className="flex justify-start ml-2 pb-3">
+                                                                <span className="w-[30%] font-semibold text-gray-700">Floor</span>
+                                                                <span className="w-[5%] text-center">:</span>
+                                                                <span className="w-[65%] ml-1 text-gray-700">{data.floor}</span>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </td>
                                                 <td className="border-b border-r border-black text-center align-middle m-0">
@@ -341,7 +345,7 @@ function Quotation(props)
                                         {props.customer.cusState === 'Tamil Nadu' && (
                                             <>
                                                 <tr>
-                                                    <td colSpan="4" className="border border-b border-black pb-3 pr-2 align-middle m-0 text-right font-bold border-l border-r">
+                                                    <td colSpan="4" className="border border-b-0 border-black pb-3 pr-2 align-middle m-0 text-right font-bold border-l border-r">
                                                         CGST (9%)
                                                     </td>
                                                     <td className="pb-3 pr-2 border-b border-r border-t border-black text-center font-bold">
@@ -352,7 +356,7 @@ function Quotation(props)
                                                     <td colSpan="4" className="border border-r border-black pb-3 pr-2 align-middle m-0 text-right font-bold">
                                                         SGST (9%)
                                                     </td>
-                                                    <td className="pb-3 pr-2 border-b border-r border-t border-black text-center font-bold">
+                                                    <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
                                                         ₹ {props.customer.sgst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </td>
                                                 </tr>

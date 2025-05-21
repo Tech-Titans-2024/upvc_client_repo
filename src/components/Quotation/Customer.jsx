@@ -1,7 +1,7 @@
 import React from 'react'
 
-function Customer(props) {
-    console.log(props.customer.quotationNo)
+function Customer(props) 
+{
     return (
         <div className='p-5 grid grid-cols-4 gap-7 border-2 border-black rounded-lg py-12 '>
             <div className='flex flex-col gap-4'>
@@ -46,12 +46,15 @@ function Customer(props) {
                 <label className='font-semibold ml-1 uppercase'>Customer Phone No :</label>
                 <input
                     type="text"
-                    placeholder=''
+                    placeholder=""
                     className="w-full p-3 border-2 border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    name='cusContact'
+                    name="cusContact"
                     value={props.customer.cusContact}
-                    onChange={props.handleCustomer}
-                    autoComplete='off'
+                    onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                        props.handleCustomer({ target: { name: 'cusContact', value: val } });
+                    }}
+                    autoComplete="off"
                 />
             </div>
             <div className='flex flex-col gap-4'>
