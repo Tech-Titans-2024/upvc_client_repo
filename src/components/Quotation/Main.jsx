@@ -22,7 +22,7 @@ function Main()
         brand: 'Veka', product: 'Door', type: '', variant: '', mesh: 'No', frame: '',
         lock: '', width: '', height: '', feet: '', area: '', price: '', quantity: '1',
         totalqtyprice: '', glass: '', thickness: '', color: '', adcost: '0', totalcost: '',
-        image: '', floor: '' 
+        image: '', floor: ''
     })
     const [customer, setCustomer] = useState({
         salesPerson: '', quotationNo: '', tpcost: '0', cusName: '', cusAddress: '', cusContact: '',
@@ -225,7 +225,7 @@ function Main()
         }
     }
 
-    const handleSave = async () => {
+    const handleSave = async () => { 
         try {
             const QResponse = await axios.get(`${apiUrl}/api/quotationNo`);
             if (QResponse.data !== undefined) {
@@ -238,33 +238,51 @@ function Main()
         }
         catch (err) { console.error("Error fetching quotation number:", err.message) }
 
-        if (currentData.product === 'Door' || currentData.product === 'Window') {
-            if (
-                currentData.brand === '' || currentData.product === '' || currentData.type === '' ||
-                currentData.variant === '' || currentData.width === '' || currentData.height === '' ||
-                currentData.price === '' || currentData.glass === '' || currentData.thickness === '' ||
-                currentData.color === ''
-            ) {
-                alert('Please fill in all required Fields .');
-                return;
-            }
-        }
-        if (currentData.product === 'Louver') {
-            if (
-                currentData.brand === '' || currentData.product === '' ||
-                currentData.variant === '' || currentData.width === '' || currentData.height === '' ||
-                currentData.price === '' || currentData.glass === '' || currentData.thickness === '' ||
-                currentData.color === ''
-            ) {
-                alert('Please fill in all required Fields .');
-                return;
-            }
-        }
+        // if (currentData.product === 'Door') {
+        //     if (
+        //         currentData.brand === '' || currentData.product === '' || currentData.type === '' ||
+        //         currentData.variant === '' || currentData.width === '' || currentData.height === '' ||
+        //         !parseFloat(currentData.price) || !parseFloat(currentData.totalcost) || !parseFloat(currentData.totalqtyprice) ||
+        //         currentData.glass === '' || currentData.thickness === '' || currentData.color === ''
+        //     ) {
+        //         alert('Please fill in all required Fields .');
+        //         return;
+        //     }
+        // }
+        // if (currentData.product === 'Window') {
+        //     console.log(currentData)
+        //     if (
+        //         currentData.brand === '' || currentData.product === '' || currentData.type === '' ||
+        //         currentData.variant === '' || currentData.width === '' || currentData.height === '' ||
+        //         !parseFloat(currentData.price) || !parseFloat(currentData.totalcost) || !parseFloat(currentData.totalqtyprice) ||
+        //         currentData.glass === '' || currentData.thickness === '' || currentData.color === ''
+        //     ) {
+        //         alert('Please fill in all required Fields .');
+        //         return;
+        //     }
+        //     if (currentData.type === 'Sliding Window' || currentData.type === 'Open Window') {
+        //         if (currentData.frame === '') {
+        //             alert('Please fill in all required Fields .');
+        //             return;
+        //         }
+        //     }
+        // }
+        // if (currentData.product === 'Louver') {
+        //     if (
+        //         currentData.brand === '' || currentData.product === '' ||
+        //         currentData.variant === '' || currentData.width === '' || currentData.height === '' ||
+        //         currentData.price === '' || currentData.glass === '' || currentData.thickness === '' ||
+        //         currentData.color === ''
+        //     ) {
+        //         alert('Please fill in all required Fields .');
+        //         return;
+        //     }
+        // }
         setSavedData((prev) => [...prev, currentData]);
         alert("Data saved successfully");
         setCurrentData((prev) => ({
-            ...prev, width: "", height: "", area: "", price: "", glass: "", totalqtyprice: '', floor: '',
-            color: "", adcost: "0", quantity: "1", total: "", image: "", totalcost: '', feet: '', thickness: ''
+            ...prev, width: "", height: "", area: "", price: "", glass: "", totalqtyprice: '', floor: '', type: '',
+            color: "", adcost: "0", quantity: "1", total: "", image: "", totalcost: '', feet: '', thickness: '', variant: ''
         }))
     }
 
@@ -285,20 +303,27 @@ function Main()
         const { name, value } = e.target;
         setCustomer((prevState) => {
             const updatedCustomer = { ...prevState, [name]: value };
-            if (updatedCustomer.cusState === 'Tamil Nadu') {
-                const cgst = parseFloat(updatedCustomer.netTotal * 9) / 100;
-                const sgst = parseFloat(updatedCustomer.netTotal * 9) / 100;
-                const gTotal = parseFloat(updatedCustomer.netTotal) + cgst + sgst + parseFloat(updatedCustomer.tpcost);
-                return { ...updatedCustomer, cgst, sgst, gTotal };
-            }
-            if (updatedCustomer.cusState === 'Others') {
-                const cgst = parseFloat(updatedCustomer.netTotal * 9) / 100;
-                const igst = parseFloat(updatedCustomer.netTotal * 9) / 100;
-                const gTotal = parseFloat(updatedCustomer.netTotal) + igst + cgst + parseFloat(updatedCustomer.tpcost);
-                return { ...updatedCustomer, cgst, igst, gTotal };
-            }
-            return updatedCustomer;
+            const taxes = calculateTaxes(updatedCustomer);
+            return { ...updatedCustomer, ...taxes };
         })
+    }
+
+    const calculateTaxes = (customer) => {
+        const netTotal = parseFloat(customer.netTotal || 0);
+        const tpcost = parseFloat(customer.tpcost || 0);
+        if (customer.cusState === 'Tamil Nadu') {
+            const cgst = netTotal * 0.09;
+            const sgst = netTotal * 0.09;
+            const gTotal = netTotal + cgst + sgst + tpcost;
+            return { cgst, sgst, gTotal };
+        }
+        if (customer.cusState === 'Others') {
+            const cgst = netTotal * 0.09;
+            const igst = netTotal * 0.09;
+            const gTotal = netTotal + cgst + igst + tpcost;
+            return { cgst, igst, gTotal };
+        }
+        return {};
     }
 
     useEffect(() => {
@@ -308,9 +333,11 @@ function Main()
         const year = currentDate.getFullYear();
         const formattedDate = `${day}-${month}-${year}`;
         const netTotal = savedData.reduce((total, data) => total + parseFloat(data.totalcost || 0), 0);
-        setCustomer((prev) => ({
-            ...prev, date: formattedDate, netTotal
-        }))
+        setCustomer((prev) => {
+            const updatedCustomer = { ...prev, date: formattedDate, netTotal };
+            const taxes = calculateTaxes(updatedCustomer);
+            return { ...updatedCustomer, ...taxes };
+        });
     }, [savedData]);
 
     const handleGetQuotation = () => {
