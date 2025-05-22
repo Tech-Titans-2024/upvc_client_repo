@@ -321,7 +321,7 @@ function Quotation(props)
                                                                 <span className="w-[65%] ml-1 text-gray-700">{data.floor}</span>
                                                             </div>
                                                         )}
-                                                    </div>
+                                                    </div> 
                                                 </td>
                                                 <td className="border-b border-r border-black text-center align-middle m-0">
                                                     <span>{data.quantity}</span>
