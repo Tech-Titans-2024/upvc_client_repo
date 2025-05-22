@@ -1,10 +1,9 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSave, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import React, {useEffect, useState} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faSave, faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
 
-function Edit(props) 
-{
+function Edit(props) {
     const [edit, setEdit] = useState(false)
     const apiUrl = import.meta.env.VITE_API_URL;
     const [position, setPosition] = useState()
@@ -35,8 +34,8 @@ function Edit(props)
         const cgst = totalcost * 0.09;
         let sgst = 0;
         let igst = 0;
-        if (customerState === 'Tamil Nadu') { sgst = totalcost * 0.09 }
-        else { igst = totalcost * 0.09 }
+        if (customerState === 'Tamil Nadu') {sgst = totalcost * 0.09}
+        else {igst = totalcost * 0.09}
         const gTotal = totalcost + cgst + sgst + igst;
         return {
             cgst: cgst.toFixed(2),
@@ -46,66 +45,89 @@ function Edit(props)
         };
     };
 
+    console.log("hyfyfyfy7", formData);
+
+
+
 
     const handleChange = async (e) => {
+    const { name, value, type } = e.target;
 
-        const { name, value, type } = e.target;
+    if (type === "radio") {
+        setUnit(value);
+        return;
+    }
 
-        if (type === "radio") { setUnit(value); return }
+    setFormData((prevData) => {
+        const updatedData = {
+            ...prevData,
+            [name]: value,
+        };
 
-        setFormData((prevData) => {
-            const updatedData = {
-                ...prevData,
-                [name]: value,
-            }
+        const updatedWidth = parseFloat(updatedData.width) || 0;
+        const updatedHeight = parseFloat(updatedData.height) || 0;
+        const price = parseFloat(updatedData.price) || 0;
+        const quantity = parseFloat(updatedData.quantity);
 
-            const updatedWidth = parseFloat(updatedData.width) || 0;
-            const updatedHeight = parseFloat(updatedData.height) || 0;
-            const price = parseFloat(updatedData.price) || 0;
-            const quantity = parseFloat(updatedData.quantity) || 1;
-            const addCost = parseFloat(updatedData.adcost) || 0;
+        const addCost = parseFloat(updatedData.adcost) || 0;
 
-            let updatedArea, areaInFeet, areaInMM;
+        let updatedArea = 0;
+        let areaInFeet = 0;
+        let areaInMM = 0;
 
-            if (unit === 'mm') {
-                areaInMM = updatedWidth * updatedHeight;
-                areaInFeet = areaInMM / (304.8 * 304.8);
-                updatedArea = areaInMM.toFixed(2);
-            }
-            else if (unit === 'feet') {
-                areaInFeet = updatedWidth * updatedHeight;
-                areaInMM = areaInFeet * (304.8 * 304.8);
-                updatedArea = areaInFeet.toFixed(2);
-            }
-
-            const totalQtyPrice = (quantity * price * areaInFeet).toFixed(2);
-            const totalCost = (parseFloat(totalQtyPrice) + addCost).toFixed(2);
-            const gstCalculations = calculateGST(parseFloat(totalCost));
-
-            return {
-                ...updatedData, area: updatedArea, feet: areaInFeet.toFixed(2),
-                totalqtyprice: totalQtyPrice, totalcost: totalCost, ...gstCalculations
-            }
-        })
-
-        const priceData = async () => {
-            const response = await axios.post(`${apiUrl}/api/pricelist`, {
-                height: parseFloat(value) || parseFloat(formData.height),
-                width: parseFloat(value) || parseFloat(formData.width),
-                selectedProduct: formData.product,
-                selectedType: formData.type,
-                selectedVariant: formData.variant,
-                brand: formData.brand,
-            })
-
-            if (response.data?.data !== undefined) {
-                const fetchedPrice = parseFloat(response.data.data).toFixed(2);
-                setFormData((prev) => ({ ...prev, price: fetchedPrice, }));
-            }
+        if (unit === "mm") {
+            areaInMM = updatedWidth * updatedHeight;
+            areaInFeet = areaInMM / (304.8 * 304.8);
+            updatedArea = areaInMM.toFixed(2);
+        } else if (unit === "feet") {
+            areaInFeet = updatedWidth * updatedHeight;
+            areaInMM = areaInFeet * (304.8 * 304.8);
+            updatedArea = areaInFeet.toFixed(2);
         }
 
-        if (name === "height" || name === "width") { priceData() }
+        // Handle empty or 0 quantity
+        let totalQtyPrice = "0.00";
+        let totalCost = "0.00";
+
+        if (!isNaN(quantity) && quantity > 0) {
+            totalQtyPrice = (quantity * price * areaInFeet).toFixed(2);
+            totalCost = (parseFloat(totalQtyPrice) + addCost).toFixed(2);
+        }
+
+        const grandTotal = totalCost;
+
+        return {
+            ...updatedData,
+            area: updatedArea,
+            feet: areaInFeet.toFixed(2),
+            totalqtyprice: totalQtyPrice,
+            totalcost: totalCost,
+            gTotal: grandTotal,
+        };
+    });
+
+    const priceData = async () => {
+        const response = await axios.post(`${apiUrl}/api/pricelist`, {
+            height: parseFloat(value) || parseFloat(formData.height),
+            width: parseFloat(value) || parseFloat(formData.width),
+            selectedProduct: formData.product,
+            selectedType: formData.type,
+            selectedVariant: formData.variant,
+            brand: formData.brand,
+        });
+
+        if (response.data?.data !== undefined) {
+            const fetchedPrice = parseFloat(response.data.data).toFixed(2);
+            setFormData((prev) => ({ ...prev, price: fetchedPrice }));
+        }
     };
+
+    if (name === "height" || name === "width") {
+        priceData();
+    }
+};
+
+
 
     const handleSave = async () => {
         const updatedFormData = {
@@ -115,10 +137,10 @@ function Edit(props)
             totalcost: Number(formData.totalcost),
             area: Number(formData.area),
             feet: Number(formData.feet),
-            cgst: Number(formData.cgst || 0),
-            sgst: Number(formData.sgst || 0),
-            igst: Number(formData.igst || 0),
-            gTotal: Number(formData.gTotal || formData.totalcost)
+            // cgst: Number(formData.cgst || 0),
+            // sgst: Number(formData.sgst || 0),
+            // igst: Number(formData.igst || 0),
+            // gTotal: Number(formData.gTotal || formData.totalcost)
         }
         try {
             const response = await axios.post(`${apiUrl}/api/editsaveqtn`, {
@@ -129,7 +151,7 @@ function Edit(props)
                 alert(response.data.message);
                 await setTotalCost(response.data.calculatedTotal);
             }
-            else { alert("Error occurred while updating.") }
+            else {alert("Error occurred while updating.")}
         }
         catch (error) {
             console.error("Error:", error);
@@ -151,12 +173,12 @@ function Edit(props)
 
             if (targetQuotation) {
                 targetQuotation.product.splice(deleteIndex, 1);
-                if (targetQuotation.product.length === 0) { alert("All products are deleted.") }
+                if (targetQuotation.product.length === 0) {alert("All products are deleted.")}
             }
-            if (props.setQuotations) { props.setQuotations(updatedQuotations) }
+            if (props.setQuotations) {props.setQuotations(updatedQuotations)}
             setIsDelete(false);
         }
-        catch (err) { console.error("Delete failed", err) }
+        catch (err) {console.error("Delete failed", err)}
     }
 
     return (
@@ -203,7 +225,7 @@ function Edit(props)
                                                 <td className="border-2 border-black font-bold w-[12%] p-2">
                                                     <button
                                                         className="w-32 h-10 font-bold text-lg text-white rounded-md focus:outline-none bg-blue-500 hover:bg-blue-600"
-                                                        onClick={() => { setEdit(true); setPosition(index) }}
+                                                        onClick={() => {setEdit(true); setPosition(index)}}
                                                     >
                                                         <FontAwesomeIcon icon={faEdit} className="mr-1" />
                                                         Edit
@@ -447,7 +469,7 @@ function Edit(props)
                                     onChange={handleChange}
                                 />
                             </div>
-                            <div className="flex flex-col gap-4">
+                            {/* <div className="flex flex-col gap-4">
                                 <label className="font-semibold ml-1 uppercase">CGST(9%) :</label>
                                 <input type="text" className='w-32 p-3 bg-gray-200 border-2 border-black rounded-md'
                                     value={formData.cgst || "0.00"}
@@ -462,7 +484,7 @@ function Edit(props)
                                     value={customerState === 'Tamil Nadu' ? (formData.sgst || "0.00") : (formData.igst || "0.00")}
                                     readOnly
                                 />
-                            </div>
+                            </div> */}
                             <div className="flex flex-col gap-4">
                                 <label className="font-semibold ml-1 uppercase ">Grand Total : </label>
                                 <input type="text" className='w-32 p-3 bg-gray-200 border-2 border-black rounded-md focus:outline-none'
