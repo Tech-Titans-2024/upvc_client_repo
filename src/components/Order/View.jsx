@@ -485,7 +485,7 @@ function View(props)
                                                     Transport Cost (Rs.)
                                                 </td>
                                                 <td className="pb-3 pr-2 border-b border-r border-black text-center font-bold">
-                                                    ₹ {props.qtnViewDetails.tpcost?.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || "0.00"}
+                                                    ₹ {props.qtnViewDetails.tp_cost?.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || "0.00"}
                                                 </td>
                                             </tr>
                                             <tr>
