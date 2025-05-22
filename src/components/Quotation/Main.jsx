@@ -238,46 +238,46 @@ function Main()
         }
         catch (err) { console.error("Error fetching quotation number:", err.message) }
 
-        // if (currentData.product === 'Door') {
-        //     if (
-        //         currentData.brand === '' || currentData.product === '' || currentData.type === '' ||
-        //         currentData.variant === '' || currentData.width === '' || currentData.height === '' ||
-        //         !parseFloat(currentData.price) || !parseFloat(currentData.totalcost) || !parseFloat(currentData.totalqtyprice) ||
-        //         currentData.glass === '' || currentData.thickness === '' || currentData.color === ''
-        //     ) {
-        //         alert('Please fill in all required Fields .');
-        //         return;
-        //     }
-        // }
-        // if (currentData.product === 'Window') {
-        //     console.log(currentData)
-        //     if (
-        //         currentData.brand === '' || currentData.product === '' || currentData.type === '' ||
-        //         currentData.variant === '' || currentData.width === '' || currentData.height === '' ||
-        //         !parseFloat(currentData.price) || !parseFloat(currentData.totalcost) || !parseFloat(currentData.totalqtyprice) ||
-        //         currentData.glass === '' || currentData.thickness === '' || currentData.color === ''
-        //     ) {
-        //         alert('Please fill in all required Fields .');
-        //         return;
-        //     }
-        //     if (currentData.type === 'Sliding Window' || currentData.type === 'Open Window') {
-        //         if (currentData.frame === '') {
-        //             alert('Please fill in all required Fields .');
-        //             return;
-        //         }
-        //     }
-        // }
-        // if (currentData.product === 'Louver') {
-        //     if (
-        //         currentData.brand === '' || currentData.product === '' ||
-        //         currentData.variant === '' || currentData.width === '' || currentData.height === '' ||
-        //         currentData.price === '' || currentData.glass === '' || currentData.thickness === '' ||
-        //         currentData.color === ''
-        //     ) {
-        //         alert('Please fill in all required Fields .');
-        //         return;
-        //     }
-        // }
+        if (currentData.product === 'Door') {
+            if (
+                currentData.brand === '' || currentData.product === '' || currentData.type === '' ||
+                currentData.variant === '' || currentData.width === '' || currentData.height === '' ||
+                !parseFloat(currentData.price) || !parseFloat(currentData.totalcost) || !parseFloat(currentData.totalqtyprice) ||
+                currentData.glass === '' || currentData.thickness === '' || currentData.color === ''
+            ) {
+                alert('Please fill in all required Fields .');
+                return;
+            }
+        }
+        if (currentData.product === 'Window') {
+            console.log(currentData)
+            if (
+                currentData.brand === '' || currentData.product === '' || currentData.type === '' ||
+                currentData.variant === '' || currentData.width === '' || currentData.height === '' ||
+                !parseFloat(currentData.price) || !parseFloat(currentData.totalcost) || !parseFloat(currentData.totalqtyprice) ||
+                currentData.glass === '' || currentData.thickness === '' || currentData.color === ''
+            ) {
+                alert('Please fill in all required Fields .');
+                return;
+            }
+            if (currentData.type === 'Sliding Window' || currentData.type === 'Open Window') {
+                if (currentData.frame === '') {
+                    alert('Please fill in all required Fields .');
+                    return;
+                }
+            }
+        }
+        if (currentData.product === 'Louver') {
+            if (
+                currentData.brand === '' || currentData.product === '' ||
+                currentData.variant === '' || currentData.width === '' || currentData.height === '' ||
+                currentData.price === '' || currentData.glass === '' || currentData.thickness === '' ||
+                currentData.color === ''
+            ) {
+                alert('Please fill in all required Fields .');
+                return;
+            }
+        }
         setSavedData((prev) => [...prev, currentData]);
         alert("Data saved successfully");
         setCurrentData((prev) => ({
