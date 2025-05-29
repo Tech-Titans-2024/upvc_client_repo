@@ -1,95 +1,125 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-const PieChart2 = () => 
-{
-	const chartData = {
-		labels: ['Fixed Window - 50', 'Sliding Window - 30', 'Open Window - 20'],
-		datasets: [
-			{
-				data: [50, 30, 20],
-				backgroundColor: [
-					'#4CAF50', // Green
-					'#FFC107', // Amber
-					'#2196F3', // Blue
-				],
-				hoverBackgroundColor: [
-					'#388E3C', // Darker Green
-					'#FFB300', // Darker Amber
-					'#1976D2', // Darker Blue
-				],
-				borderColor: '#ffffff',
-				borderWidth: 2,
-			},
-		],
-	}
+const PieChart2 = () => {
+    const [chartData, setChartData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-	const options = {
-		plugins: {
-			legend: {
-				display: true,
-				position: 'bottom',
-				labels: {
-					color: '#333',
-					font: {
-						size: 16,
-					},
-					padding: 25,
-					boxWidth: 35,
-					boxHeight: 20,
-				},
-			},
-			tooltip: {
-				callbacks: {
-					label: function (context) {
-						const label = context.label || '';
-						const value = context.raw || 0;
-						return `${label}: ${value}`;
-					},
-				},
-			},
-			datalabels: {
-				color: '#fff',
-				font: {
-					size: 14,
-					weight: 'bold',
-				},
-				formatter: (value, context) => {
-					const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
-					const percentage = ((value / total) * 100).toFixed(1);
-					return `${percentage}%`;
-				},
-			},
-		},
-		responsive: true,
-		maintainAspectRatio: false,
-	}
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:5001/api/window-pie-chart-data');
+                const windowData = response.data;
 
-	const containerStyle = {
-		width: '100%',
-		height: '450px',
-		paddingBottom: '60px',
-		paddingTop: '20px',
-		background: '#fff',
-		borderRadius: '15px',
-		boxShadow: '0px 5px 10px rgba(0, 0, 0, 0.1)',
-	}
+                // Filter for the top 3 window types (or all if less than 3)
+                const topWindowTypes = windowData.slice(0, 3);
 
-	return (
-		<div style={containerStyle}>
-			<h3
-				className="pie-heading font-bold mb-2"
-				style={{ textAlign: 'center', fontSize: '20px', marginBottom: '15px' }}
-			>
-				WINDOW
-			</h3>
-			<Pie data={chartData} options={options} />
-		</div>
-	)
-}
+                // Prepare labels with quantities
+                const labels = topWindowTypes.map(item => `${item.type} (${item.totalQuantity})`);
+                const data = topWindowTypes.map(item => item.totalQuantity);
+                const backgroundColors = [
+                    'rgb(76, 175, 80)',   // Green
+                    'rgb(255, 193, 7)',   // Amber
+                    'rgb(33, 150, 243)',  // Blue
+                    'rgb(156, 39, 176)',  // Purple
+                    'rgb(244, 67, 54)'    // Red
+                ].slice(0, topWindowTypes.length);
+
+                setChartData({
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        hoverBackgroundColor: backgroundColors.map(color => 
+                            color.replace(/rgb\((\d+), (\d+), (\d+)\)/, (match, r, g, b) => 
+                                `rgb(${Math.max(0, r - 20)}, ${Math.max(0, g - 20)}, ${Math.max(0, b - 20)})`
+                            )
+                        ),
+                        borderColor: 'rgba(255, 255, 255, 1)',
+                        borderWidth: 2,
+                    }],
+                });
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Error fetching window pie chart data:", error);
+                setError("Failed to load data. Please try again later.");
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const options = {
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                align: 'center',
+                labels: {
+                    color: '#333',
+                    font: { size: 16 },
+                    padding: 25,
+                    boxWidth: 35,
+                    boxHeight: 20,
+                },
+            },
+            tooltip: {
+                callbacks: {
+                    label: function (context) {
+                        const label = context.label || '';
+                        const value = context.raw || 0;
+                        return `${label}: ${value} units`;
+                    },
+                },
+            },
+            datalabels: {
+                color: '#fff',
+                font: { size: 14, weight: 'bold' },
+                display: (context) => true,
+                formatter: (value, context) => {
+                    const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
+                    const percentage = ((value / total) * 100).toFixed(1);
+                    return `${percentage}%`;
+                },
+            },
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+    };
+
+    const containerStyle = {
+        width: '100%',
+        height: '450px',
+        paddingBottom: '60px',
+        paddingTop: '20px',
+        background: '#fff',
+        borderRadius: '15px',
+        boxShadow: '0px 5px 10px rgba(0, 0, 0, 0.1)',
+    };
+
+    return (
+        <div style={containerStyle}>
+            <h3 className="pie-heading font-bold mb-2" style={{ textAlign: 'center', fontSize: '20px', marginBottom: '15px' }}>
+                WINDOW TYPES DISTRIBUTION
+            </h3>
+            {isLoading ? (
+                <p style={{ textAlign: 'center' }}>Loading data...</p>
+            ) : error ? (
+                <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>
+            ) : chartData ? (
+                <Pie data={chartData} options={options} />
+            ) : (
+                <p style={{ textAlign: 'center' }}>No data available</p>
+            )}
+        </div>
+    );
+};
 
 export default PieChart2;
