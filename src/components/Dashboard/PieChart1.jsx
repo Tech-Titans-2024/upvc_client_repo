@@ -14,15 +14,15 @@ const PieChart1 = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:5001/api/pie-chart-data');
-                const doorData = response.data;
+                const response = await axios.get('http://localhost:5001/api/door-sales-data');
+                const doorSalesData = response.data;
 
-                // Filter for the top 3 door types (or all if less than 3)
-                const topDoorTypes = doorData.slice(0, 3);
+                // Filter for the top 3 door types by sales (or all if less than 3)
+                const topDoorTypes = doorSalesData.slice(0, 3);
 
-                // Prepare labels with quantities
-                const labels = topDoorTypes.map(item => `${item.type} (${item.totalQuantity})`);
-                const data = topDoorTypes.map(item => item.totalQuantity);
+                // Prepare labels with sales amounts
+                const labels = topDoorTypes.map(item => `${item.type} (₹${item.totalSales.toLocaleString()})`);
+                const data = topDoorTypes.map(item => item.totalSales);
                 const backgroundColors = [
                     'rgb(67, 160, 71)', // Green
                     'rgb(251, 140, 0)',  // Orange
@@ -34,20 +34,20 @@ const PieChart1 = () => {
                 setChartData({
                     labels: labels,
                     datasets: [{
-    data: data,
-    backgroundColor: backgroundColors,
-    hoverBackgroundColor: backgroundColors.map(color => 
-      color.replace(/rgb\((\d+), (\d+), (\d+)\)/, (match, r, g, b) => 
-        `rgb(${Math.max(0, r - 20)}, ${Math.max(0, g - 20)}, ${Math.max(0, b - 20)})`
-      )
-    ),
-    borderColor: 'rgba(255, 255, 255, 1)',
-    borderWidth: 2,
-  }],
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        hoverBackgroundColor: backgroundColors.map(color => 
+                            color.replace(/rgb\((\d+), (\d+), (\d+)\)/, (match, r, g, b) => 
+                                `rgb(${Math.max(0, r - 20)}, ${Math.max(0, g - 20)}, ${Math.max(0, b - 20)})`
+                            )
+                        ),
+                        borderColor: 'rgba(255, 255, 255, 1)',
+                        borderWidth: 2,
+                    }],
                 });
                 setIsLoading(false);
             } catch (error) {
-                console.error("Error fetching pie chart data:", error);
+                console.error("Error fetching door sales data:", error);
                 setError("Failed to load data. Please try again later.");
                 setIsLoading(false);
             }
@@ -73,9 +73,9 @@ const PieChart1 = () => {
             tooltip: {
                 callbacks: {
                     label: function (context) {
-                        const label = context.label || '';
+                        const label = context.label.split(' (')[0] || '';
                         const value = context.raw || 0;
-                        return `${label}: ${value} units`;
+                        return `${label}: ₹${value.toLocaleString()}`;
                     },
                 },
             },
@@ -89,6 +89,18 @@ const PieChart1 = () => {
                     return `${percentage}%`;
                 },
             },
+            title: {
+                display: true,
+                text: 'DOOR SALES DISTRIBUTION',
+                font: {
+                    size: 20,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 20
+                }
+            }
         },
         responsive: true,
         maintainAspectRatio: false,
@@ -106,9 +118,6 @@ const PieChart1 = () => {
 
     return (
         <div style={containerStyle}>
-            <h3 className="pie-heading font-bold mb-2" style={{ textAlign: 'center', fontSize: '20px', marginBottom: '15px' }}>
-                DOOR TYPES DISTRIBUTION
-            </h3>
             {isLoading ? (
                 <p style={{ textAlign: 'center' }}>Loading data...</p>
             ) : error ? (

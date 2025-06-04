@@ -70,7 +70,7 @@ const HorizontalBarChart = () => {
             },
             title: {
                 display: true,
-                text: 'Sales by Product Type',
+                text: 'Sales by Product',
                 font: {
                     size: 24,
                     weight: 'bold',

@@ -6,7 +6,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-const PieChart3 = () => {
+const LouverSalesPieChart = () => {
     const [chartData, setChartData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -14,17 +14,20 @@ const PieChart3 = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:5001/api/louver-pie-chart-data');
-                const louverData = response.data;
+                const response = await axios.get('http://localhost:5001/api/louver-sales-data');
+                const louverSalesData = response.data;
 
-                // Prepare labels with quantities
-                const labels = louverData.map(item => `${item.variant} (${item.totalQuantity})`);
-                const data = louverData.map(item => item.totalQuantity);
+                // Filter for the top 3 louver variants by sales (or all if less than 3)
+                const topLouverVariants = louverSalesData.slice(0, 3);
+
+                // Prepare labels with sales amounts
+                const labels = topLouverVariants.map(item => `${item.variant} (₹${item.totalSales.toLocaleString()})`);
+                const data = topLouverVariants.map(item => item.totalSales);
                 const backgroundColors = [
-                    'rgb(255, 99, 132)',  // Vibrant pink
-                    'rgb(54, 162, 235)', // Vibrant blue
-                    'rgb(255, 206, 86)',  // Vibrant yellow (if needed for additional variants)
-                ].slice(0, louverData.length);
+                    'rgb(65, 105, 225)', // Royal Blue
+                    'rgb(255, 127, 80)', // Coral
+                    'rgb(65, 105, 225)'  // Royal Blue (repeated for 3rd slice if needed)
+                ].slice(0, topLouverVariants.length);
 
                 setChartData({
                     labels: labels,
@@ -42,7 +45,7 @@ const PieChart3 = () => {
                 });
                 setIsLoading(false);
             } catch (error) {
-                console.error("Error fetching louver pie chart data:", error);
+                console.error("Error fetching louver sales data:", error);
                 setError("Failed to load data. Please try again later.");
                 setIsLoading(false);
             }
@@ -60,7 +63,7 @@ const PieChart3 = () => {
                 labels: {
                     color: '#333',
                     font: { size: 16 },
-                    padding: 45,
+                    padding: 25,
                     boxWidth: 35,
                     boxHeight: 20,
                 },
@@ -68,9 +71,9 @@ const PieChart3 = () => {
             tooltip: {
                 callbacks: {
                     label: function (context) {
-                        const label = context.label || '';
+                        const label = context.label.split(' (')[0] || '';
                         const value = context.raw || 0;
-                        return `${label}: ${value} units`;
+                        return `${label}: ₹${value.toLocaleString()}`;
                     },
                 },
             },
@@ -84,6 +87,18 @@ const PieChart3 = () => {
                     return `${percentage}%`;
                 },
             },
+            title: {
+                display: true,
+                text: 'LOUVER SALES DISTRIBUTION',
+                font: {
+                    size: 20,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 20
+                }
+            }
         },
         responsive: true,
         maintainAspectRatio: false,
@@ -101,9 +116,6 @@ const PieChart3 = () => {
 
     return (
         <div style={containerStyle}>
-            <h3 className="pie-heading font-bold mb-2" style={{ textAlign: 'center', fontSize: '20px', marginBottom: '15px' }}>
-                LOUVERS VARIANT DISTRIBUTION
-            </h3>
             {isLoading ? (
                 <p style={{ textAlign: 'center' }}>Loading data...</p>
             ) : error ? (
@@ -117,4 +129,4 @@ const PieChart3 = () => {
     );
 };
 
-export default PieChart3;
+export default LouverSalesPieChart;

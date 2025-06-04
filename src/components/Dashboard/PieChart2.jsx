@@ -6,7 +6,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-const PieChart2 = () => {
+const WindowSalesPieChart = () => {
     const [chartData, setChartData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -14,21 +14,19 @@ const PieChart2 = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:5001/api/window-pie-chart-data');
-                const windowData = response.data;
+                const response = await axios.get('http://localhost:5001/api/window-sales-data');
+                const windowSalesData = response.data;
 
-                // Filter for the top 3 window types (or all if less than 3)
-                const topWindowTypes = windowData.slice(0, 3);
+                // Filter for the top 3 window types by sales (or all if less than 3)
+                const topWindowTypes = windowSalesData.slice(0, 3);
 
-                // Prepare labels with quantities
-                const labels = topWindowTypes.map(item => `${item.type} (${item.totalQuantity})`);
-                const data = topWindowTypes.map(item => item.totalQuantity);
+                // Prepare labels with sales amounts
+                const labels = topWindowTypes.map(item => `${item.type} (₹${item.totalSales.toLocaleString()})`);
+                const data = topWindowTypes.map(item => item.totalSales);
                 const backgroundColors = [
-                    'rgb(76, 175, 80)',   // Green
-                    'rgb(255, 193, 7)',   // Amber
-                    'rgb(33, 150, 243)',  // Blue
-                    'rgb(156, 39, 176)',  // Purple
-                    'rgb(244, 67, 54)'    // Red
+                    'rgb(0, 82, 147)',   // Deep Blue
+                    'rgb(0, 147, 147)',  // Teal
+                    'rgb(212, 175, 55)'  // Gold
                 ].slice(0, topWindowTypes.length);
 
                 setChartData({
@@ -47,7 +45,7 @@ const PieChart2 = () => {
                 });
                 setIsLoading(false);
             } catch (error) {
-                console.error("Error fetching window pie chart data:", error);
+                console.error("Error fetching window sales data:", error);
                 setError("Failed to load data. Please try again later.");
                 setIsLoading(false);
             }
@@ -73,9 +71,9 @@ const PieChart2 = () => {
             tooltip: {
                 callbacks: {
                     label: function (context) {
-                        const label = context.label || '';
+                        const label = context.label.split(' (')[0] || '';
                         const value = context.raw || 0;
-                        return `${label}: ${value} units`;
+                        return `${label}: ₹${value.toLocaleString()}`;
                     },
                 },
             },
@@ -89,6 +87,18 @@ const PieChart2 = () => {
                     return `${percentage}%`;
                 },
             },
+            title: {
+                display: true,
+                text: 'WINDOW SALES DISTRIBUTION',
+                font: {
+                    size: 20,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 20
+                }
+            }
         },
         responsive: true,
         maintainAspectRatio: false,
@@ -106,9 +116,6 @@ const PieChart2 = () => {
 
     return (
         <div style={containerStyle}>
-            <h3 className="pie-heading font-bold mb-2" style={{ textAlign: 'center', fontSize: '20px', marginBottom: '15px' }}>
-                WINDOW TYPES DISTRIBUTION
-            </h3>
             {isLoading ? (
                 <p style={{ textAlign: 'center' }}>Loading data...</p>
             ) : error ? (
@@ -122,4 +129,4 @@ const PieChart2 = () => {
     );
 };
 
-export default PieChart2;
+export default WindowSalesPieChart;

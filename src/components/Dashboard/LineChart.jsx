@@ -5,7 +5,8 @@ import {
   Chart as ChartJS, 
   CategoryScale, 
   LinearScale, 
-  BarElement,
+  PointElement,
+  LineElement,
   Title, 
   Tooltip, 
   Legend 
@@ -14,13 +15,14 @@ import {
 ChartJS.register(
   CategoryScale, 
   LinearScale, 
-  BarElement,
+  PointElement,
+  LineElement,
   Title, 
   Tooltip, 
   Legend
 );
 
-const MonthlySalesBarChart = () => {
+const SalesBySalespersonChart = () => {
   const [chartData, setChartData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,36 +30,39 @@ const MonthlySalesBarChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/api/monthly-sales');
+        const response = await axios.get('http://localhost:5001/api/sales-by-salesperson');
         
         // Handle empty response
         if (!response.data || response.data.length === 0) {
           throw new Error("No sales data available");
         }
 
-        const monthlyData = response.data;
+        const salespersonData = response.data;
 
-        // Prepare labels (months)
-        const labels = monthlyData.map(item => item.month);
+        // Prepare labels (salesperson names)
+        const labels = salespersonData.map(item => item.sales_person);
         
         // Prepare sales data
-        const salesData = monthlyData.map(item => item.totalSales);
+        const salesData = salespersonData.map(item => item.totalSales);
 
         setChartData({
           labels: labels,
           datasets: [
             {
-              label: 'Monthly Sales',
+              label: 'Total Sales by Salesperson',
               data: salesData,
-              backgroundColor: 'rgba(54, 162, 235, 0.7)',
-              borderColor: 'rgba(54, 162, 235, 1)',
-              borderWidth: 1
+              backgroundColor: 'rgba(75, 192, 192, 0.7)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 2,
+              tension: 0.1,
+              pointRadius: 8,
+              pointHoverRadius: 10
             }
           ]
         });
         setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching monthly sales data:", error);
+        console.error("Error fetching salesperson sales data:", error);
         setError(error.response?.data?.error || error.message || "Failed to load data. Please try again later.");
         setIsLoading(false);
       }
@@ -82,7 +87,7 @@ const MonthlySalesBarChart = () => {
       },
       title: {
         display: true,
-        text: 'Monthly Sales Overview',
+        text: 'Sales Performance by Salesperson',
         font: {
           size: 18,
           weight: 'bold',
@@ -139,7 +144,7 @@ const MonthlySalesBarChart = () => {
           <p>{error}</p>
         </div>
       ) : chartData ? (
-        <Chart type='bar' data={chartData} options={options} />
+        <Chart type='line' data={chartData} options={options} />
       ) : (
         <div className="flex items-center justify-center h-full">
           <p>No data available</p>
@@ -149,4 +154,4 @@ const MonthlySalesBarChart = () => {
   );
 };
 
-export default MonthlySalesBarChart;
+export default SalesBySalespersonChart;
